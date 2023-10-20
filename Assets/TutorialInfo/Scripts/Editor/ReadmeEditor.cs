@@ -16,6 +16,12 @@ public class ReadmeEditor : Editor
 
     const float k_Space = 16f;
 
+    // 編集モードのフラグ
+    private bool inEditMode = false;
+
+    // -1は、削除するセクションがないことを意味する
+    private int sectionToRemove = -1;
+
     static ReadmeEditor()
     {
         EditorApplication.delayCall += SelectReadmeAutomatically;
@@ -125,33 +131,97 @@ public class ReadmeEditor : Editor
         var readme = (Readme)target;
         Init();
 
-        foreach (var section in readme.sections)
+        // 編集モードのトグルボタンを追加
+        if (GUILayout.Button(inEditMode ? "Finish Editing" : "Edit Readme", ButtonStyle))
         {
-            if (!string.IsNullOrEmpty(section.heading))
+            inEditMode = !inEditMode;
+
+            if (!inEditMode)
             {
-                GUILayout.Label(section.heading, HeadingStyle);
+                // Save changes when exiting edit mode
+                EditorUtility.SetDirty(target);
+                AssetDatabase.SaveAssets();
+            }
+        }
+
+        if (inEditMode)
+        {
+            readme.title = EditorGUILayout.TextField("Title:", readme.title);
+            readme.icon = (Texture2D)EditorGUILayout.ObjectField("Icon:", readme.icon, typeof(Texture2D), false);
+        }
+        else
+        {
+            //GUILayout.Label(readme.title, TitleStyle);
+            //if (readme.icon)
+            //{
+            //    GUILayout.Label(readme.icon);
+            //}
+        }
+
+        // ... sections editing code ...
+
+        if (inEditMode)
+        {
+            if (GUILayout.Button("Add Section", ButtonStyle))
+            {
+                Array.Resize(ref readme.sections, readme.sections.Length + 1);
+                readme.sections[readme.sections.Length - 1] = new Readme.Section();
             }
 
-            if (!string.IsNullOrEmpty(section.text))
+            if (sectionToRemove >= 0 && sectionToRemove < readme.sections.Length)
             {
-                GUILayout.Label(section.text, BodyStyle);
+                List<Readme.Section> sectionsList = new List<Readme.Section>(readme.sections);
+                sectionsList.RemoveAt(sectionToRemove);
+                readme.sections = sectionsList.ToArray();
+                sectionToRemove = -1;
             }
+        }
 
-            if (!string.IsNullOrEmpty(section.linkText))
+
+        for (int i = 0; i < readme.sections.Length; i++)
+        {
+            var section = readme.sections[i];
+
+            if (inEditMode)
             {
-                if (LinkLabel(new GUIContent(section.linkText)))
+                section.heading = EditorGUILayout.TextField("Heading:", section.heading);
+                section.text = EditorGUILayout.TextArea(section.text, GUILayout.Height(100));
+                section.linkText = EditorGUILayout.TextField("Link Text:", section.linkText);
+                section.url = EditorGUILayout.TextField("URL:", section.url);
+
+                if (GUILayout.Button("Remove This Section"))
                 {
-                    Application.OpenURL(section.url);
+                    sectionToRemove = i;
+                }
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(section.heading))
+                {
+                    GUILayout.Label(section.heading, HeadingStyle);
+                }
+                if (!string.IsNullOrEmpty(section.text))
+                {
+                    GUILayout.Label(section.text, BodyStyle);
+                }
+                if (!string.IsNullOrEmpty(section.linkText))
+                {
+                    if (LinkLabel(new GUIContent(section.linkText)))
+                    {
+                        Application.OpenURL(section.url);
+                    }
                 }
             }
 
             GUILayout.Space(k_Space);
         }
 
-        if (GUILayout.Button("Remove Readme Assets", ButtonStyle))
-        {
-            RemoveTutorial();
-        }
+
+        // ReadMe関連のアセットを削除するボタン
+        //if (GUILayout.Button("Remove Readme Assets", ButtonStyle))
+        //{
+        //    RemoveTutorial();
+        //}
     }
 
     bool m_Initialized;
