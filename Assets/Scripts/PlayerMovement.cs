@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    Vector3 startPos;   // スポーン地点
+    CharacterController controller;　// キャラクターコントローラー
     private Animator animator;
     public float speed = 5f;
     public float sensitivity = 30.0f;
@@ -19,6 +21,8 @@ public class PlayerMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        startPos = transform.position;
+        controller = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
         if (animator == null)
         {
@@ -70,6 +74,10 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetMouseButton(0))
         {
             AttackAnimation();
+        }
+
+        if (controller.isGrounded) { 
+            
         }
     }
 
