@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class EnemyController : MonoBehaviour
 {
@@ -20,11 +21,9 @@ public class EnemyController : MonoBehaviour
 
     private void OnDeath() // エネミーが倒されたときの処理
     {
-        // ここでプレイヤーに憑依オプションを提示するロジックを追加
-        // 例: UIの表示や、近くのプレイヤーオブジェクトを検索してPossessメソッドを呼び出す
     }
 
-    private void OnMouseDown()
+    public void OnMouseDown()
     {
         // ゲーム中にエネミーをクリックすると、プレイヤーが憑依する
         PlayerMovement player = FindObjectOfType<PlayerMovement>();
