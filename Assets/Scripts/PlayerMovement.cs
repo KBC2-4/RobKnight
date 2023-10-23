@@ -12,6 +12,10 @@ public class PlayerMovement : MonoBehaviour
     public EnemyData currentPossession; // 現在憑依しているエネミーのデータ
     private GameObject currentModel;
 
+    public int hp = 100;
+    public int maxHp = 100;
+    public int mp = 100;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -22,9 +26,9 @@ public class PlayerMovement : MonoBehaviour
         }
 
         // マウスカーソルを非表示にする
-        Cursor.visible = false;
-        // マウスカーソルを画面の中央に固定する
-        Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.visible = false;
+        //// マウスカーソルを画面の中央に固定する
+        //Cursor.lockState = CursorLockMode.Locked;
 
 
         if (Application.isEditor)
@@ -71,7 +75,7 @@ public class PlayerMovement : MonoBehaviour
 
     void AttackAnimation()
     {
-        animator.SetBool("AttackBool",true);
+        //animator.SetBool("AttackBool",true);
     }
 
     public void Possess(EnemyData newEnemy)
