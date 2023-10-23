@@ -11,6 +11,8 @@ public class PauseController : MonoBehaviour
         Time.timeScale = 1f;
         // ポーズメニューのUIを非表示に設定
         pauseMenu.SetActive(false);
+
+
     }
 
     void Update()
@@ -37,7 +39,7 @@ public class PauseController : MonoBehaviour
             // ゲームの時間を再開
             Time.timeScale = 1f;
             // ポーズメニューのUIを非表示
-            pauseMenu.SetActive(false); 
+            pauseMenu.SetActive(false);
         }
     }
 }

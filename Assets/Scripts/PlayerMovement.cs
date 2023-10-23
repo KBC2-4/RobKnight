@@ -9,6 +9,8 @@ public class PlayerMovement : MonoBehaviour
     public float speed = 5f;
     public float sensitivity = 30.0f;
     float rotX, rotY;
+    public EnemyData currentPossession; // 現在憑依しているエネミーのデータ
+    private GameObject currentModel;
 
     // Start is called before the first frame update
     void Start()
@@ -28,6 +30,11 @@ public class PlayerMovement : MonoBehaviour
         if (Application.isEditor)
         {
             sensitivity = sensitivity * 1.5f;
+        }
+
+        if (currentPossession != null)
+        {
+            Possess(currentPossession);
         }
     }
 
@@ -49,8 +56,12 @@ public class PlayerMovement : MonoBehaviour
         rotY = (mouseY/* + rightStickVertical*/) * sensitivity;
 
         //CameraRotation(cam, rotX, rotY);
-        Vector3 movement = new Vector3(horizontal, 0f, vertical) * speed * Time.deltaTime;
-        transform.Translate(movement);
+        //Vector3 movement = new Vector3(horizontal, 0f, vertical) * speed * Time.deltaTime;
+        //transform.Translate(movement);
+        Vector3 movement = new Vector3(horizontal, 0f, vertical).normalized * speed * Time.deltaTime;
+        transform.Translate(movement, Space.World);
+
+
 
         if (Input.GetMouseButton(0))
         {
@@ -61,5 +72,18 @@ public class PlayerMovement : MonoBehaviour
     void AttackAnimation()
     {
         animator.SetBool("AttackBool",true);
+    }
+
+    public void Possess(EnemyData newEnemy)
+    {
+        currentPossession = newEnemy;
+
+        if (currentModel != null)
+        {
+            Destroy(currentModel);
+        }
+
+        currentModel = Instantiate(newEnemy.modelPrefab, transform.position, transform.rotation);
+        currentModel.transform.parent = this.transform;
     }
 }
