@@ -9,14 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2c02960a608377c4f8d740551e440299, type: 3}
-  m_Name: Gobrin
+  m_Script: {fileID: 11500000, guid: 22ea51f54fdb053458e042887d1eb274, type: 3}
+  m_Name: Slash
   m_EditorClassIdentifier: 
-  enemyName: Gobrin
-  hp: 20
-  maxHp: 20
-  attackPower: 1
-  modelPrefab: {fileID: 6205500010942803720, guid: 971b3dd3f475a3e469d5aba0d32757f6,
+  abilityName: Slash
+  damage: 10
+  cooldown: 2
+  effectPrefab: {fileID: 6907970219779784112, guid: 9a2654c0a2682dd4a9691972cbdc7174,
     type: 3}
-  abilities:
-  - {fileID: 0}
