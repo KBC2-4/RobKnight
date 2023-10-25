@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,11 +7,12 @@ using UnityEngine.EventSystems;
 public class EnemyController : MonoBehaviour
 {
     public EnemyData enemyData;
+    private Animator animator;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -19,8 +21,33 @@ public class EnemyController : MonoBehaviour
         
     }
 
-    private void OnDeath() // エネミーが倒されたときの処理
+    public void Damage(int damage)
     {
+        Debug.Log("当たってます");
+        enemyData.hp -= damage;
+        if (enemyData.hp <= 0)
+        {
+            OnDeath();
+        }
+    }
+
+    // エネミーが倒されたときの処理
+    private void OnDeath()
+    {
+        animator.SetTrigger("DieTrigger");
+        StartCoroutine(DestroyAfterAnimation("Die01", 0));
+    }
+
+    private IEnumerator DestroyAfterAnimation(string animationName, int layerIndex)
+    {
+        // アニメーションの長さを取得
+        float animationLength = animator.GetCurrentAnimatorStateInfo(layerIndex).length;
+
+        // アニメーションが完了するのを待つ
+        yield return new WaitForSeconds(animationLength);
+
+        // ゲームオブジェクトを破壊
+        Destroy(gameObject);
     }
 
     public void OnMouseDown()
