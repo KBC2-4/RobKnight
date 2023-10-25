@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerHpSlider : MonoBehaviour
+public class EnemyHpSlider : MonoBehaviour
 {
     public Slider hpSlider;
-    public PlayerMovement playerMovement;
+    public EnemyController enemyController;
 
 
     // Start is called before the first frame update
@@ -16,14 +16,14 @@ public class PlayerHpSlider : MonoBehaviour
         if (hpSlider != null)
         {
             // スライダーの最大値と現在値を設定
-            hpSlider.maxValue = playerMovement.hp;
-            hpSlider.value = playerMovement.maxHp;
+            hpSlider.value = enemyController.enemyData.hp;
+            hpSlider.maxValue = enemyController.enemyData.maxHp;
         }
     }
 
     // Update is called once per frame
     void Update()
     {
-        hpSlider.value = playerMovement.hp;
+        hpSlider.value = enemyController.enemyData.hp;
     }
 }

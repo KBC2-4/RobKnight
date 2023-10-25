@@ -17,7 +17,24 @@ public class PlayerMovement : MonoBehaviour
     public int hp = 100;
     public int maxHp = 100;
     public int mp = 100;
+    public int attackDamage = 10;
+    private bool isAttacking = false;
 
+    public static GameOverController Instance { get; private set; }
+
+    private void Awake()
+    {
+        GameOverController gameOverController = FindObjectOfType<GameOverController>();
+        if (gameOverController != null)
+        {
+            gameOverController.ShowGameOverScreen();
+        }
+        else
+        {
+            Debug.LogError("GameOverControllerが見つかりません");
+        }
+
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -68,22 +85,45 @@ public class PlayerMovement : MonoBehaviour
         //transform.Translate(movement);
         Vector3 movement = new Vector3(horizontal, 0f, vertical).normalized * speed * Time.deltaTime;
         transform.Translate(movement, Space.World);
+        controller.Move(movement);
+
+        // ブレンドツリー
+        //animator.SetFloat("Horizontal", horizontal);
+        //animator.SetFloat("Vertical", vertical);
+        //animator.SetFloat("Speed", movement.magnitude);
 
 
-
-        if (Input.GetMouseButton(0))
+        if (Input.GetButtonDown("Fire1"))
         {
+            isAttacking = true;
             AttackAnimation();
         }
 
-        if (controller.isGrounded) { 
-            
+        if (Input.GetButtonUp("Fire1"))
+        {
+            isAttacking = false;
+        }
+
+        if (Input.GetButtonUp("Fire2") && currentPossession.abilities.Length > 0)
+        {
+            currentPossession.abilities[0].Use(transform);
+        }
+
+        if (controller.isGrounded)
+        {
+
         }
     }
+
+    //private void FixedUpdate()
+    //{
+    //    animator.SetFloat("Speed", movement.magnitude);
+    //}
 
     void AttackAnimation()
     {
         //animator.SetBool("AttackBool",true);
+        animator.SetTrigger("Attack");
     }
 
     public void Possess(EnemyData newEnemy)
@@ -97,5 +137,51 @@ public class PlayerMovement : MonoBehaviour
 
         currentModel = Instantiate(newEnemy.modelPrefab, transform.position, transform.rotation);
         currentModel.transform.parent = this.transform;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("Enemyかな？");
+        if (isAttacking && other.gameObject.CompareTag("Enemy"))
+        {
+            Debug.Log("Enemyだ！”攻撃開始");
+            EnemyController enemyController = other.gameObject.GetComponent<EnemyController>();
+            if (enemyController != null)
+            {
+                enemyController.Damage(attackDamage);
+                isAttacking = false;
+            }
+        }
+    }
+
+    public void Damage(int damage)
+    {
+        Debug.Log("エネミーから攻撃されています");
+        hp -= damage;
+        if (hp <= 0)
+        {
+            OnDeath();
+        }
+    }
+
+    private void OnDeath()
+    {
+        animator.SetTrigger("DieTrigger");
+        StartCoroutine(DestroyAfterAnimation("Die01_Stay_SwordAndShield", 0));
+        Debug.Log("プレイヤーが死亡した！");
+        GameOverController gameOverController = FindObjectOfType<GameOverController>();
+        if (gameOverController != null)
+        {
+            gameOverController.ShowGameOverScreen();
+        }
+    }
+
+    private IEnumerator DestroyAfterAnimation(string animationName, int layerIndex)
+    {
+        // アニメーションの長さを取得
+        float animationLength = animator.GetCurrentAnimatorStateInfo(layerIndex).length;
+
+        // アニメーションが完了するのを待つ
+        yield return new WaitForSeconds(animationLength);
     }
 }
