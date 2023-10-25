@@ -13,6 +13,7 @@ public class EnemyController : MonoBehaviour
     void Start()
     {
         animator = GetComponent<Animator>();
+        enemyData.hp = enemyData.maxHp;
     }
 
     // Update is called once per frame
