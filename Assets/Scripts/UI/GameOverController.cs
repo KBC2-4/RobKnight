@@ -7,6 +7,7 @@ public class GameOverController : MonoBehaviour
 {
     public GameObject gameOverPanel;
 
+
     private void Start()
     {
         gameOverPanel.SetActive(false);
@@ -14,7 +15,7 @@ public class GameOverController : MonoBehaviour
 
     public void ShowGameOverScreen()
     {
-        Debug.Log("aaa");
+        Debug.Log("ゲームオーバー！");
         gameOverPanel.SetActive(true);
     }
 

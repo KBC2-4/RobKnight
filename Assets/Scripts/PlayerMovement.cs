@@ -22,19 +22,7 @@ public class PlayerMovement : MonoBehaviour
 
     public static GameOverController Instance { get; private set; }
 
-    private void Awake()
-    {
-        GameOverController gameOverController = FindObjectOfType<GameOverController>();
-        if (gameOverController != null)
-        {
-            gameOverController.ShowGameOverScreen();
-        }
-        else
-        {
-            Debug.LogError("GameOverController‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ");
-        }
 
-    }
     // Start is called before the first frame update
     void Start()
     {
