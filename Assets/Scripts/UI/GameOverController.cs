@@ -15,17 +15,23 @@ public class GameOverController : MonoBehaviour
 
     public void ShowGameOverScreen()
     {
+        // ゲームの時間を停止
+        Time.timeScale = 0f;
         Debug.Log("ゲームオーバー！");
         gameOverPanel.SetActive(true);
     }
 
     public void RestartGame()
     {
+        // ゲームの時間を初期状態で通常の速度に設定
+        Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public void GoToTitle()
     {
+        // ゲームの時間を初期状態で通常の速度に設定
+        Time.timeScale = 1f;
         SceneManager.LoadScene("Title");
     }
 }
