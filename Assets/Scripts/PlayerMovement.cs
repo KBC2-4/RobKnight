@@ -19,6 +19,7 @@ public class PlayerMovement : MonoBehaviour
     public int mp = 100;
     public int attackDamage = 10;
     private bool isAttacking = false;
+    public ParticleSystem particleSystem;
 
     public static GameOverController Instance { get; private set; }
 
@@ -29,6 +30,8 @@ public class PlayerMovement : MonoBehaviour
         startPos = transform.position;
         controller = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
+        particleSystem = GetComponentInChildren<ParticleSystem>();
+        particleSystem.Stop();
         if (animator == null)
         {
             Debug.LogError("Animator component is missing on this GameObject!");
@@ -112,6 +115,11 @@ public class PlayerMovement : MonoBehaviour
     {
         //animator.SetBool("AttackBool",true);
         animator.SetTrigger("Attack");
+        if (particleSystem.isStopped)
+        {
+            particleSystem.Play();
+        }
+       
     }
 
     public void Possess(EnemyData newEnemy)
@@ -140,6 +148,7 @@ public class PlayerMovement : MonoBehaviour
                 isAttacking = false;
             }
         }
+
     }
 
     public void Damage(int damage)
