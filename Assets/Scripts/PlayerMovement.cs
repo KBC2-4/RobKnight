@@ -95,10 +95,10 @@ public class PlayerMovement : MonoBehaviour
             isAttacking = false;
         }
 
-        if (Input.GetButtonUp("Fire2") && currentPossession.abilities.Length > 0)
-        {
-            currentPossession.abilities[0].Use(transform);
-        }
+        //if (Input.GetButtonUp("Fire2") && currentPossession.abilities.Length > 0)
+        //{
+        //    currentPossession.abilities[0].Use(transform);
+        //}
 
         if (controller.isGrounded)
         {

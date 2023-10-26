@@ -2,12 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
+using UnityEngine.EventSystems;
 
 public class SettingsAnimatorController : MonoBehaviour
 {
     private Animator animator;
     public PostProcessVolume postProcessVolume;
     private UnityEngine.Rendering.PostProcessing.DepthOfField depthOfField;
+    //　最初にフォーカスするゲームオブジェクト
+    [SerializeField]
+    public GameObject firstSelect;
+    // ReturnButtonを押した時にフォーカスするゲームオブジェクト
+    [SerializeField]
+    public GameObject returnSelect;
 
     private void Start()
     {
@@ -30,6 +37,8 @@ public class SettingsAnimatorController : MonoBehaviour
         {
             animator.SetBool("isSettingsOpen", true);
             EnableDepthOfFieldEffect();
+
+            EventSystem.current.SetSelectedGameObject(firstSelect);
         }
     }
 
@@ -39,6 +48,9 @@ public class SettingsAnimatorController : MonoBehaviour
         {
             animator.SetBool("isSettingsOpen", false);
             DisableDepthOfFieldEffect() ;
+
+            EventSystem.current.SetSelectedGameObject(returnSelect);
+            
         }
     }
 

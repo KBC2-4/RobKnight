@@ -2,10 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
 public class GameOverController : MonoBehaviour
 {
     public GameObject gameOverPanel;
+    //　最初にフォーカスするゲームオブジェクト
+    [SerializeField]
+    public GameObject firstSelect;
 
 
     private void Start()
@@ -19,6 +23,7 @@ public class GameOverController : MonoBehaviour
         Time.timeScale = 0f;
         Debug.Log("ゲームオーバー！");
         gameOverPanel.SetActive(true);
+        EventSystem.current.SetSelectedGameObject(firstSelect);
     }
 
     public void RestartGame()
