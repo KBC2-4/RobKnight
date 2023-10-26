@@ -1539,10 +1539,12 @@ MonoBehaviour:
   speed: 5
   sensitivity: 30
   currentPossession: {fileID: 0}
-  hp: 5
+  hp: 100
   maxHp: 100
   mp: 100
   attackDamage: 10
+  particleSystem: {fileID: 5666295093653095364, guid: 9a2654c0a2682dd4a9691972cbdc7174,
+    type: 3}
 --- !u!143 &886765139
 CharacterController:
   m_ObjectHideFlags: 0
@@ -7878,7 +7880,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.19587104
+  m_Radius: 1
   m_Height: 1.4
   m_Direction: 1
   m_Center: {x: -0.00000013382633, y: 0.5035896, z: -0.000000042633083}
@@ -7942,6 +7944,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5666295093653095364, guid: 9a2654c0a2682dd4a9691972cbdc7174,
         type: 3}
+      propertyPath: looping
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5666295093653095364, guid: 9a2654c0a2682dd4a9691972cbdc7174,
+        type: 3}
       propertyPath: InitialModule.startLifetime.scalar
       value: 0.3
       objectReference: {fileID: 0}
@@ -7954,6 +7961,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Particle System
+      objectReference: {fileID: 0}
+    - target: {fileID: 6907970219779784112, guid: 9a2654c0a2682dd4a9691972cbdc7174,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -9157,6 +9169,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7248728026383455906, guid: 971b3dd3f475a3e469d5aba0d32757f6,
         type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7248728026383455906, guid: 971b3dd3f475a3e469d5aba0d32757f6,
+        type: 3}
       propertyPath: m_Center.y
       value: 0.5
       objectReference: {fileID: 0}
@@ -9168,7 +9185,7 @@ PrefabInstance:
     - target: {fileID: 7248728026383455906, guid: 971b3dd3f475a3e469d5aba0d32757f6,
         type: 3}
       propertyPath: m_ProvidesContacts
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7891257583682504002, guid: 971b3dd3f475a3e469d5aba0d32757f6,
         type: 3}
