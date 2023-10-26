@@ -19,25 +19,24 @@ public class EnemyAttack : MonoBehaviour
         
     }
 
+    //攻撃状況の取得
+    public bool GetAttacking() 
+    {
+        return isAttacking;
+    }
+
     // アニメーションイベントから呼び出される関数
     public void PerformAttack()
     {
         isAttacking = true;
         // ここでプレイヤーにダメージを与える処理を書く
-        Debug.Log("エネミーが攻撃!");
+        //Debug.Log("エネミーが攻撃!");
+    }
+    public void EndAttack()
+    {
+        isAttacking = false;
+        // ここでプレイヤーにダメージを与える処理を書く
+        //Debug.Log("エネミーが攻撃終了!");
     }
 
-    // 当たり判定がプレイヤーに触れたときの処理
-    private void OnTriggerEnter(Collider other)
-    {
-        if (isAttacking && other.CompareTag("Player"))
-        {
-            PlayerMovement playerMovement = other.GetComponent<PlayerMovement>();
-            if (playerMovement != null)
-            {
-                playerMovement.Damage(attackDamage);
-                isAttacking = false;
-            }
-        }
-    }
 }

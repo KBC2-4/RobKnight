@@ -135,7 +135,7 @@ public class PlayerMovement : MonoBehaviour
         currentModel.transform.parent = this.transform;
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
         Debug.Log("Enemyかな？");
         if (isAttacking && other.gameObject.CompareTag("Enemy"))
@@ -153,7 +153,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void Damage(int damage)
     {
-        Debug.Log("エネミーから攻撃されています");
+        //Debug.Log("エネミーから攻撃されています");
         hp -= damage;
         if (hp <= 0)
         {
