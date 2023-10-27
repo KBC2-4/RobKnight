@@ -10,6 +10,12 @@ public class PlayerController : MonoBehaviour
     private Animator animator;
     public float speed = 5f;
     public float sensitivity = 30.0f;
+
+    /// <summary>
+    /// 前フレームの座標
+    /// </summary>
+    private Vector3 prevPosition;
+
     float rotX, rotY;
     public EnemyData currentPossession; // 現在憑依しているエネミーのデータ
     private GameObject currentModel;
@@ -28,6 +34,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         startPos = transform.position;
+        prevPosition = startPos;
         controller = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
         particleSystem = GetComponentInChildren<ParticleSystem>();
@@ -77,6 +84,9 @@ public class PlayerController : MonoBehaviour
         Vector3 movement = new Vector3(horizontal, 0f, vertical).normalized * speed * Time.deltaTime;
         transform.Translate(movement, Space.World);
         controller.Move(movement);
+
+        //キャラクターの回転
+        MoveRotation();
 
         // ブレンドツリー
         //animator.SetFloat("Horizontal", horizontal);
@@ -180,5 +190,34 @@ public class PlayerController : MonoBehaviour
 
         // アニメーションが完了するのを待つ
         yield return new WaitForSeconds(animationLength);
+    }
+
+    /// <summary>
+    /// 移動時のキャラクターの回転関数
+    /// </summary>
+    private void MoveRotation()
+    {
+
+
+        //現在座標の取得
+        Vector3 position = transform.position;
+
+        //移動量の計算
+        Vector3 deltaMove = position - prevPosition;
+
+        //前フレームの座標の更新
+        prevPosition = position;
+
+        //静止している場合回転させない
+        if(deltaMove==Vector3.zero)
+        {
+            return;
+        }
+
+        //進行方向に向くような回転を取得
+        Quaternion rotation = Quaternion.LookRotation(deltaMove, Vector3.up);
+
+        //回転させる
+        transform.rotation = rotation;
     }
 }
