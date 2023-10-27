@@ -9,6 +9,8 @@ public class EnemyController : MonoBehaviour
     public EnemyData enemyData;
     private Animator animator;
 
+    private bool finded;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -20,6 +22,12 @@ public class EnemyController : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void Finded()
+    {
+        finded = true;
+        animator.SetBool("Finded", true);
     }
 
     public void Damage(int damage)
