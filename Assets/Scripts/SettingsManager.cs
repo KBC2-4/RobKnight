@@ -16,7 +16,7 @@ public class SettingsManager : MonoBehaviour
     public AudioSource bgmAudioSource;
 
     public Slider cameraRotationSpeedSlider;
-    public PlayerMovement playerMovement;
+    public PlayerController playerMovement;
 
     // Start is called before the first frame update
     void Start()

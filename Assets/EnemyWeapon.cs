@@ -44,7 +44,7 @@ public class EnemyWeapon : MonoBehaviour
     {
         if (isAttacking && other.CompareTag("Player"))
         {
-            PlayerMovement playerMovement = other.GetComponent<PlayerMovement>();
+            PlayerController playerMovement = other.GetComponent<PlayerController>();
             if (playerMovement != null)
             {
                 playerMovement.Damage(attackDamage);

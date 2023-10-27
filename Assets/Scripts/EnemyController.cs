@@ -54,7 +54,7 @@ public class EnemyController : MonoBehaviour
     public void OnMouseDown()
     {
         // ゲーム中にエネミーをクリックすると、プレイヤーが憑依する
-        PlayerMovement player = FindObjectOfType<PlayerMovement>();
+        PlayerController player = FindObjectOfType<PlayerController>();
         if (player != null)
         {
             player.Possess(enemyData);

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class PlayerHpSlider : MonoBehaviour
 {
     public Slider hpSlider;
-    public PlayerMovement playerMovement;
+    public PlayerController playerMovement;
 
 
     // Start is called before the first frame update
