@@ -22,10 +22,10 @@ public class CameraMovement : MonoBehaviour
     void Start()
     {
         //カメラの位置を設定
-        //Vector3 position = target.transform.position;
-        //position.y += 10;
-        //gameObject.transform.position = position;
-        
+        Vector3 position = target.transform.position;
+        position.y += 10;
+        gameObject.transform.position = position;
+
         //ゲーム開始時にカメラとターゲットの距離を取得
         offset = gameObject.transform.position - target.transform.position;
     }
