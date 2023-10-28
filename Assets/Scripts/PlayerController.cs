@@ -162,12 +162,15 @@ public class PlayerController : MonoBehaviour
     private void OnTriggerStay(Collider other)
     {
         Debug.Log("Enemyかな？");
+        Debug.Log(isAttacking);
         if (isAttacking && other.gameObject.CompareTag("Enemy"))
         {
+            
             Debug.Log("Enemyだ！”攻撃開始");
             EnemyController enemyController = other.gameObject.GetComponent<EnemyController>();
             if (enemyController != null)
             {
+                Debug.Log("attack");
                 enemyController.Damage(attackDamage);
                 isAttacking = false;
             }
