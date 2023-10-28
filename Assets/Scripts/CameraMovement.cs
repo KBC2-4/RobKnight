@@ -13,7 +13,7 @@ public class CameraMovement : MonoBehaviour
     private GameObject target;
 
     /// <summary>
-    /// プレイヤーとカメラの相対位置
+    /// ターゲットとカメラの相対位置
     /// </summary>
     public Vector3 offset;
 
@@ -33,13 +33,7 @@ public class CameraMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //プレイヤーの位置にカメラを追従させる
+        //ターゲットの位置にカメラを追従させる
         gameObject.transform.position = target.transform.position + offset;
-
-        //float horizontal = Input.GetAxis("Horizontal");
-        //float vertical = Input.GetAxis("Vertical");
-
-        //Vector3 movement = new Vector3(horizontal, 0f, vertical) * speed * Time.deltaTime;
-        //transform.Translate(movement);
     }
 }

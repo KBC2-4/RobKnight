@@ -16,6 +16,20 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private Vector3 prevPosition;
 
+    /// <summary>
+    /// 現在の回転速度
+    /// </summary>
+    private float currentAngleVelocity;
+
+    /// <summary>
+    /// 回転速度の最大値
+    /// </summary>
+    [SerializeField] private float maxAngularSpeed = Mathf.Infinity;
+    /// <summary>
+    /// 進行方向に向くのにかかる時間
+    /// </summary>
+    [SerializeField] private float smoothTime = 0.1f;
+
     float rotX, rotY;
     public EnemyData currentPossession; // 現在憑依しているエネミーのデータ
     private GameObject currentModel;
@@ -209,7 +223,7 @@ public class PlayerController : MonoBehaviour
         prevPosition = position;
 
         //静止している場合回転させない
-        if(deltaMove==Vector3.zero)
+        if (deltaMove == Vector3.zero)
         {
             return;
         }
@@ -217,7 +231,16 @@ public class PlayerController : MonoBehaviour
         //進行方向に向くような回転を取得
         Quaternion rotation = Quaternion.LookRotation(deltaMove, Vector3.up);
 
+        //現在の向きと進行方向の角度差を計算
+        float diffAngle = Vector3.Angle(transform.forward, deltaMove);
+
+        //現在フレームで回転する角度の計算
+        float rotaAngle = Mathf.SmoothDampAngle(0, diffAngle, ref currentAngleVelocity, smoothTime, maxAngularSpeed);
+
+        //現在フレームにおける回転を計算
+        Quaternion nextRota = Quaternion.RotateTowards(transform.rotation, rotation, rotaAngle);
+
         //回転させる
-        transform.rotation = rotation;
+        transform.rotation = nextRota;
     }
 }
