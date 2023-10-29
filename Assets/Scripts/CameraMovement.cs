@@ -36,4 +36,21 @@ public class CameraMovement : MonoBehaviour
         //ターゲットの位置にカメラを追従させる
         gameObject.transform.position = target.transform.position + offset;
     }
+
+    /// <summary>
+    /// カメラのターゲットを切り替える
+    /// </summary>
+    /// <param name="newTarget">新たにターゲットにしたいオブジェクト</param>
+    public void SetCameraTarget(GameObject newTarget)
+    {
+        target = newTarget;
+
+        //カメラの位置を設定
+        Vector3 position = target.transform.position;
+        position.y += 10;
+        gameObject.transform.position = position;
+
+        //カメラとターゲットの距離を取得
+        offset = gameObject.transform.position - target.transform.position;
+    }
 }

@@ -48,7 +48,7 @@ public class EnemyController : MonoBehaviour
         yield return new WaitForSeconds(animationLength);
 
         // ゲームオブジェクトを破壊
-        Destroy(gameObject);
+        //Destroy(gameObject);
     }
 
     public void OnMouseDown()

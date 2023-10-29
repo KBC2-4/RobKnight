@@ -139,7 +139,7 @@ public class PlayerController : MonoBehaviour
     {
         //animator.SetBool("AttackBool",true);
         animator.SetTrigger("Attack");
-        if (particleSystem.isStopped)
+        if (particleSystem != null && particleSystem.isStopped)
         {
             particleSystem.Play();
         }
@@ -161,21 +161,27 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        Debug.Log("Enemyかな？");
-        Debug.Log(isAttacking);
-        if (isAttacking && other.gameObject.CompareTag("Enemy"))
+        //Debug.Log("Enemyかな？");
+        if (other.gameObject.CompareTag("Enemy"))
         {
-            
-            Debug.Log("Enemyだ！”攻撃開始");
-            EnemyController enemyController = other.gameObject.GetComponent<EnemyController>();
-            if (enemyController != null)
+            //攻撃処理
+            if (isAttacking)
             {
-                Debug.Log("attack");
-                enemyController.Damage(attackDamage);
-                isAttacking = false;
+                Debug.Log("Enemyだ！”攻撃開始");
+                EnemyController enemyController = other.gameObject.GetComponent<EnemyController>();
+                if (enemyController != null)
+                {
+                    Debug.Log("attack");
+                    enemyController.Damage(attackDamage);
+                    isAttacking = false;
+                }
+            } //憑依処理
+            else if(Input.GetButtonDown("Fire2"))
+            {
+                Debug.Log("hyoui");
+                Possession(other.gameObject);             
             }
         }
-
     }
 
     public void Damage(int damage)
@@ -245,5 +251,25 @@ public class PlayerController : MonoBehaviour
 
         //回転させる
         transform.rotation = nextRota;
+    }
+
+    /// <summary>
+    /// 憑依アクション
+    /// </summary>
+    /// <param name="targetObj">憑依するキャラクター</param>
+    private void Possession(GameObject targetObj)
+    {
+        //現在の体を捨てる
+        GetComponent<PlayerController>().enabled = false;
+
+        //操作対象を切り替える
+        targetObj.GetComponent<PlayerController>().enabled = true;
+
+        //カメラのターゲットを憑依キャラに切り替える
+        GameObject camera = GameObject.Find("MainCamera");
+        if (camera != null)
+        {
+            camera.GetComponent<CameraMovement>().SetCameraTarget(targetObj);
+        }
     }
 }

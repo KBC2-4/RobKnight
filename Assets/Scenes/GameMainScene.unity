@@ -11697,6 +11697,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 8272943599560564261}
+    - targetCorrespondingSourceObject: {fileID: 6205500010942803720, guid: 971b3dd3f475a3e469d5aba0d32757f6,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8272943599560564266}
     - targetCorrespondingSourceObject: {fileID: 8216550534077555744, guid: 971b3dd3f475a3e469d5aba0d32757f6,
         type: 3}
       insertIndex: -1
@@ -11781,6 +11785,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attackDamage: 10
+--- !u!114 &8272943599560564266
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8272943599560564249}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 462a06207822c884c8c86f519df1acb2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 5
+  sensitivity: 30
+  maxAngularSpeed: Infinity
+  smoothTime: 0.1
+  currentPossession: {fileID: 0}
+  hp: 100
+  maxHp: 100
+  mp: 100
+  attackDamage: 10
+  particleSystem: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
