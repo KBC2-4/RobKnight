@@ -1,24 +1,56 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.Design.Serialization;
 using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
 {
-    public float speed = 5f;
+    /// <summary>
+    /// プレイヤーのTransform
+    /// </summary>
+    [SerializeField]
+    [Tooltip("追従させたいターゲット")]
+    private GameObject target;
+
+    /// <summary>
+    /// ターゲットとカメラの相対位置
+    /// </summary>
+    public Vector3 offset;
+
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        //カメラの位置を設定
+        Vector3 position = target.transform.position;
+        position.y += 10;
+        gameObject.transform.position = position;
+
+        //ゲーム開始時にカメラとターゲットの距離を取得
+        offset = gameObject.transform.position - target.transform.position;
     }
 
     // Update is called once per frame
     void Update()
     {
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
+        //ターゲットの位置にカメラを追従させる
+        gameObject.transform.position = target.transform.position + offset;
+    }
 
-        Vector3 movement = new Vector3(horizontal, 0f, vertical) * speed * Time.deltaTime;
-        transform.Translate(movement);
+    /// <summary>
+    /// カメラのターゲットを切り替える
+    /// </summary>
+    /// <param name="newTarget">新たにターゲットにしたいオブジェクト</param>
+    public void SetCameraTarget(GameObject newTarget)
+    {
+        target = newTarget;
+
+        //カメラの位置を設定
+        Vector3 position = target.transform.position;
+        position.y += 10;
+        gameObject.transform.position = position;
+
+        //カメラとターゲットの距離を取得
+        offset = gameObject.transform.position - target.transform.position;
     }
 }
