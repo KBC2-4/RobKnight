@@ -20,8 +20,24 @@ public class PlayerController : MonoBehaviour
     public int attackDamage = 10;
     private bool isAttacking = false;
     public ParticleSystem particleSystem;
+    public float possessionRange = 3.0f; // 憑依可能な距離
+    public GameObject possessionUI; // 憑依を促すUI
 
-    public static GameOverController Instance { get; private set; }
+    public static GameOverController GameOverInstance { get; private set; }
+
+    public static PlayerController PlayerInstance { get; private set; }
+
+    void Awake()
+    {
+        if (PlayerInstance == null)
+        {
+            PlayerInstance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
 
     // Start is called before the first frame update
@@ -57,6 +73,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        CheckForPossessionOpportunity();
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
 
@@ -106,6 +123,20 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void CheckForPossessionOpportunity()
+    {
+        foreach (var enemy in FindObjectsOfType<EnemyController>())
+        {
+            float distance = Vector3.Distance(transform.position, enemy.transform.position);
+            if (enemy.isDeath && distance < possessionRange)
+            {
+                possessionUI.SetActive(true);
+                return;
+            }
+        }
+        possessionUI.SetActive(false);
+    }
+
     //private void FixedUpdate()
     //{
     //    animator.SetFloat("Speed", movement.magnitude);
@@ -125,6 +156,8 @@ public class PlayerController : MonoBehaviour
     public void Possess(EnemyData newEnemy)
     {
         currentPossession = newEnemy;
+        hp = newEnemy.maxHp;
+        maxHp = hp;
 
         if (currentModel != null)
         {
@@ -137,7 +170,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        Debug.Log("Enemyかな？");
+        //Debug.Log("Enemyかな？");
         if (isAttacking && other.gameObject.CompareTag("Enemy"))
         {
             Debug.Log("Enemyだ！”攻撃開始");
