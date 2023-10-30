@@ -8,6 +8,12 @@ public class EnemyController : MonoBehaviour
 {
     public EnemyData enemyData;
     private Animator animator;
+    public EnemyBehavior behavior;
+
+    private bool finded;
+    private bool isAttacking = false;
+    private bool playerFound = false;
+    public bool isDeath = false;
 
     // Start is called before the first frame update
     void Start()
@@ -19,7 +25,13 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        behavior?.PerformActions(this);
+    }
+
+    public void Finded()
+    {
+        finded = true;
+        animator.SetBool("Finded", true);
     }
 
     public void Damage(int damage)
@@ -49,6 +61,7 @@ public class EnemyController : MonoBehaviour
 
         // ゲームオブジェクトを破壊
         //Destroy(gameObject);
+        isDeath = true;
     }
 
     public void OnMouseDown()
@@ -60,4 +73,46 @@ public class EnemyController : MonoBehaviour
             player.Possess(enemyData);
         }
     }
+
+    //攻撃状況の取得
+    public bool GetAttacking()
+    {
+        return isAttacking;
+    }
+
+    // アニメーションイベントから呼び出される関数
+    public void PerformAttack()
+    {
+        isAttacking = true;
+        // ここでプレイヤーにダメージを与える処理を書く
+        //Debug.Log("エネミーが攻撃!");
+    }
+    public void EndAttack()
+    {
+        isAttacking = false;
+        // ここでプレイヤーにダメージを与える処理を書く
+        //Debug.Log("エネミーが攻撃終了!");
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            playerFound = true;
+        }
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            playerFound = false;
+        }
+    }
+
+    public bool IsPlayerFound()
+    {
+        return playerFound;
+    }
+
 }
