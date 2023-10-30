@@ -1,9 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HpSlider : MonoBehaviour
 {
+    private EnemyController enemyController;
+    private Slider hpSlider;
+
+    void Start()
+    {
+        enemyController = GetComponentInParent<EnemyController>();
+        hpSlider = GetComponentInChildren<Slider>();
+        hpSlider.maxValue = enemyController.enemyData.maxHp;
+        hpSlider.value = enemyController.enemyData.hp;
+    }
+
+    void Update()
+    {
+        hpSlider.value = enemyController.enemyData.hp;
+    }
 
     void LateUpdate()
     {
