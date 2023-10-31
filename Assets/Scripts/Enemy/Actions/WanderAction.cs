@@ -10,7 +10,7 @@ public class WanderAction : EnemyAction
 
     public override void Act(EnemyController controller)
     {
-        if (!controller.isDeath)
+        if (!controller.isDeath)//‚±‚±‚ÅŽ€‘Ì‚ª“®‚©‚È‚¢—l‚É‚µ‚Ä‚é
         {
             controller.transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime);
             controller.transform.Rotate(Vector3.up * rotateSpeed * Time.deltaTime);
