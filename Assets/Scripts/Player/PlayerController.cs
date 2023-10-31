@@ -38,7 +38,7 @@ public class PlayerController : MonoBehaviour
     public int hp = 100;
     public int maxHp = 100;
     public int mp = 100;
-    public int attackDamage = 10;
+    public int attackPower = 10;
     private bool isAttacking = false;
     public ParticleSystem particleSystem;
 
@@ -173,14 +173,14 @@ public class PlayerController : MonoBehaviour
                 if (enemyController != null)
                 {
                     Debug.Log("attack");
-                    enemyController.Damage(attackDamage);
+                    enemyController.Damage(attackPower);
                     isAttacking = false;
                 }
             } //憑依処理
-            else if(Input.GetButtonDown("Fire2"))
+            else if (Input.GetButtonDown("Fire2") && other.GetComponent<EnemyController>().enemyData.hp <= 0)
             {
                 Debug.Log("hyoui");
-                Possession(other.gameObject);             
+                Possession(other.gameObject);
             }
         }
     }
@@ -271,9 +271,10 @@ public class PlayerController : MonoBehaviour
         targetObj.GetComponent<PlayerController>().enabled = true;
 
         //憑依キャラのパラメータを設定
-        targetObj.GetComponent<PlayerController>().maxHp = targetObj.GetComponent<EnemyData>().maxHp;
+        currentPossession = targetObj.GetComponent<EnemyController>().enemyData;
+        targetObj.GetComponent<PlayerController>().maxHp = currentPossession.maxHp;
         targetObj.GetComponent<PlayerController>().hp = targetObj.GetComponent<PlayerController>().maxHp;
-        targetObj.GetComponent<PlayerController>().attackDamage = targetObj.GetComponent<EnemyData>().attackPower;
+        targetObj.GetComponent<PlayerController>().attackPower = currentPossession.attackPower;
 
         //カメラのターゲットを憑依キャラに切り替える
         GameObject camera = GameObject.Find("MainCamera");
