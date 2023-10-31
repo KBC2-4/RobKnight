@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
@@ -71,7 +72,7 @@ public class PlayerController : MonoBehaviour
 
         if (currentPossession != null)
         {
-            Possess(currentPossession);
+           // Possess(currentPossession);
         }
     }
 
@@ -146,18 +147,18 @@ public class PlayerController : MonoBehaviour
        
     }
 
-    public void Possess(EnemyData newEnemy)
-    {
-        currentPossession = newEnemy;
+    //public void Possess(EnemyData newEnemy)
+    //{
+    //    currentPossession = newEnemy;
 
-        if (currentModel != null)
-        {
-            Destroy(currentModel);
-        }
+    //    if (currentModel != null)
+    //    {
+    //        Destroy(currentModel);
+    //    }
 
-        currentModel = Instantiate(newEnemy.modelPrefab, transform.position, transform.rotation);
-        currentModel.transform.parent = this.transform;
-    }
+    //    currentModel = Instantiate(newEnemy.modelPrefab, transform.position, transform.rotation);
+    //    currentModel.transform.parent = this.transform;
+    //}
 
     private void OnTriggerStay(Collider other)
     {
@@ -259,11 +260,20 @@ public class PlayerController : MonoBehaviour
     /// <param name="targetObj">憑依するキャラクター</param>
     private void Possession(GameObject targetObj)
     {
-        //現在の体を捨てる
+        //現在の体カラ操作機能を失効させる
         GetComponent<PlayerController>().enabled = false;
+
+        //対象にプレイヤーコントローラーを追加
+        targetObj.gameObject.AddComponent<CharacterController>();
+        targetObj.gameObject.AddComponent<PlayerController>();
 
         //操作対象を切り替える
         targetObj.GetComponent<PlayerController>().enabled = true;
+
+        //憑依キャラのパラメータを設定
+        targetObj.GetComponent<PlayerController>().maxHp = targetObj.GetComponent<EnemyData>().maxHp;
+        targetObj.GetComponent<PlayerController>().hp = targetObj.GetComponent<PlayerController>().maxHp;
+        targetObj.GetComponent<PlayerController>().attackDamage = targetObj.GetComponent<EnemyData>().attackPower;
 
         //カメラのターゲットを憑依キャラに切り替える
         GameObject camera = GameObject.Find("MainCamera");

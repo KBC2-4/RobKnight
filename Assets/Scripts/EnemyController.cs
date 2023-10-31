@@ -70,7 +70,7 @@ public class EnemyController : MonoBehaviour
         PlayerController player = FindObjectOfType<PlayerController>();
         if (player != null)
         {
-            player.Possess(enemyData);
+            //player.Possess(enemyData);
         }
     }
 
