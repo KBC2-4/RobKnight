@@ -1363,9 +1363,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68f519673467449449e6527c59c465f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyData: {fileID: 11400000, guid: 5ee5bd87b3a3e584299248274c51a51a, type: 2}
+  enemyBaseData: {fileID: 11400000, guid: 5ee5bd87b3a3e584299248274c51a51a, type: 2}
+  enemyData: {fileID: 0}
   behavior: {fileID: 11400000, guid: 950e15d5ced1f30428c1e6d8e4a74548, type: 2}
   isDeath: 0
+  player: {fileID: 0}
+  detectionRange: 5
+  detectionLayer:
+    serializedVersion: 2
+    m_Bits: 136
 --- !u!1 &5876132879308093440
 GameObject:
   m_ObjectHideFlags: 0
