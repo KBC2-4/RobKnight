@@ -2860,7 +2860,7 @@ GameObject:
   - component: {fileID: 4847522591642723720}
   m_Layer: 0
   m_Name: BossGoblin
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2971,8 +2971,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68f519673467449449e6527c59c465f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyData: {fileID: 11400000, guid: 983fe305bc0fd4f4c8f817eeef6a2bf5, type: 2}
+  enemyBaseData: {fileID: 11400000, guid: 983fe305bc0fd4f4c8f817eeef6a2bf5, type: 2}
+  enemyData: {fileID: 0}
   behavior: {fileID: 11400000, guid: a649ca409488bea49beb20fac55706be, type: 2}
+  isDeath: 0
+  player: {fileID: 0}
+  detectionRange: 5
+  detectionLayer:
+    serializedVersion: 2
+    m_Bits: 136
 --- !u!135 &4847522591642723720
 SphereCollider:
   m_ObjectHideFlags: 0
