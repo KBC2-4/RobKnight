@@ -6,7 +6,9 @@ using UnityEngine.EventSystems;
 
 public class EnemyController : MonoBehaviour
 {
+    public EnemyData enemyBaseData;
     public EnemyData enemyData;
+
     private Animator animator;
     public EnemyBehavior behavior;
 
@@ -14,10 +16,28 @@ public class EnemyController : MonoBehaviour
     private bool isAttacking = false;
     private bool playerFound = false;
     public bool isDeath = false;
+    public Transform player;
+    public float detectionRange = 1f;
+    public LayerMask detectionLayer;
 
     // Start is called before the first frame update
+    void Awake()
+    {
+        if (player == null)
+        {
+            player = GameObject.FindWithTag("Player").transform;
+        }
+    }
+
     void Start()
     {
+        if (enemyBaseData == null)
+        {
+            Debug.LogError("EnemyBaseDataがセットされていません。");
+            return;
+        }
+        
+        enemyData = Instantiate(enemyBaseData);
         animator = GetComponent<Animator>();
         enemyData.hp = enemyData.maxHp;
     }
@@ -25,6 +45,7 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        DetectPlayer();
         behavior?.PerformActions(this);
     }
 
@@ -94,18 +115,49 @@ public class EnemyController : MonoBehaviour
         //Debug.Log("エネミーが攻撃終了!");
     }
 
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            playerFound = true;
-        }
-    }
+    //void OnTriggerEnter(Collider other)
+    //{
+    //    if (other.CompareTag("Player"))
+    //    {
+    //        playerFound = true;
+    //    }
+    //}
 
-    void OnTriggerExit(Collider other)
+    //void OnTriggerExit(Collider other)
+    //{
+    //    if (other.CompareTag("Player"))
+    //    {
+    //        playerFound = false;
+    //    }
+    //}
+
+    void DetectPlayer()
     {
-        if (other.CompareTag("Player"))
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+        if (distanceToPlayer <= detectionRange)
         {
+            Vector3 directionToPlayer = (player.position - transform.position).normalized;
+            Ray ray = new Ray(transform.position, directionToPlayer);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit, detectionRange, detectionLayer))
+            {
+                if (hit.collider.CompareTag("Player"))
+                {
+                    // プレイヤーが見つかった時の処理
+                    playerFound = true;
+                    Debug.Log("エネミー：プレイヤーを見つけたよ！");
+                }
+                else
+                {
+                    // プレイヤーが見つからなかった時の処理
+                    playerFound = false;
+                }
+            }
+        }
+        else
+        {
+            // プレイヤーが見つからなかった時の処理
             playerFound = false;
         }
     }

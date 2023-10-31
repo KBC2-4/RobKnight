@@ -9,13 +9,19 @@ public class AttackAction : EnemyAction
 
     public override void Act(EnemyController controller)
     {
-        //float distanceToPlayer = Vector3.Distance(controller.transform.position, PlayerController.PlayerInstance.transform.position);
+        if (controller == null || controller.player == null)
+        {
+            Debug.LogError("ControllerまたはPlayerがnullです!");
+            return;
+        }
 
-        //if (distanceToPlayer <= attackRange && !controller.GetAttacking())
-        //{
-        controller.GetComponent<Animator>().SetBool("IsWalking", false);
-        controller.GetComponent<Animator>().SetTrigger("AttackTrigger");
-        //}
+        float distanceToPlayer = Vector3.Distance(controller.transform.position, controller.player.position);
+        if (distanceToPlayer <= attackRange)
+        {
+            Debug.Log("エネミー：攻撃モーション");
+            controller.GetComponent<Animator>().SetBool("IsWalking", false);
+            controller.GetComponent<Animator>().SetTrigger("AttackTrigger");
+        }
     }
 }
 

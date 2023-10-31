@@ -11,6 +11,17 @@ public class EnemyBehavior : ScriptableObject
     public float idleFrequency = 0.1f;
     private bool isIdle = false;
 
+    private float timer;
+    private EnemyState currentState;
+
+    private enum EnemyState
+    {
+        Idle,
+        Wander,
+        Chase,
+        Attack
+    }
+
     public void PerformActions(EnemyController controller)
     {
 

@@ -13,7 +13,7 @@ public class WanderAction : EnemyAction
         controller.transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime);
         controller.transform.Rotate(Vector3.up * rotateSpeed * Time.deltaTime);
         // !
-        //controller.GetComponent<Animator>().SetBool("IsWalking", true);
+        controller.GetComponent<Animator>().SetBool("IsWalking", true);
 
     }
 }
