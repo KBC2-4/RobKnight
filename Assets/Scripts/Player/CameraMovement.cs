@@ -23,6 +23,7 @@ public class CameraMovement : MonoBehaviour
     {
         //カメラの位置を設定
         Vector3 position = target.transform.position;
+        position.z -= 5;
         position.y += 10;
         gameObject.transform.position = position;
 
@@ -47,7 +48,8 @@ public class CameraMovement : MonoBehaviour
 
         //カメラの位置を設定
         Vector3 position = target.transform.position;
-        position.y += 10;
+        position.z -= 150;   
+        position.y += 50;
         gameObject.transform.position = position;
 
         //カメラとターゲットの距離を取得

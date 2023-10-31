@@ -79,6 +79,8 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Damage(1);
+
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
 
@@ -275,6 +277,11 @@ public class PlayerController : MonoBehaviour
         targetObj.GetComponent<PlayerController>().maxHp = currentPossession.maxHp;
         targetObj.GetComponent<PlayerController>().hp = targetObj.GetComponent<PlayerController>().maxHp;
         targetObj.GetComponent<PlayerController>().attackPower = currentPossession.attackPower;
+
+        //タグをPlayerに変更
+        targetObj.tag = "Player";
+
+        Debug.Log(targetObj.tag);
 
         //カメラのターゲットを憑依キャラに切り替える
         GameObject camera = GameObject.Find("MainCamera");
