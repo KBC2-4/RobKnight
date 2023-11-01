@@ -75,6 +75,8 @@ public class PlayerController : MonoBehaviour
         prevPosition = startPos;
         controller = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
+        animator.enabled = true;
+        animator.Play("Idle");
         particleSystem = GetComponentInChildren<ParticleSystem>();
         //particleSystem.Stop();
         if (animator == null)
@@ -119,7 +121,6 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
 
@@ -156,18 +157,13 @@ public class PlayerController : MonoBehaviour
         //    AttackAnimation();
         //}
 
-        if (Input.GetButtonUp("Fire1"))
-        {
-            isAttacking = false;
-        }
-
         //if (Input.GetButtonUp("Fire2") && currentPossession.abilities.Length > 0)
         //{
         //    currentPossession.abilities[0].Use(transform);
         //}
 
 
-        if(fireAction.IsPressed()==false)
+        if(fireAction.IsPressed() == false)
         {
             isAttacking = false;
         }
@@ -182,7 +178,10 @@ public class PlayerController : MonoBehaviour
     {
         isAttacking = true;
         Debug.Log("Attack");
-        animator.SetTrigger("Attack");
+        if (animator != null)
+        {
+            animator.SetTrigger("AttackTrigger");
+        }
         if (particleSystem != null && particleSystem.isStopped)
         {
             particleSystem.Play();
@@ -216,12 +215,12 @@ public class PlayerController : MonoBehaviour
                 EnemyController enemyController = other.gameObject.GetComponent<EnemyController>();
                 if (enemyController != null)
                 {
-                    Debug.Log("attack");
                     enemyController.Damage(attackPower);
                     isAttacking = false;
                 }
             } //憑依処理
-            else if (possedAction.IsPressed() && other.GetComponent<EnemyController>().enemyData.hp <= 0)
+            else if (possedAction.IsPressed() && other.GetComponent<EnemyController>().enemyData.hp <= 0
+                     && currentPossession == null)
             {
                 Debug.Log("hyoui");
                 Possession(other.gameObject);
@@ -300,22 +299,14 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// 憑依可能にする関数
-    /// </summary>
-    private void SetIsPossed()
-    {
-        Debug.Log("hyoui");
-        isPossed = false;
-    }
-
-    /// <summary>
     /// 憑依アクション
     /// </summary>
     /// <param name="targetObj">憑依するキャラクター</param>
     private void Possession(GameObject targetObj)
     {
-        //現在の体カラ操作機能を失効させる
+        //現在の体から操作機能を失効させる
         GetComponent<PlayerController>().enabled = false;
+        animator.enabled = false;
 
         //対象にプレイヤーコントローラーを追加
         targetObj.gameObject.AddComponent<CharacterController>();
@@ -330,11 +321,10 @@ public class PlayerController : MonoBehaviour
         targetObj.GetComponent<PlayerController>().hp = targetObj.GetComponent<PlayerController>().maxHp;
         targetObj.GetComponent<PlayerController>().attackPower = currentPossession.attackPower;
         targetObj.GetComponent<PlayerController>().inputActions = inputActions;
-
+        targetObj.GetComponent<EnemyController>().enabled = false;
+       
         //タグをPlayerに変更
         targetObj.tag = "Player";
-
-        Debug.Log(targetObj.tag);
 
         //カメラのターゲットを憑依キャラに切り替える
         GameObject camera = GameObject.Find("MainCamera");
