@@ -99,7 +99,7 @@ public class EnemyController : MonoBehaviour
             lightEffectAnimation.Play();
         }
         gameObject.GetComponent<Rigidbody>().isKinematic = true;
-        gameObject.GetComponent<CapsuleCollider>().enabled = false;
+        gameObject.GetComponent<CapsuleCollider>().isTrigger = true;
     }
 
     private IEnumerator DestroyAfterAnimation(string animationName, int layerIndex)
