@@ -1,15 +1,18 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using static UnityEngine.UI.Image;
+using Color = System.Drawing.Color;
 
 public class EnemyController : MonoBehaviour
 {
     public EnemyData enemyBaseData;
     public EnemyData enemyData;
 
-    private Animator animator;
+    [HideInInspector] public Animator animator;
     public EnemyBehavior behavior;
 
     private bool finded;
@@ -18,11 +21,18 @@ public class EnemyController : MonoBehaviour
     public bool isDeath = false;
     public Transform player;
     public float detectionRange = 1f;
-    public LayerMask detectionLayer;
+    public LayerMask detectionLayer;    // Rayで検知するレイヤー
+    //private LayerMask detectionLayer = LayerMask.GetMask("Player", "Wall");
+    public float fieldOfViewAngle = 90f; // 視野角
+    public int rayCount = 10; // 放射するRayの数
+    
+    public GameObject lightEffect;
+
 
     // Start is called before the first frame update
     void Awake()
     {
+        animator = GetComponent<Animator>();
         if (player == null)
         {
             player = GameObject.FindWithTag("Player").transform;
@@ -38,16 +48,26 @@ public class EnemyController : MonoBehaviour
         }
         
         enemyData = Instantiate(enemyBaseData);
-        animator = GetComponent<Animator>();
         enemyData.hp = enemyData.maxHp;
     }
 
     // Update is called once per frame
     void Update()
     {
-        DetectPlayer();
-        behavior?.PerformActions(this);
+        if (!isDeath)
+        {
+            DetectPlayer();
+            behavior?.PerformActions(this);
+        }
     }
+
+    // void FixedUpdate()
+    // {
+    //     if (!isDeath)
+    //     {
+    //         behavior?.PerformActions(this);
+    //     }
+    // }
 
     public void Finded()
     {
@@ -70,6 +90,13 @@ public class EnemyController : MonoBehaviour
     {
         animator.SetTrigger("DieTrigger");
         StartCoroutine(DestroyAfterAnimation("Die01", 0));
+        lightEffect.SetActive(true);
+        // Animator animator = lightEffect.GetComponent<Animator>();
+        Animation lightEffectAnimation = lightEffect.GetComponent<Animation>();
+        if (lightEffectAnimation != null)
+        {
+            lightEffectAnimation.Play();
+        }
     }
 
     private IEnumerator DestroyAfterAnimation(string animationName, int layerIndex)
@@ -106,22 +133,28 @@ public class EnemyController : MonoBehaviour
     {
         isAttacking = true;
         // ここでプレイヤーにダメージを与える処理を書く
-        //Debug.Log("エネミーが攻撃!");
+        Debug.Log("エネミーが攻撃!");
     }
     public void EndAttack()
     {
         isAttacking = false;
         // ここでプレイヤーにダメージを与える処理を書く
-        //Debug.Log("エネミーが攻撃終了!");
+        Debug.Log("エネミーが攻撃終了!");
     }
 
-    //void OnTriggerEnter(Collider other)
-    //{
-    //    if (other.CompareTag("Player"))
-    //    {
-    //        playerFound = true;
-    //    }
-    //}
+    void OnTriggerEnter(Collider other)
+    {
+        if (isAttacking && other.CompareTag("Player"))
+        {
+            // if (other.name == "AttackTrigger1")
+            // {
+            //     
+            // }
+            other.GetComponent<PlayerController>().Damage(enemyData.attackPower);
+            //playerFound = true;
+            EndAttack();
+        }
+    }
 
     //void OnTriggerExit(Collider other)
     //{
@@ -130,35 +163,55 @@ public class EnemyController : MonoBehaviour
     //        playerFound = false;
     //    }
     //}
-
+    
+    // プレイヤーを検出するための関数
     void DetectPlayer()
     {
+        // エネミーとプレイヤーの間の距離を計算
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+        // プレイヤーが検出範囲内にいるかチェック
         if (distanceToPlayer <= detectionRange)
         {
+            // エネミーからプレイヤーへの方向ベクトルを計算し、正規化
             Vector3 directionToPlayer = (player.position - transform.position).normalized;
-            Ray ray = new Ray(transform.position, directionToPlayer);
-            RaycastHit hit;
+            // エネミーの前方ベクトルとプレイヤーへの方向ベクトルの間の角度を計算
+            float angleBetween = Vector3.Angle(transform.forward, directionToPlayer);
 
-            if (Physics.Raycast(ray, out hit, detectionRange, detectionLayer))
+            // 角度が視野の半分より小さいかチェック
+            if (angleBetween < fieldOfViewAngle / 2f)
             {
-                if (hit.collider.CompareTag("Player"))
+                // エネミーからプレイヤーへのレイを作成
+                Ray ray = new Ray(transform.position, directionToPlayer);
+                RaycastHit hit;
+                // レイを赤色で描画（デバッグ用）
+                Debug.DrawRay(ray.origin, ray.direction * detectionRange, UnityEngine.Color.red);
+
+                // レイキャストを使用してプレイヤーを検出
+                if (Physics.Raycast(ray, out hit, detectionRange, detectionLayer))
                 {
-                    // プレイヤーが見つかった時の処理
-                    playerFound = true;
-                    Debug.Log("エネミー：プレイヤーを見つけたよ！");
-                }
-                else
-                {
-                    // プレイヤーが見つからなかった時の処理
-                    playerFound = false;
+                    // レイがプレイヤーにヒットしたかチェック
+                    if (hit.collider.CompareTag("Player"))
+                    {
+                        // プレイヤーが見つからなかった時の処理
+                        playerFound = true;
+                        Debug.Log("エネミー：プレイヤーを見つけたよ！");
+                    }
+                    else
+                    {
+                        // プレイヤーが見つからなかった時の処理
+                        //Debug.Log("エネミー：Raycastがヒットしたが、プレイヤーではない。ヒットしたオブジェクト：" + hit.collider.name);
+                        playerFound = false;
+                    }
                 }
             }
-        }
-        else
-        {
-            // プレイヤーが見つからなかった時の処理
-            playerFound = false;
+
+            // 放射線状のRayを描画
+            for (int i = 0; i < rayCount; i++)
+            {
+                float angle = fieldOfViewAngle / (rayCount - 1) * i - fieldOfViewAngle / 2f;
+                Vector3 rayDirection = Quaternion.Euler(0, angle, 0) * transform.forward;
+                Debug.DrawRay(transform.position, rayDirection * detectionRange, UnityEngine.Color.yellow);
+            }
         }
     }
 

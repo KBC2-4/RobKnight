@@ -12,10 +12,10 @@ public class WanderAction : EnemyAction
     {
         if (!controller.isDeath)//‚±‚±‚ÅŽ€‘Ì‚ª“®‚©‚È‚¢—l‚É‚µ‚Ä‚é
         {
-            controller.transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime);
-            controller.transform.Rotate(Vector3.up * rotateSpeed * Time.deltaTime);
+            controller.transform.Translate(Vector3.forward * (moveSpeed * Time.deltaTime));
+            controller.transform.Rotate(Vector3.up * (rotateSpeed * Time.deltaTime));
             // !
-            controller.GetComponent<Animator>().SetBool("IsWalking", true);
+            controller.animator.SetBool("IsWalking", true);
         }
     }
 }
