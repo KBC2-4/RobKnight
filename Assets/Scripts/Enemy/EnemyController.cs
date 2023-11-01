@@ -92,17 +92,20 @@ public class EnemyController : MonoBehaviour
         StartCoroutine(DestroyAfterAnimation("Die01", 0));
         lightEffect.SetActive(true);
         // Animator animator = lightEffect.GetComponent<Animator>();
+        animator.SetBool("IsWalking", false);   
         Animation lightEffectAnimation = lightEffect.GetComponent<Animation>();
         if (lightEffectAnimation != null)
         {
             lightEffectAnimation.Play();
         }
         gameObject.GetComponent<Rigidbody>().isKinematic = true;
-        gameObject.GetComponent<CapsuleCollider>().enabled = false;
+        gameObject.GetComponent<CapsuleCollider>().isTrigger = true;
     }
 
     private IEnumerator DestroyAfterAnimation(string animationName, int layerIndex)
     {
+        isDeath = true;
+
         // アニメーションの長さを取得
         float animationLength = animator.GetCurrentAnimatorStateInfo(layerIndex).length;
 
@@ -111,7 +114,6 @@ public class EnemyController : MonoBehaviour
 
         // ゲームオブジェクトを破壊
         //Destroy(gameObject);
-        isDeath = true;
     }
 
     public void OnMouseDown()

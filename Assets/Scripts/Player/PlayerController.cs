@@ -76,7 +76,7 @@ public class PlayerController : MonoBehaviour
         controller = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
         particleSystem = GetComponentInChildren<ParticleSystem>();
-        particleSystem.Stop();
+        //particleSystem.Stop();
         if (animator == null)
         {
             Debug.LogError("Animator component is missing on this GameObject!");
