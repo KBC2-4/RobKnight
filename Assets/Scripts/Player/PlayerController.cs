@@ -91,7 +91,7 @@ public class PlayerController : MonoBehaviour
         //inputActionsから[Fireアクション]を取得
         possedAction = inputActions.FindActionMap("Player").FindAction("Possession");
         //[Fire]アクションから呼ばれる関数を設定
-        possedAction.performed += _ => SetIsPossed();
+        //possedAction.performed += _ => SetIsPossed();
         possedAction.Enable();
 
         // マウスカーソルを非表示にする
@@ -119,6 +119,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
 
@@ -165,9 +166,10 @@ public class PlayerController : MonoBehaviour
         //    currentPossession.abilities[0].Use(transform);
         //}
 
-        if (controller.isGrounded)
-        {
 
+        if(fireAction.IsPressed()==false)
+        {
+            isAttacking = false;
         }
     }
 
@@ -178,6 +180,7 @@ public class PlayerController : MonoBehaviour
 
     void AttackAnimation()
     {
+        isAttacking = true;
         Debug.Log("Attack");
         animator.SetTrigger("Attack");
         if (particleSystem != null && particleSystem.isStopped)
@@ -186,6 +189,7 @@ public class PlayerController : MonoBehaviour
         }
        
     }
+
 
     //public void Possess(EnemyData newEnemy)
     //{
@@ -217,7 +221,7 @@ public class PlayerController : MonoBehaviour
                     isAttacking = false;
                 }
             } //憑依処理
-            else if (isPossed == true && other.GetComponent<EnemyController>().enemyData.hp <= 0)
+            else if (possedAction.IsPressed() && other.GetComponent<EnemyController>().enemyData.hp <= 0)
             {
                 Debug.Log("hyoui");
                 Possession(other.gameObject);
@@ -325,6 +329,7 @@ public class PlayerController : MonoBehaviour
         targetObj.GetComponent<PlayerController>().maxHp = currentPossession.maxHp;
         targetObj.GetComponent<PlayerController>().hp = targetObj.GetComponent<PlayerController>().maxHp;
         targetObj.GetComponent<PlayerController>().attackPower = currentPossession.attackPower;
+        targetObj.GetComponent<PlayerController>().inputActions = inputActions;
 
         //タグをPlayerに変更
         targetObj.tag = "Player";
