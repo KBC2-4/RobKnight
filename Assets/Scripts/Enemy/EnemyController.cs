@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using static UnityEngine.UI.Image;
@@ -50,8 +49,6 @@ public class EnemyController : MonoBehaviour
         
         enemyData = Instantiate(enemyBaseData);
         enemyData.hp = enemyData.maxHp;
-
-        animator.SetBool("IsWalking", true);
     }
 
     // Update is called once per frame
@@ -174,6 +171,9 @@ public class EnemyController : MonoBehaviour
     // プレイヤーを検出するための関数
     void DetectPlayer()
     {
+        // プレイヤー検出フラグをリセット
+        playerFound = false;
+        
         // エネミーとプレイヤーの間の距離を計算
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
         // プレイヤーが検出範囲内にいるかチェック
@@ -184,13 +184,10 @@ public class EnemyController : MonoBehaviour
             // エネミーの前方ベクトルとプレイヤーへの方向ベクトルの間の角度を計算
             float angleBetween = Vector3.Angle(transform.forward, directionToPlayer);
 
-            if (playerFound)
-            {
-
-            }
             // 角度が視野の半分より小さいかチェック
-            else if (angleBetween < fieldOfViewAngle / 2f)
+            if (angleBetween < fieldOfViewAngle / 2f)
             {
+                
                 // エネミーからプレイヤーへのレイを作成
                 Ray ray = new Ray(transform.position, directionToPlayer);
                 RaycastHit hit;
@@ -207,22 +204,14 @@ public class EnemyController : MonoBehaviour
                         playerFound = true;
                         Debug.Log("エネミー：プレイヤーを見つけたよ！");
                     }
-                    //else
-                    //{
-                    //    // プレイヤーが見つからなかった時の処理
-                    //    //Debug.Log("エネミー：Raycastがヒットしたが、プレイヤーではない。ヒットしたオブジェクト：" + hit.collider.name);
-                    //    playerFound = false; 
-                    //    animator.SetBool("IsWalking", true);
-                    //}
+                    // else　// Raycastテスト
+                    // {
+                    //     // プレイヤーが見つからなかった時の処理
+                    //     Debug.Log("エネミー：Raycastがヒットしたが、プレイヤーではない。ヒットしたオブジェクト：" + hit.collider.name);
+                    //     playerFound = false;
+                    // }
                 }
             }
-            //else
-            //{
-            //    //プレイヤーが視野角内にいないときの処理
-            //    //プレイヤー発見状態を解除する
-            //    playerFound = false;
-            //    animator.SetBool("IsWalking", true);
-            //}
 
             // 放射線状のRayを描画
             for (int i = 0; i < rayCount; i++)
@@ -230,13 +219,6 @@ public class EnemyController : MonoBehaviour
                 float angle = fieldOfViewAngle / (rayCount - 1) * i - fieldOfViewAngle / 2f;
                 Vector3 rayDirection = Quaternion.Euler(0, angle, 0) * transform.forward;
                 Debug.DrawRay(transform.position, rayDirection * detectionRange, UnityEngine.Color.yellow);
-            }
-        }
-        else if(playerFound)
-        {
-            if (detectionRange * 2 <= distanceToPlayer)
-            {
-                playerFound = false;
             }
         }
     }

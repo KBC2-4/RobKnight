@@ -7,7 +7,7 @@ public class IdleAction : EnemyAction
 {
     public override void Act(EnemyController controller)
     {
-        //controller.animator.SetBool("IsWalking", false);
+        controller.animator.SetFloat("Speed", 0);
     }
 }
 

@@ -25,8 +25,8 @@ public class AttackAction : EnemyAction
         
         // 現在再生中のアニメーションの状態を取得
         AnimatorStateInfo stateInfo = controller.animator.GetCurrentAnimatorStateInfo(0);
-
-            controller.animator.SetBool("IsWalking", false);
+        
+            controller.animator.SetFloat("Speed", 0);
         if (!stateInfo.IsName("Attack"))
         {
 
