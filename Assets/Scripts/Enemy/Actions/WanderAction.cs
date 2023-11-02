@@ -14,7 +14,7 @@ public class WanderAction : EnemyAction
         AnimatorStateInfo stateInfo = controller.animator.GetCurrentAnimatorStateInfo(0);
         controller.animator.SetFloat("Speed", moveSpeed);
 
-        //死亡していない & アニメーターのステートがMove01なら移動処理に入る
+        //死亡していない & アニメーターのステートがWalkなら移動処理に入る
         if (!controller.isDeath && stateInfo.IsName("Walk"))
         {
             controller.transform.Translate(Vector3.forward * (moveSpeed * Time.deltaTime));
