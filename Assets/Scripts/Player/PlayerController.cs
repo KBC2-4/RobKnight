@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -90,11 +91,10 @@ public class PlayerController : MonoBehaviour
         fireAction.performed += _ => AttackAnimation();
         fireAction.Enable();
 
-        //inputActionsから[Fireアクション]を取得
+        //inputActionsから[憑依アクション]を取得
         possedAction = inputActions.FindActionMap("Player").FindAction("Possession");
-        //[Fire]アクションから呼ばれる関数を設定
-        //possedAction.performed += _ => SetIsPossed();
         possedAction.Enable();
+ 
 
         // マウスカーソルを非表示にする
         //Cursor.visible = false;
@@ -105,11 +105,6 @@ public class PlayerController : MonoBehaviour
         if (Application.isEditor)
         {
             sensitivity = sensitivity * 1.5f;
-        }
-
-        if (currentPossession != null)
-        {
-           // Possess(currentPossession);
         }
     }
 
@@ -208,23 +203,24 @@ public class PlayerController : MonoBehaviour
         //Debug.Log("Enemyかな？");
         if (other.gameObject.CompareTag("Enemy"))
         {
-            //攻撃処理
-            if (isAttacking)
+            EnemyController enemy = other.gameObject.GetComponent<EnemyController>();
+
+            if (enemy != null)
             {
-                Debug.Log("Enemyだ！”攻撃開始");
-                EnemyController enemyController = other.gameObject.GetComponent<EnemyController>();
-                if (enemyController != null)
+                //攻撃処理
+                if (isAttacking)
                 {
-                    enemyController.Damage(attackPower);
+                    Debug.Log("Enemyだ！”攻撃開始");
+                    enemy.Damage(attackPower);
                     isAttacking = false;
+                }//憑依処理
+                else if (possedAction.IsPressed() && enemy.enemyData.hp <= 0
+                         && currentPossession == null)
+                {
+                    Debug.Log("prossession(憑依)");
+                    Possession(other.gameObject);
+                    isPossed = false;
                 }
-            } //憑依処理
-            else if (possedAction.IsPressed() && other.GetComponent<EnemyController>().enemyData.hp <= 0
-                     && currentPossession == null)
-            {
-                Debug.Log("hyoui");
-                Possession(other.gameObject);
-                isPossed = false;
             }
         }
     }
@@ -304,25 +300,34 @@ public class PlayerController : MonoBehaviour
     /// <param name="targetObj">憑依するキャラクター</param>
     private void Possession(GameObject targetObj)
     {
-        //現在の体から操作機能を失効させる
-        GetComponent<PlayerController>().enabled = false;
-        animator.enabled = false;
-
         //対象にプレイヤーコントローラーを追加
         targetObj.gameObject.AddComponent<CharacterController>();
+        CharacterController characterController = targetObj.gameObject.GetComponent<CharacterController>();
+        // エネミーのCapsuleColliderからコリジョンの高さ・中心からの座標・半径を引継いでデストロイ
+        CapsuleCollider capsuleCollider = targetObj.gameObject.GetComponent<CapsuleCollider>();
+        characterController.height = capsuleCollider.height;
+        characterController.center = capsuleCollider.center;
+        characterController.radius = capsuleCollider.radius;
+        Destroy(targetObj.GetComponent<CapsuleCollider>());
         targetObj.gameObject.AddComponent<PlayerController>();
 
+        PlayerController playerController = targetObj.GetComponent<PlayerController>();
+        //現在の体から操作機能を失効させる
+        enabled = false;
+        animator.enabled = false;
+     
         //操作対象を切り替える
-        targetObj.GetComponent<PlayerController>().enabled = true;
+        playerController.enabled = true;
 
         //憑依キャラのパラメータを設定
         currentPossession = targetObj.GetComponent<EnemyController>().enemyData;
-        targetObj.GetComponent<PlayerController>().maxHp = currentPossession.maxHp;
-        targetObj.GetComponent<PlayerController>().hp = targetObj.GetComponent<PlayerController>().maxHp;
-        targetObj.GetComponent<PlayerController>().attackPower = currentPossession.attackPower;
-        targetObj.GetComponent<PlayerController>().inputActions = inputActions;
+        playerController.maxHp = currentPossession.maxHp;
+        playerController.hp = playerController.maxHp;
+        playerController.attackPower = currentPossession.attackPower;
+        playerController.inputActions = inputActions;
+        //Destroy(targetObj.GetComponent<EnemyController>());
         targetObj.GetComponent<EnemyController>().enabled = false;
-       
+            
         //タグをPlayerに変更
         targetObj.tag = "Player";
 
