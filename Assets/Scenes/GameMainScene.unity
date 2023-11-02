@@ -668,7 +668,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68f519673467449449e6527c59c465f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyBaseData: {fileID: 0}
+  enemyBaseData: {fileID: 11400000, guid: 5ee5bd87b3a3e584299248274c51a51a, type: 2}
   enemyData: {fileID: 11400000, guid: 5ee5bd87b3a3e584299248274c51a51a, type: 2}
   animator: {fileID: 0}
   behavior: {fileID: 0}
@@ -1053,13 +1053,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 644603329}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.5, y: 0, z: 0, w: 0.8660254}
+  m_LocalRotation: {x: 0.46174863, y: 0, z: 0, w: 0.8870109}
   m_LocalPosition: {x: 300.3824, y: 4.92, z: 415.8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 60, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 55, y: 0, z: 0}
 --- !u!114 &772046740 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 437694242597240945, guid: 6ecea656774754b42856d85cfa17994e,
@@ -1582,7 +1582,7 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 20
+  m_Intensity: 15
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -1640,13 +1640,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 865591222}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.4533477, y: -0, z: -0, w: 0.89133376}
-  m_LocalPosition: {x: 0.04, y: 2.9699924, z: -1.9840698}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 3.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 886765135}
-  m_LocalEulerAnglesHint: {x: 53.917, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &870460118
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1841,6 +1841,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 5
   sensitivity: 30
+  inputActions: {fileID: -944628639613478452, guid: 4e1ec3c0ceba72c45b04f5da851592d5,
+    type: 3}
   maxAngularSpeed: Infinity
   smoothTime: 0.1
   currentPossession: {fileID: 0}
@@ -8122,6 +8124,12 @@ PrefabInstance:
       propertyPath: m_Interpolate
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4567981959197233242, guid: 04f234b057eb7ac44945576c93a29425,
+        type: 3}
+      propertyPath: enemyData
+      value: 
+      objectReference: {fileID: 11400000, guid: 5ee5bd87b3a3e584299248274c51a51a,
+        type: 2}
     - target: {fileID: 5428439017428533663, guid: 04f234b057eb7ac44945576c93a29425,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -8176,6 +8184,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Goblin
+      objectReference: {fileID: 0}
+    - target: {fileID: 5784879901760377946, guid: 04f234b057eb7ac44945576c93a29425,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9193060540010023349, guid: 04f234b057eb7ac44945576c93a29425,
         type: 3}

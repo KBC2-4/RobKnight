@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
@@ -11,6 +12,22 @@ public class PlayerController : MonoBehaviour
     private Animator animator;
     public float speed = 5f;
     public float sensitivity = 30.0f;
+
+
+    /// <summary>
+    /// 入力用
+    /// </summary>
+    public InputActionAsset inputActions;
+
+    /// <summary>
+    /// 攻撃用入力変数
+    /// </summary>
+    private InputAction fireAction;
+
+    /// <summary>
+    /// 憑依用入力変数
+    /// </summary>
+    private InputAction possedAction;
 
     /// <summary>
     /// 前フレームの座標
@@ -35,6 +52,12 @@ public class PlayerController : MonoBehaviour
     public EnemyData currentPossession; // 現在憑依しているエネミーのデータ
     private GameObject currentModel;
 
+
+    /// <summary>
+    /// 憑依可能かのフラグ
+    /// </summary>
+    private bool isPossed;
+
     public int hp = 100;
     public int maxHp = 100;
     public int mp = 100;
@@ -52,12 +75,26 @@ public class PlayerController : MonoBehaviour
         prevPosition = startPos;
         controller = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
+        animator.enabled = true;
+        animator.Play("Idle");
         particleSystem = GetComponentInChildren<ParticleSystem>();
         //particleSystem.Stop();
         if (animator == null)
         {
             Debug.LogError("Animator component is missing on this GameObject!");
         }
+
+        //inputActionsから[Fireアクション]を取得
+        fireAction = inputActions.FindActionMap("Player").FindAction("Fire");
+        //[Fire]アクションから呼ばれる関数を設定
+        fireAction.performed += _ => AttackAnimation();
+        fireAction.Enable();
+
+        //inputActionsから[Fireアクション]を取得
+        possedAction = inputActions.FindActionMap("Player").FindAction("Possession");
+        //[Fire]アクションから呼ばれる関数を設定
+        //possedAction.performed += _ => SetIsPossed();
+        possedAction.Enable();
 
         // マウスカーソルを非表示にする
         //Cursor.visible = false;
@@ -74,6 +111,11 @@ public class PlayerController : MonoBehaviour
         {
            // Possess(currentPossession);
         }
+    }
+
+    private void OnEnable()
+    {
+       
     }
 
     // Update is called once per frame
@@ -109,25 +151,21 @@ public class PlayerController : MonoBehaviour
         //animator.SetFloat("Speed", movement.magnitude);
 
 
-        if (Input.GetButtonDown("Fire1"))
-        {
-            isAttacking = true;
-            AttackAnimation();
-        }
-
-        if (Input.GetButtonUp("Fire1"))
-        {
-            isAttacking = false;
-        }
+        //if (Input.GetButtonDown("Fire1"))
+        //{
+        //    isAttacking = true;
+        //    AttackAnimation();
+        //}
 
         //if (Input.GetButtonUp("Fire2") && currentPossession.abilities.Length > 0)
         //{
         //    currentPossession.abilities[0].Use(transform);
         //}
 
-        if (controller.isGrounded)
-        {
 
+        if(fireAction.IsPressed() == false)
+        {
+            isAttacking = false;
         }
     }
 
@@ -138,14 +176,19 @@ public class PlayerController : MonoBehaviour
 
     void AttackAnimation()
     {
-        //animator.SetBool("AttackBool",true);
-        animator.SetTrigger("Attack");
+        isAttacking = true;
+        Debug.Log("Attack");
+        if (animator != null)
+        {
+            animator.SetTrigger("AttackTrigger");
+        }
         if (particleSystem != null && particleSystem.isStopped)
         {
             particleSystem.Play();
         }
        
     }
+
 
     //public void Possess(EnemyData newEnemy)
     //{
@@ -172,15 +215,16 @@ public class PlayerController : MonoBehaviour
                 EnemyController enemyController = other.gameObject.GetComponent<EnemyController>();
                 if (enemyController != null)
                 {
-                    Debug.Log("attack");
                     enemyController.Damage(attackPower);
                     isAttacking = false;
                 }
             } //憑依処理
-            else if (Input.GetButtonDown("Fire2") && other.GetComponent<EnemyController>().enemyData.hp <= 0)
+            else if (possedAction.IsPressed() && other.GetComponent<EnemyController>().enemyData.hp <= 0
+                     && currentPossession == null)
             {
                 Debug.Log("hyoui");
                 Possession(other.gameObject);
+                isPossed = false;
             }
         }
     }
@@ -260,8 +304,9 @@ public class PlayerController : MonoBehaviour
     /// <param name="targetObj">憑依するキャラクター</param>
     private void Possession(GameObject targetObj)
     {
-        //現在の体カラ操作機能を失効させる
+        //現在の体から操作機能を失効させる
         GetComponent<PlayerController>().enabled = false;
+        animator.enabled = false;
 
         //対象にプレイヤーコントローラーを追加
         targetObj.gameObject.AddComponent<CharacterController>();
@@ -275,11 +320,11 @@ public class PlayerController : MonoBehaviour
         targetObj.GetComponent<PlayerController>().maxHp = currentPossession.maxHp;
         targetObj.GetComponent<PlayerController>().hp = targetObj.GetComponent<PlayerController>().maxHp;
         targetObj.GetComponent<PlayerController>().attackPower = currentPossession.attackPower;
-
+        targetObj.GetComponent<PlayerController>().inputActions = inputActions;
+        targetObj.GetComponent<EnemyController>().enabled = false;
+       
         //タグをPlayerに変更
         targetObj.tag = "Player";
-
-        Debug.Log(targetObj.tag);
 
         //カメラのターゲットを憑依キャラに切り替える
         GameObject camera = GameObject.Find("MainCamera");
