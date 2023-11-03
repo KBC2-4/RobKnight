@@ -171,6 +171,9 @@ public class EnemyController : MonoBehaviour
     // プレイヤーを検出するための関数
     void DetectPlayer()
     {
+        // プレイヤー検出フラグをリセット
+        playerFound = false;
+        
         // エネミーとプレイヤーの間の距離を計算
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
         // プレイヤーが検出範囲内にいるかチェック
@@ -184,6 +187,7 @@ public class EnemyController : MonoBehaviour
             // 角度が視野の半分より小さいかチェック
             if (angleBetween < fieldOfViewAngle / 2f)
             {
+                
                 // エネミーからプレイヤーへのレイを作成
                 Ray ray = new Ray(transform.position, directionToPlayer);
                 RaycastHit hit;
@@ -200,12 +204,12 @@ public class EnemyController : MonoBehaviour
                         playerFound = true;
                         Debug.Log("エネミー：プレイヤーを見つけたよ！");
                     }
-                    else
-                    {
-                        // プレイヤーが見つからなかった時の処理
-                        //Debug.Log("エネミー：Raycastがヒットしたが、プレイヤーではない。ヒットしたオブジェクト：" + hit.collider.name);
-                        playerFound = false;
-                    }
+                    // else　// Raycastテスト
+                    // {
+                    //     // プレイヤーが見つからなかった時の処理
+                    //     Debug.Log("エネミー：Raycastがヒットしたが、プレイヤーではない。ヒットしたオブジェクト：" + hit.collider.name);
+                    //     playerFound = false;
+                    // }
                 }
             }
 
