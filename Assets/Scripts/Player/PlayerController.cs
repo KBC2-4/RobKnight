@@ -21,6 +21,11 @@ public class PlayerController : MonoBehaviour
     public InputActionAsset inputActions;
 
     /// <summary>
+    /// 移動用入力変数
+    /// </summary>
+    private InputAction moveAction;
+
+    /// <summary>
     /// 攻撃用入力変数
     /// </summary>
     private InputAction fireAction;
@@ -31,19 +36,15 @@ public class PlayerController : MonoBehaviour
     private InputAction possedAction;
 
     /// <summary>
-    /// 前フレームの座標
+    /// プレイヤーの移動量
     /// </summary>
-    private Vector3 prevPosition;
+    private Vector2 inputMove;
 
     /// <summary>
-    /// 現在の回転速度
+    /// プレイヤーの回転速度
     /// </summary>
-    private float currentAngleVelocity;
+    private float turnVelocity;
 
-    /// <summary>
-    /// 回転速度の最大値
-    /// </summary>
-    [SerializeField] private float maxAngularSpeed = Mathf.Infinity;
     /// <summary>
     /// 進行方向に向くのにかかる時間
     /// </summary>
@@ -52,12 +53,6 @@ public class PlayerController : MonoBehaviour
     float rotX, rotY;
     public EnemyData currentPossession; // 現在憑依しているエネミーのデータ
     private GameObject currentModel;
-
-
-    /// <summary>
-    /// 憑依可能かのフラグ
-    /// </summary>
-    private bool isPossed;
 
     public int hp = 100;
     public int maxHp = 100;
@@ -73,7 +68,6 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         startPos = transform.position;
-        prevPosition = startPos;
         controller = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
         animator.enabled = true;
@@ -85,9 +79,13 @@ public class PlayerController : MonoBehaviour
             Debug.LogError("Animator component is missing on this GameObject!");
         }
 
-        //inputActionsから[Fireアクション]を取得
+        //inputActionsから[移動アクション]を取得
+        moveAction = inputActions.FindActionMap("Player").FindAction("Move");
+        moveAction.Enable();
+
+        //inputActionsから[攻撃アクション]を取得
         fireAction = inputActions.FindActionMap("Player").FindAction("Fire");
-        //[Fire]アクションから呼ばれる関数を設定
+        //[攻撃]アクションから呼ばれる関数を設定
         fireAction.performed += _ => AttackAnimation();
         fireAction.Enable();
 
@@ -108,37 +106,10 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void OnEnable()
-    {
-       
-    }
-
     // Update is called once per frame
     void Update()
     {
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
-
-        // コントローラーの右ステックの入力を取得
-        float rightStickHorizontal = Input.GetAxis("RightHorizontal");
-        float rightStickVertical = Input.GetAxis("RightVertical");
-
-        // マウスの座標を取得
-        float mouseX = Input.GetAxis("Mouse X");
-        float mouseY = Input.GetAxis("Mouse Y");
-
-        rotX = (mouseX/* + rightStickHorizontal*/) * sensitivity;
-        rotY = (mouseY/* + rightStickVertical*/) * sensitivity;
-
-        //CameraRotation(cam, rotX, rotY);
-        //Vector3 movement = new Vector3(horizontal, 0f, vertical) * speed * Time.deltaTime;
-        //transform.Translate(movement);
-        Vector3 movement = new Vector3(horizontal, 0f, vertical).normalized * speed * Time.deltaTime;
-        transform.Translate(movement, Space.World);
-        controller.Move(movement);
-
-        //キャラクターの回転
-        MoveRotation();
+        PlayerMove();
 
         // ブレンドツリー
         //animator.SetFloat("Horizontal", horizontal);
@@ -219,7 +190,6 @@ public class PlayerController : MonoBehaviour
                 {
                     Debug.Log("prossession(憑依)");
                     Possession(other.gameObject);
-                    isPossed = false;
                 }
             }
         }
@@ -257,41 +227,43 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
+    /// 移動用関数
+    /// </summary>
+    private void PlayerMove()
+    {
+        inputMove = moveAction.ReadValue<Vector2>();
+
+        float speedX = inputMove.x * speed;
+        float speedY = inputMove.y * speed;
+
+        //入力値から、現在速度を計算
+        Vector3 moveVelocity = new Vector3(speedX, 0, speedY);
+
+        //現在フレームの移動量を移動速度から計算
+        Vector3 moveDelta = moveVelocity * Time.deltaTime;
+
+        //移動させる
+        controller.Move(moveDelta);
+
+        //キャラクターの回転
+        if (inputMove != Vector2.zero)
+        {
+            MoveRotation();
+        }
+
+    }
+
+    /// <summary>
     /// 移動時のキャラクターの回転関数
     /// </summary>
     private void MoveRotation()
     {
-
-
-        //現在座標の取得
-        Vector3 position = transform.position;
-
-        //移動量の計算
-        Vector3 deltaMove = position - prevPosition;
-
-        //前フレームの座標の更新
-        prevPosition = position;
-
-        //静止している場合回転させない
-        if (deltaMove == Vector3.zero)
-        {
-            return;
-        }
-
-        //進行方向に向くような回転を取得
-        Quaternion rotation = Quaternion.LookRotation(deltaMove, Vector3.up);
-
-        //現在の向きと進行方向の角度差を計算
-        float diffAngle = Vector3.Angle(transform.forward, deltaMove);
-
-        //現在フレームで回転する角度の計算
-        float rotaAngle = Mathf.SmoothDampAngle(0, diffAngle, ref currentAngleVelocity, smoothTime, maxAngularSpeed);
-
-        //現在フレームにおける回転を計算
-        Quaternion nextRota = Quaternion.RotateTowards(transform.rotation, rotation, rotaAngle);
-
+        //入力値からy軸周りの目標角度を計算
+        var targetAngleY = -Mathf.Atan2(inputMove.y, inputMove.x) * Mathf.Rad2Deg + 90;
+        //緩急させながら次の角度を計算
+        var angleY = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngleY, ref turnVelocity, smoothTime);
         //回転させる
-        transform.rotation = nextRota;
+        transform.rotation = Quaternion.Euler(0, angleY, 0);
     }
 
     /// <summary>
