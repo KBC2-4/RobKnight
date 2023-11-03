@@ -109,36 +109,16 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        PlayerMove();
-
-        // ブレンドツリー
-        //animator.SetFloat("Horizontal", horizontal);
-        //animator.SetFloat("Vertical", vertical);
-        //animator.SetFloat("Speed", movement.magnitude);
-
-
-        //if (Input.GetButtonDown("Fire1"))
-        //{
-        //    isAttacking = true;
-        //    AttackAnimation();
-        //}
-
-        //if (Input.GetButtonUp("Fire2") && currentPossession.abilities.Length > 0)
-        //{
-        //    currentPossession.abilities[0].Use(transform);
-        //}
-
+        if (isAttacking == false)
+        {
+            PlayerMove();
+        }
 
         if(fireAction.IsPressed() == false)
         {
             isAttacking = false;
         }
     }
-
-    //private void FixedUpdate()
-    //{
-    //    animator.SetFloat("Speed", movement.magnitude);
-    //}
 
     void AttackAnimation()
     {
@@ -154,20 +134,6 @@ public class PlayerController : MonoBehaviour
         }
        
     }
-
-
-    //public void Possess(EnemyData newEnemy)
-    //{
-    //    currentPossession = newEnemy;
-
-    //    if (currentModel != null)
-    //    {
-    //        Destroy(currentModel);
-    //    }
-
-    //    currentModel = Instantiate(newEnemy.modelPrefab, transform.position, transform.rotation);
-    //    currentModel.transform.parent = this.transform;
-    //}
 
     private void OnTriggerStay(Collider other)
     {
@@ -248,7 +214,12 @@ public class PlayerController : MonoBehaviour
         //キャラクターの回転
         if (inputMove != Vector2.zero)
         {
+            animator.SetFloat("Speed", 1.0f);
             MoveRotation();
+        }
+        else
+        {
+            animator.SetFloat("Speed", 0);
         }
 
     }
@@ -272,32 +243,39 @@ public class PlayerController : MonoBehaviour
     /// <param name="targetObj">憑依するキャラクター</param>
     private void Possession(GameObject targetObj)
     {
-        //対象にプレイヤーコントローラーを追加
-        targetObj.gameObject.AddComponent<CharacterController>();
-        CharacterController characterController = targetObj.gameObject.GetComponent<CharacterController>();
-        // エネミーのCapsuleColliderからコリジョンの高さ・中心からの座標・半径を引継いでデストロイ
-        CapsuleCollider capsuleCollider = targetObj.gameObject.GetComponent<CapsuleCollider>();
-        characterController.height = capsuleCollider.height;
-        characterController.center = capsuleCollider.center;
-        characterController.radius = capsuleCollider.radius;
-        Destroy(targetObj.GetComponent<CapsuleCollider>());
-        targetObj.gameObject.AddComponent<PlayerController>();
-
-        PlayerController playerController = targetObj.GetComponent<PlayerController>();
         //現在の体から操作機能を失効させる
         enabled = false;
         animator.enabled = false;
-     
-        //操作対象を切り替える
-        playerController.enabled = true;
 
-        //憑依キャラのパラメータを設定
-        currentPossession = targetObj.GetComponent<EnemyController>().enemyData;
-        playerController.maxHp = currentPossession.maxHp;
-        playerController.hp = playerController.maxHp;
-        playerController.attackPower = currentPossession.attackPower;
-        playerController.inputActions = inputActions;
-        //Destroy(targetObj.GetComponent<EnemyController>());
+        //対象にプレイヤーコントローラーを追加
+        targetObj.gameObject.AddComponent<CharacterController>();
+        CharacterController characterController = targetObj?.gameObject.GetComponent<CharacterController>();
+        // エネミーのCapsuleColliderからコリジョンの高さ・中心からの座標・半径を引継いでデストロイ
+        CapsuleCollider capsuleCollider = targetObj?.gameObject.GetComponent<CapsuleCollider>();
+        if (capsuleCollider != null)
+        {
+            characterController.height = capsuleCollider.height;
+            characterController.center = capsuleCollider.center;
+            characterController.radius = capsuleCollider.radius;
+            Destroy(targetObj.GetComponent<CapsuleCollider>());
+        }
+        targetObj.gameObject.AddComponent<PlayerController>();
+
+        PlayerController playerController = targetObj?.GetComponent<PlayerController>();
+
+        if (playerController != null)
+        {
+            //操作対象を切り替える
+            playerController.enabled = true;
+
+            //憑依キャラのパラメータを設定
+            currentPossession = targetObj?.GetComponent<EnemyController>().enemyData;
+            playerController.maxHp = currentPossession.maxHp;
+            playerController.hp = playerController.maxHp;
+            playerController.attackPower = currentPossession.attackPower;
+            playerController.inputActions = inputActions;
+        }
+
         targetObj.GetComponent<EnemyController>().enabled = false;
             
         //タグをPlayerに変更
