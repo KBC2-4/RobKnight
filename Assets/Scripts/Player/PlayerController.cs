@@ -33,7 +33,17 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// 憑依用入力変数
     /// </summary>
-    private InputAction possedAction;
+    private InputAction possessionAction;
+
+    /// <summary>
+    /// 憑依アクション入力タイマー
+    /// </summary>
+    private float inputTimerPossession;
+
+    /// <summary>
+    /// 憑依アクションに必要な入力時間
+    /// </summary>
+    public const float inputTimePossession = 0.1f;
 
     /// <summary>
     /// プレイヤーの移動量
@@ -90,15 +100,16 @@ public class PlayerController : MonoBehaviour
         fireAction.Enable();
 
         //inputActionsから[憑依アクション]を取得
-        possedAction = inputActions.FindActionMap("Player").FindAction("Possession");
-        possedAction.Enable();
- 
+        possessionAction = inputActions.FindActionMap("Player").FindAction("Possession");
+        possessionAction.Enable();
+
 
         // マウスカーソルを非表示にする
         //Cursor.visible = false;
         //// マウスカーソルを画面の中央に固定する
         //Cursor.lockState = CursorLockMode.Locked;
 
+        inputTimerPossession = 0;
 
         if (Application.isEditor)
         {
@@ -140,22 +151,36 @@ public class PlayerController : MonoBehaviour
         //Debug.Log("Enemyかな？");
         if (other.gameObject.CompareTag("Enemy"))
         {
+            Debug.Log("enemy");
             EnemyController enemy = other.gameObject.GetComponent<EnemyController>();
 
             if (enemy != null)
             {
                 //攻撃処理
-                if (isAttacking)
+                if (isAttacking == true)
                 {
                     Debug.Log("Enemyだ！”攻撃開始");
                     enemy.Damage(attackPower);
                     isAttacking = false;
                 }//憑依処理
-                else if (possedAction.IsPressed() && enemy.enemyData.hp <= 0
-                         && currentPossession == null)
+                else if (possessionAction != null)
                 {
-                    Debug.Log("prossession(憑依)");
-                    Possession(other.gameObject);
+                    if (possessionAction.IsPressed() == true)
+                    {
+                        Debug.Log(inputTimerPossession);
+                        inputTimerPossession += Time.deltaTime;
+
+                        if (inputTimePossession < inputTimerPossession
+                            && enemy.enemyData.hp <= 0 && currentPossession == null)
+                        {
+                            Debug.Log("Possession");
+                            Possession(other.gameObject);
+                        }
+                    }
+                    else
+                    {
+                        inputTimerPossession = 0;
+                    }
                 }
             }
         }
