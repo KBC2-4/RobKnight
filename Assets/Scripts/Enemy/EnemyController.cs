@@ -15,9 +15,9 @@ public class EnemyController : MonoBehaviour
     [HideInInspector] public Animator animator;
     public EnemyBehavior behavior;
 
-    private bool finded;
-    private bool isAttacking = false;
-    private bool playerFound = false;
+    private bool _finded;
+    private bool _isAttacking = false;
+    private bool _playerFound = false;
     public bool isDeath = false;
     public Transform player;
     public float detectionRange = 1f;
@@ -71,7 +71,7 @@ public class EnemyController : MonoBehaviour
 
     public void Finded()
     {
-        finded = true;
+        _finded = true;
         animator.SetBool("Finded", true);
     }
 
@@ -129,26 +129,26 @@ public class EnemyController : MonoBehaviour
     //攻撃状況の取得
     public bool GetAttacking()
     {
-        return isAttacking;
+        return _isAttacking;
     }
 
     // アニメーションイベントから呼び出される関数
     public void PerformAttack()
     {
-        isAttacking = true;
+        _isAttacking = true;
         // ここでプレイヤーにダメージを与える処理を書く
         Debug.Log("エネミーが攻撃!");
     }
     public void EndAttack()
     {
-        isAttacking = false;
+        _isAttacking = false;
         // ここでプレイヤーにダメージを与える処理を書く
         Debug.Log("エネミーが攻撃終了!");
     }
 
     void OnTriggerEnter(Collider other)
     {
-        if (isAttacking && other.CompareTag("Player"))
+        if (_isAttacking && other.CompareTag("Player"))
         {
             // if (other.name == "AttackTrigger1")
             // {
@@ -172,7 +172,7 @@ public class EnemyController : MonoBehaviour
     void DetectPlayer()
     {
         // プレイヤー検出フラグをリセット
-        playerFound = false;
+        _playerFound = false;
         
         // エネミーとプレイヤーの間の距離を計算
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
@@ -201,7 +201,7 @@ public class EnemyController : MonoBehaviour
                     if (hit.collider.CompareTag("Player"))
                     {
                         // プレイヤーが見つからなかった時の処理
-                        playerFound = true;
+                        _playerFound = true;
                         Debug.Log("エネミー：プレイヤーを見つけたよ！");
                     }
                     // else　// Raycastテスト
@@ -225,7 +225,7 @@ public class EnemyController : MonoBehaviour
 
     public bool IsPlayerFound()
     {
-        return playerFound;
+        return _playerFound;
     }
 
 }

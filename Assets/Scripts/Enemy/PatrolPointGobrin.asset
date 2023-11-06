@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fa08958e6a864cb49ac00649f48382f1, type: 3}
-  m_Name: Gobrin
+  m_Name: PatrolPointGobrin
   m_EditorClassIdentifier: 
   actions:
   - {fileID: 11400000, guid: 6732d8228c598eb44afe7cb103ac6a53, type: 2}
   attackAction: {fileID: 11400000, guid: 6732d8228c598eb44afe7cb103ac6a53, type: 2}
   idleAction: {fileID: 11400000, guid: b9ad5e1a12e88e54886113b51dfbb52f, type: 2}
   wanderAction:
-  - {fileID: 11400000, guid: 53ff4f572cc886e4baf043af5d4ca5e4, type: 2}
   - {fileID: 11400000, guid: 8a87a1ae2d308844f8d1671300f5ac9c, type: 2}
+  - {fileID: 11400000, guid: 53ff4f572cc886e4baf043af5d4ca5e4, type: 2}
   chaseAction: {fileID: 11400000, guid: f161d41363aa76943b5786c267644574, type: 2}
-  idleFrequency: 0.0005
+  idleFrequency: 0
   idleTime: 2
   attackRange: 2
