@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using Unity.VisualScripting;
+using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -34,6 +35,11 @@ public class PlayerController : MonoBehaviour
     /// 憑依用入力変数
     /// </summary>
     private InputAction possessionAction;
+
+    /// <summary>
+    /// 人間に戻る用入力変数
+    /// </summary>
+    private InputAction returnAction;
 
     /// <summary>
     /// 憑依アクション入力タイマー
@@ -103,6 +109,10 @@ public class PlayerController : MonoBehaviour
         possessionAction = inputActions.FindActionMap("Player").FindAction("Possession");
         possessionAction.Enable();
 
+        //inputActionsから[人間に戻るアクション]を取得
+        //returnAction = inputActions.FindActionMap("Player").FindAction("Return");
+        //returnAction.performed += _ => Return();
+        //returnAction.Enable();
 
         // マウスカーソルを非表示にする
         //Cursor.visible = false;
@@ -305,6 +315,10 @@ public class PlayerController : MonoBehaviour
             
         //タグをPlayerに変更
         targetObj.tag = "Player";
+        targetObj.layer = gameObject.layer;
+
+        tag = "Untagged";
+        gameObject.layer = 0;
 
         //カメラのターゲットを憑依キャラに切り替える
         GameObject camera = GameObject.Find("MainCamera");
@@ -312,5 +326,13 @@ public class PlayerController : MonoBehaviour
         {
             camera.GetComponent<CameraMovement>().SetCameraTarget(targetObj);
         }
+    }
+
+    /// <summary>
+    /// 人間に戻るアクション
+    /// </summary>
+    private void Return()
+    {
+        GetComponent<Renderer>().enabled = true;
     }
 }
