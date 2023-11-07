@@ -745,6 +745,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Possession",
+                    "type": "Button",
+                    "id": "1360575e-8a0d-47a2-bc04-157b6786cb7f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -882,6 +891,17 @@
                 },
                 {
                     "name": "",
+                    "id": "75d95d1c-26bd-4871-8237-370c541e0aa4",
+                    "path": "<Gamepad>/dpad",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "96cbc2de-80de-4f4a-be41-46a7159bb7e1",
                     "path": "<Gamepad>/rightStick",
                     "interactions": "",
@@ -965,6 +985,39 @@
                     "processors": "",
                     "groups": "XR",
                     "action": "Fire",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "114fe981-5af4-415d-9870-231be62cb65a",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Fire",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8a5bf6e9-f598-4dd5-b97d-865a40e02481",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Possession",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "cd64f2d4-8ffa-4bae-a47d-430764163373",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Possession",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

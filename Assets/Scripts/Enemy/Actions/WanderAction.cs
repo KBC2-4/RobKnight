@@ -10,12 +10,16 @@ public class WanderAction : EnemyAction
 
     public override void Act(EnemyController controller)
     {
-        if (!controller.isDeath)//ここで死体が動かない様にしてる
+        // 現在再生中のアニメーションの状態を取得
+        AnimatorStateInfo stateInfo = controller.animator.GetCurrentAnimatorStateInfo(0);
+        controller.animator.SetFloat("Speed", moveSpeed);
+
+        //死亡していない & アニメーターのステートがWalkなら移動処理に入る
+        if (!controller.isDeath && stateInfo.IsName("Walk"))
         {
-            controller.transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime);
-            controller.transform.Rotate(Vector3.up * rotateSpeed * Time.deltaTime);
+            controller.transform.Translate(Vector3.forward * (moveSpeed * Time.deltaTime));
+            controller.transform.Rotate(Vector3.up * (rotateSpeed * Time.deltaTime));
             // !
-            controller.GetComponent<Animator>().SetBool("IsWalking", true);
         }
     }
 }

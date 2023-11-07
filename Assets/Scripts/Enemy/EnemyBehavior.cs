@@ -6,12 +6,15 @@ using UnityEngine;
 public class EnemyBehavior : ScriptableObject
 {
     public List<EnemyAction> actions;
+    public EnemyAction attackAction;
     public EnemyAction idleAction;
     public EnemyAction wanderAction;
-    public float idleFrequency = 0.1f;
+    public EnemyAction chaseAction;
+    public float idleFrequency = 0.1f; // アイドル状態になる確率を10%に設定
+    public float idleTime = 2f; // アイドル状態の持続時間
     private bool isIdle = false;
-
-    private float timer;
+    private float idleTimer = 0f; // アイドル用のタイマー
+    public float attackRange = 2f; // 攻撃範囲
     private EnemyState currentState;
 
     private enum EnemyState
@@ -24,46 +27,57 @@ public class EnemyBehavior : ScriptableObject
 
     public void PerformActions(EnemyController controller)
     {
-
-        //if (controller.IsPlayerFound())
-        //{
-        //    Debug.Log("プレイヤーを見つけた！");
-        //    foreach (var action in actions)
-        //    {
-        //        action.Act(controller);
-        //    }
-        //}
-        //else if (Random.value < idleFrequency)
-        //{
-        //    Debug.Log("プレイヤー探索中！");
-        //    idleAction.Act(controller);
-        //}
-        //else
-        //{
-        //    wanderAction.Act(controller);
-        //}
+        Debug.Log($"State:{currentState}");
+        float distanceToPlayer = Vector3.Distance(controller.transform.position, controller.player.position);
 
         if (controller.IsPlayerFound())
         {
-            foreach (var action in actions)
+            if (distanceToPlayer <= attackRange)
             {
-                action.Act(controller);
+                attackAction.Act(controller);
+                currentState = EnemyState.Attack;
+                // foreach (var action in actions)
+                // {
+                //     action.Act(controller);
+                // }
             }
+            else
+            {
+                chaseAction.Act(controller);
+                currentState = EnemyState.Chase;
+            }
+            
+            // プレイヤー発見時はアイドルタイマーをリセット
+            idleTimer = 0f;
+            isIdle = false;
         }
         else
         {
             if (isIdle)
             {
-                idleAction.Act(controller);
+                if (idleTimer < idleTime)
+                {
+                    idleAction.Act(controller);
+                    currentState = EnemyState.Idle;
+                    idleTimer += Time.deltaTime; // タイマーを更新
+                }
+                else
+                {
+                    // アイドル時間が経過したら、状態を切り替え
+                    isIdle = false;
+                    idleTimer = 0f;
+                }
             }
             else
             {
                 wanderAction.Act(controller);
-            }
-
-            if (Random.value < idleFrequency)
-            {
-                isIdle = !isIdle;
+                currentState = EnemyState.Wander;
+                
+                // ランダムな確率でアイドル状態に切り替える
+                if (Random.value < idleFrequency)
+                {
+                    isIdle = true;
+                }
             }
         }
     }
