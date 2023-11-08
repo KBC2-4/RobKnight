@@ -1,9 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Threading;
-using Unity.VisualScripting;
-using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -78,6 +74,10 @@ public class PlayerController : MonoBehaviour
     public ParticleSystem particleSystem;
 
     public static GameOverController Instance { get; private set; }
+    // 憑依しているか
+    public bool isPossession = false;
+    // 評しているエネミーの名前を取得
+    public string PossessionEnemyName;
 
 
     // Start is called before the first frame update
@@ -309,6 +309,7 @@ public class PlayerController : MonoBehaviour
             playerController.hp = playerController.maxHp;
             playerController.attackPower = currentPossession.attackPower;
             playerController.inputActions = inputActions;
+            playerController.PossessionEnemyName = currentPossession.enemyName;
         }
 
         targetObj.GetComponent<EnemyController>().enabled = false;
