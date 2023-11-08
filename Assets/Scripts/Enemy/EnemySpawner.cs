@@ -27,14 +27,14 @@ public class EnemySpawner : MonoBehaviour
         }
 
         // エネミーのデスポーン
-        ObjectPoolManager.Instance.PerformActionOnActiveObjects(enemy =>
-        {
-            if (Vector3.Distance(playerTransform.position, enemy.transform.position) > despawnDistance)
-            {
-                // プレイヤーから離れたエネミーをプールに戻す
-                ObjectPoolManager.Instance.ReturnEnemy(enemy);
-            }
-        });
+        //ObjectPoolManager.Instance.PerformActionOnActiveObjects(enemy =>
+        //{
+        //    if (Vector3.Distance(playerTransform.position, enemy.transform.position) > despawnDistance)
+        //    {
+        //        // プレイヤーから離れたエネミーをプールに戻す
+        //        ObjectPoolManager.Instance.ReturnEnemy(enemy);
+        //    }
+        //});
     }
 
     public void SpawnObjectInRandomPosition()
@@ -46,7 +46,7 @@ public class EnemySpawner : MonoBehaviour
         //) + areaOffset;
 
         //Instantiate(objectToSpawn, transform.position + randomPosition, Quaternion.identity);
-        objectToSpawn = ObjectPoolManager.Instance.GetEnemy();
+        //objectToSpawn = ObjectPoolManager.Instance.GetEnemy();
         Vector3 randomPoint = new Vector3(
             Random.Range(-spawnArea.size.x / 2, spawnArea.size.x / 2),
             Random.Range(-spawnArea.size.y / 2, spawnArea.size.y / 2),
