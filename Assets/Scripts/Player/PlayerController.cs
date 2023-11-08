@@ -72,7 +72,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float smoothTime = 0.1f;
 
     float rotX, rotY;
-    public EnemyData currentPossession; // 現在憑依しているエネミーのデータ
+    private EnemyData currentPossession; // 現在憑依しているエネミーのデータ
     private GameObject currentModel;
 
     public int hp = 100;
@@ -119,6 +119,8 @@ public class PlayerController : MonoBehaviour
         returnAction = inputActions.FindActionMap("Player").FindAction("Return");
         returnAction.performed += _ => Return();
         returnAction.Enable();
+
+        //currentPossession = null;
 
         // マウスカーソルを非表示にする
         //Cursor.visible = false;
@@ -365,5 +367,10 @@ public class PlayerController : MonoBehaviour
             player = null;
             Destroy(gameObject);
         }
+    }
+
+    public EnemyData GetPossessionData()
+    {
+        return currentPossession;
     }
 }   
