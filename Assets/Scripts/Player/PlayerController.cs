@@ -1,8 +1,4 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Threading;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -21,6 +17,11 @@ public class PlayerController : MonoBehaviour
     public InputActionAsset inputActions;
 
     /// <summary>
+    /// 移動用入力変数
+    /// </summary>
+    private InputAction moveAction;
+
+    /// <summary>
     /// 攻撃用入力変数
     /// </summary>
     private InputAction fireAction;
@@ -28,36 +29,51 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// 憑依用入力変数
     /// </summary>
-    private InputAction possedAction;
+    private InputAction possessionAction;
 
     /// <summary>
-    /// 前フレームの座標
+    /// 人間に戻る用入力変数
     /// </summary>
-    private Vector3 prevPosition;
+    private InputAction returnAction;
 
     /// <summary>
-    /// 現在の回転速度
+    /// 人間に戻ったときの座標
     /// </summary>
-    private float currentAngleVelocity;
+    private Vector3 returnPosition = new Vector3(300f, 1f, 400f);
 
     /// <summary>
-    /// 回転速度の最大値
+    /// 憑依アクション入力タイマー
     /// </summary>
-    [SerializeField] private float maxAngularSpeed = Mathf.Infinity;
+    private float inputTimerPossession;
+
+    /// <summary>
+    /// 憑依アクションに必要な入力時間
+    /// </summary>
+    public const float inputTimePossession = 0f;
+
+    /// <summary>
+    /// 憑依後に保存するための変数
+    /// </summary>
+    private GameObject player = null;
+
+    /// <summary>
+    /// プレイヤーの移動量
+    /// </summary>
+    private Vector2 inputMove;
+
+    /// <summary>
+    /// プレイヤーの回転速度
+    /// </summary>
+    private float turnVelocity;
+
     /// <summary>
     /// 進行方向に向くのにかかる時間
     /// </summary>
     [SerializeField] private float smoothTime = 0.1f;
 
     float rotX, rotY;
-    public EnemyData currentPossession; // 現在憑依しているエネミーのデータ
+    private EnemyData currentPossession; // 現在憑依しているエネミーのデータ
     private GameObject currentModel;
-
-
-    /// <summary>
-    /// 憑依可能かのフラグ
-    /// </summary>
-    private bool isPossed;
 
     public int hp = 100;
     public int maxHp = 100;
@@ -67,13 +83,17 @@ public class PlayerController : MonoBehaviour
     public ParticleSystem particleSystem;
 
     public static GameOverController Instance { get; private set; }
+    // 憑依しているか
+    public bool isPossession = false;
+    // 評しているエネミーの名前を取得
+    public string PossessionEnemyName;
 
 
     // Start is called before the first frame update
     void Start()
     {
         startPos = transform.position;
-        prevPosition = startPos;
+        returnPosition = transform.position;
         controller = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
         animator.enabled = true;
@@ -85,22 +105,33 @@ public class PlayerController : MonoBehaviour
             Debug.LogError("Animator component is missing on this GameObject!");
         }
 
-        //inputActionsから[Fireアクション]を取得
+        //inputActionsから[移動アクション]を取得
+        moveAction = inputActions.FindActionMap("Player").FindAction("Move");
+        moveAction.Enable();
+
+        //inputActionsから[攻撃アクション]を取得
         fireAction = inputActions.FindActionMap("Player").FindAction("Fire");
-        //[Fire]アクションから呼ばれる関数を設定
+        //[攻撃]アクションから呼ばれる関数を設定
         fireAction.performed += _ => AttackAnimation();
         fireAction.Enable();
 
         //inputActionsから[憑依アクション]を取得
-        possedAction = inputActions.FindActionMap("Player").FindAction("Possession");
-        possedAction.Enable();
- 
+        possessionAction = inputActions.FindActionMap("Player").FindAction("Possession");
+        possessionAction.Enable();
+
+        //inputActionsから[人間に戻るアクション]を取得
+        returnAction = inputActions.FindActionMap("Player").FindAction("Return");
+        returnAction.performed += _ => Return();
+        returnAction.Enable();
+
+        //currentPossession = null;
 
         // マウスカーソルを非表示にする
         //Cursor.visible = false;
         //// マウスカーソルを画面の中央に固定する
         //Cursor.lockState = CursorLockMode.Locked;
 
+        inputTimerPossession = 0;
 
         if (Application.isEditor)
         {
@@ -110,64 +141,22 @@ public class PlayerController : MonoBehaviour
 
     private void OnEnable()
     {
-       
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
-
-        // コントローラーの右ステックの入力を取得
-        float rightStickHorizontal = Input.GetAxis("RightHorizontal");
-        float rightStickVertical = Input.GetAxis("RightVertical");
-
-        // マウスの座標を取得
-        float mouseX = Input.GetAxis("Mouse X");
-        float mouseY = Input.GetAxis("Mouse Y");
-
-        rotX = (mouseX/* + rightStickHorizontal*/) * sensitivity;
-        rotY = (mouseY/* + rightStickVertical*/) * sensitivity;
-
-        //CameraRotation(cam, rotX, rotY);
-        //Vector3 movement = new Vector3(horizontal, 0f, vertical) * speed * Time.deltaTime;
-        //transform.Translate(movement);
-        Vector3 movement = new Vector3(horizontal, 0f, vertical).normalized * speed * Time.deltaTime;
-        transform.Translate(movement, Space.World);
-        controller.Move(movement);
-
-        //キャラクターの回転
-        MoveRotation();
-
-        // ブレンドツリー
-        //animator.SetFloat("Horizontal", horizontal);
-        //animator.SetFloat("Vertical", vertical);
-        //animator.SetFloat("Speed", movement.magnitude);
-
-
-        //if (Input.GetButtonDown("Fire1"))
-        //{
-        //    isAttacking = true;
-        //    AttackAnimation();
-        //}
-
-        //if (Input.GetButtonUp("Fire2") && currentPossession.abilities.Length > 0)
-        //{
-        //    currentPossession.abilities[0].Use(transform);
-        //}
-
+        if (isAttacking == false)
+        {
+            PlayerMove();
+        }
 
         if(fireAction.IsPressed() == false)
         {
             isAttacking = false;
         }
     }
-
-    //private void FixedUpdate()
-    //{
-    //    animator.SetFloat("Speed", movement.magnitude);
-    //}
 
     void AttackAnimation()
     {
@@ -181,22 +170,7 @@ public class PlayerController : MonoBehaviour
         {
             particleSystem.Play();
         }
-       
     }
-
-
-    //public void Possess(EnemyData newEnemy)
-    //{
-    //    currentPossession = newEnemy;
-
-    //    if (currentModel != null)
-    //    {
-    //        Destroy(currentModel);
-    //    }
-
-    //    currentModel = Instantiate(newEnemy.modelPrefab, transform.position, transform.rotation);
-    //    currentModel.transform.parent = this.transform;
-    //}
 
     private void OnTriggerStay(Collider other)
     {
@@ -208,18 +182,27 @@ public class PlayerController : MonoBehaviour
             if (enemy != null)
             {
                 //攻撃処理
-                if (isAttacking)
+                if (isAttacking == true)
                 {
-                    Debug.Log("Enemyだ！”攻撃開始");
                     enemy.Damage(attackPower);
                     isAttacking = false;
                 }//憑依処理
-                else if (possedAction.IsPressed() && enemy.enemyData.hp <= 0
-                         && currentPossession == null)
+                else if (possessionAction != null)
                 {
-                    Debug.Log("prossession(憑依)");
-                    Possession(other.gameObject);
-                    isPossed = false;
+                    if (possessionAction.IsPressed() == true)
+                    {
+                        inputTimerPossession += Time.deltaTime;
+
+                        if (inputTimePossession < inputTimerPossession
+                            && enemy.enemyData.hp <= 0 && currentPossession == null)
+                        {
+                            Possession(other.gameObject);
+                        }
+                    }
+                    else
+                    {
+                        inputTimerPossession = 0;
+                    }
                 }
             }
         }
@@ -257,41 +240,53 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
+    /// 移動用関数
+    /// </summary>
+    private void PlayerMove()
+    {
+        inputMove = moveAction.ReadValue<Vector2>();
+
+        float speedX = inputMove.x * speed;
+        float speedY = inputMove.y * speed;
+
+        //入力値から、現在速度を計算
+        Vector3 moveVelocity = new Vector3(speedX, 0, speedY);
+
+        //現在フレームの移動量を移動速度から計算
+        Vector3 moveDelta = moveVelocity * Time.deltaTime;
+
+        //移動させる
+        controller.Move(moveDelta);
+
+        if (player != null)
+        {
+            player.transform.position = transform.position;
+        }
+
+        //キャラクターの回転
+        if (inputMove != Vector2.zero)
+        {
+            animator.SetFloat("Speed", 1.0f);
+            MoveRotation();
+        }
+        else
+        {
+            animator.SetFloat("Speed", 0);
+        }
+
+    }
+
+    /// <summary>
     /// 移動時のキャラクターの回転関数
     /// </summary>
     private void MoveRotation()
     {
-
-
-        //現在座標の取得
-        Vector3 position = transform.position;
-
-        //移動量の計算
-        Vector3 deltaMove = position - prevPosition;
-
-        //前フレームの座標の更新
-        prevPosition = position;
-
-        //静止している場合回転させない
-        if (deltaMove == Vector3.zero)
-        {
-            return;
-        }
-
-        //進行方向に向くような回転を取得
-        Quaternion rotation = Quaternion.LookRotation(deltaMove, Vector3.up);
-
-        //現在の向きと進行方向の角度差を計算
-        float diffAngle = Vector3.Angle(transform.forward, deltaMove);
-
-        //現在フレームで回転する角度の計算
-        float rotaAngle = Mathf.SmoothDampAngle(0, diffAngle, ref currentAngleVelocity, smoothTime, maxAngularSpeed);
-
-        //現在フレームにおける回転を計算
-        Quaternion nextRota = Quaternion.RotateTowards(transform.rotation, rotation, rotaAngle);
-
+        //入力値からy軸周りの目標角度を計算
+        var targetAngleY = -Mathf.Atan2(inputMove.y, inputMove.x) * Mathf.Rad2Deg + 90;
+        //緩急させながら次の角度を計算
+        var angleY = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngleY, ref turnVelocity, smoothTime);
         //回転させる
-        transform.rotation = nextRota;
+        transform.rotation = Quaternion.Euler(0, angleY, 0);
     }
 
     /// <summary>
@@ -300,36 +295,57 @@ public class PlayerController : MonoBehaviour
     /// <param name="targetObj">憑依するキャラクター</param>
     private void Possession(GameObject targetObj)
     {
+        //"Player"(人間)であれば非表示にする
+        if (name == "Player")
+        {
+            inputTimerPossession = 0f;
+            player = gameObject;
+            gameObject.SetActive(false);
+        }//憑依体であれば破棄する
+        else
+        {
+            Destroy(gameObject);
+        }
         //対象にプレイヤーコントローラーを追加
         targetObj.gameObject.AddComponent<CharacterController>();
-        CharacterController characterController = targetObj.gameObject.GetComponent<CharacterController>();
+        CharacterController characterController = targetObj?.gameObject.GetComponent<CharacterController>();
         // エネミーのCapsuleColliderからコリジョンの高さ・中心からの座標・半径を引継いでデストロイ
-        CapsuleCollider capsuleCollider = targetObj.gameObject.GetComponent<CapsuleCollider>();
-        characterController.height = capsuleCollider.height;
-        characterController.center = capsuleCollider.center;
-        characterController.radius = capsuleCollider.radius;
-        Destroy(targetObj.GetComponent<CapsuleCollider>());
+        CapsuleCollider capsuleCollider = targetObj?.gameObject.GetComponent<CapsuleCollider>();
+        if (capsuleCollider != null)
+        {
+            characterController.height = capsuleCollider.height;
+            characterController.center = capsuleCollider.center;
+            characterController.radius = capsuleCollider.radius;
+            Destroy(targetObj.GetComponent<CapsuleCollider>());
+        }
         targetObj.gameObject.AddComponent<PlayerController>();
 
-        PlayerController playerController = targetObj.GetComponent<PlayerController>();
-        //現在の体から操作機能を失効させる
-        enabled = false;
-        animator.enabled = false;
-     
-        //操作対象を切り替える
-        playerController.enabled = true;
+        PlayerController playerController = targetObj?.GetComponent<PlayerController>();
 
-        //憑依キャラのパラメータを設定
-        currentPossession = targetObj.GetComponent<EnemyController>().enemyData;
-        playerController.maxHp = currentPossession.maxHp;
-        playerController.hp = playerController.maxHp;
-        playerController.attackPower = currentPossession.attackPower;
-        playerController.inputActions = inputActions;
-        //Destroy(targetObj.GetComponent<EnemyController>());
+        if (playerController != null)
+        {
+            //操作対象を切り替える
+            playerController.enabled = true;
+
+            //憑依キャラのパラメータを設定
+            currentPossession = targetObj?.GetComponent<EnemyController>().enemyData;
+            playerController.maxHp = currentPossession.maxHp;
+            playerController.hp = playerController.maxHp;
+            playerController.attackPower = currentPossession.attackPower;
+            playerController.inputActions = inputActions;
+            playerController.player = player;
+            playerController.PossessionEnemyName = currentPossession.enemyName;
+            player = null;
+            playerController.currentPossession = currentPossession;
+            currentPossession = null;
+        }
+
+        //EnemyControllerの機能をオフにする
         targetObj.GetComponent<EnemyController>().enabled = false;
             
         //タグをPlayerに変更
         targetObj.tag = "Player";
+        targetObj.layer = gameObject.layer;
 
         //カメラのターゲットを憑依キャラに切り替える
         GameObject camera = GameObject.Find("MainCamera");
@@ -338,4 +354,32 @@ public class PlayerController : MonoBehaviour
             camera.GetComponent<CameraMovement>().SetCameraTarget(targetObj);
         }
     }
-}
+
+    /// <summary>
+    /// 人間に戻るアクション
+    /// </summary>
+    private void Return()
+    {
+        if (player != null)
+        {
+            //"Player"(人間)を表示する
+            player.SetActive(true);
+            
+            //カメラのターゲットを"Player"(人間)に戻す
+            GameObject camera = GameObject.Find("MainCamera");
+            if (camera != null)
+            {
+               camera.GetComponent<CameraMovement>().SetCameraTarget(player);
+            }
+
+            //憑依体を削除
+            player = null;
+            Destroy(gameObject);
+        }
+    }
+
+    public EnemyData GetPossessionData()
+    {
+        return currentPossession;
+    }
+}   
