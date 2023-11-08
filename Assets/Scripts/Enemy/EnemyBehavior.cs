@@ -8,7 +8,7 @@ public class EnemyBehavior : ScriptableObject
     public List<EnemyAction> actions;
     public EnemyAction attackAction;
     public EnemyAction idleAction;
-    public EnemyAction wanderAction;
+    public List<EnemyAction> wanderAction;
     public EnemyAction chaseAction;
     public float idleFrequency = 0.1f; // アイドル状態になる確率を10%に設定
     public float idleTime = 2f; // アイドル状態の持続時間
@@ -16,6 +16,7 @@ public class EnemyBehavior : ScriptableObject
     private float idleTimer = 0f; // アイドル用のタイマー
     public float attackRange = 2f; // 攻撃範囲
     private EnemyState currentState;
+    private EnemyAction _selectedAction;
 
     private enum EnemyState
     {
@@ -70,9 +71,16 @@ public class EnemyBehavior : ScriptableObject
             }
             else
             {
-                wanderAction.Act(controller);
+                wanderAction[0].Act(controller);
                 currentState = EnemyState.Wander;
-                
+
+                //if (_selectedAction == null)
+                //{
+                //    SelectAction(controller, wanderAction);
+                //}
+                //_selectedAction.Act(controller);
+                //currentState = EnemyState.Wander;
+
                 // ランダムな確率でアイドル状態に切り替える
                 if (Random.value < idleFrequency)
                 {
@@ -80,6 +88,13 @@ public class EnemyBehavior : ScriptableObject
                 }
             }
         }
+    }
+    
+    
+    // アクションをランダム選択
+    private void SelectAction(EnemyController controller, List<EnemyAction> actions)
+    {
+        _selectedAction = actions[Random.Range(0, actions.Count)];
     }
 }
 
