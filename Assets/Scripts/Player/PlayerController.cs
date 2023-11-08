@@ -1,9 +1,4 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Threading;
-using Unity.VisualScripting;
-using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -42,6 +37,11 @@ public class PlayerController : MonoBehaviour
     private InputAction returnAction;
 
     /// <summary>
+    /// 人間に戻ったときの座標
+    /// </summary>
+    private Vector3 returnPosition = new Vector3(300f, 1f, 400f);
+
+    /// <summary>
     /// 憑依アクション入力タイマー
     /// </summary>
     private float inputTimerPossession;
@@ -49,7 +49,12 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// 憑依アクションに必要な入力時間
     /// </summary>
-    public const float inputTimePossession = 0.1f;
+    public const float inputTimePossession = 0f;
+
+    /// <summary>
+    /// 憑依後に保存するための変数
+    /// </summary>
+    private GameObject player = null;
 
     /// <summary>
     /// プレイヤーの移動量
@@ -67,7 +72,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float smoothTime = 0.1f;
 
     float rotX, rotY;
-    public EnemyData currentPossession; // 現在憑依しているエネミーのデータ
+    private EnemyData currentPossession; // 現在憑依しているエネミーのデータ
     private GameObject currentModel;
 
     public int hp = 100;
@@ -78,12 +83,17 @@ public class PlayerController : MonoBehaviour
     public ParticleSystem particleSystem;
 
     public static GameOverController Instance { get; private set; }
+    // 憑依しているか
+    public bool isPossession = false;
+    // 評しているエネミーの名前を取得
+    public string PossessionEnemyName;
 
 
     // Start is called before the first frame update
     void Start()
     {
         startPos = transform.position;
+        returnPosition = transform.position;
         controller = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
         animator.enabled = true;
@@ -110,9 +120,11 @@ public class PlayerController : MonoBehaviour
         possessionAction.Enable();
 
         //inputActionsから[人間に戻るアクション]を取得
-        //returnAction = inputActions.FindActionMap("Player").FindAction("Return");
-        //returnAction.performed += _ => Return();
-        //returnAction.Enable();
+        returnAction = inputActions.FindActionMap("Player").FindAction("Return");
+        returnAction.performed += _ => Return();
+        returnAction.Enable();
+
+        //currentPossession = null;
 
         // マウスカーソルを非表示にする
         //Cursor.visible = false;
@@ -125,6 +137,11 @@ public class PlayerController : MonoBehaviour
         {
             sensitivity = sensitivity * 1.5f;
         }
+    }
+
+    private void OnEnable()
+    {
+        
     }
 
     // Update is called once per frame
@@ -153,7 +170,6 @@ public class PlayerController : MonoBehaviour
         {
             particleSystem.Play();
         }
-       
     }
 
     private void OnTriggerStay(Collider other)
@@ -161,7 +177,6 @@ public class PlayerController : MonoBehaviour
         //Debug.Log("Enemyかな？");
         if (other.gameObject.CompareTag("Enemy"))
         {
-            Debug.Log("enemy");
             EnemyController enemy = other.gameObject.GetComponent<EnemyController>();
 
             if (enemy != null)
@@ -169,7 +184,6 @@ public class PlayerController : MonoBehaviour
                 //攻撃処理
                 if (isAttacking == true)
                 {
-                    Debug.Log("Enemyだ！”攻撃開始");
                     enemy.Damage(attackPower);
                     isAttacking = false;
                 }//憑依処理
@@ -177,13 +191,11 @@ public class PlayerController : MonoBehaviour
                 {
                     if (possessionAction.IsPressed() == true)
                     {
-                        Debug.Log(inputTimerPossession);
                         inputTimerPossession += Time.deltaTime;
 
                         if (inputTimePossession < inputTimerPossession
                             && enemy.enemyData.hp <= 0 && currentPossession == null)
                         {
-                            Debug.Log("Possession");
                             Possession(other.gameObject);
                         }
                     }
@@ -246,6 +258,11 @@ public class PlayerController : MonoBehaviour
         //移動させる
         controller.Move(moveDelta);
 
+        if (player != null)
+        {
+            player.transform.position = transform.position;
+        }
+
         //キャラクターの回転
         if (inputMove != Vector2.zero)
         {
@@ -278,10 +295,17 @@ public class PlayerController : MonoBehaviour
     /// <param name="targetObj">憑依するキャラクター</param>
     private void Possession(GameObject targetObj)
     {
-        //現在の体から操作機能を失効させる
-        enabled = false;
-        animator.enabled = false;
-
+        //"Player"(人間)であれば非表示にする
+        if (name == "Player")
+        {
+            inputTimerPossession = 0f;
+            player = gameObject;
+            gameObject.SetActive(false);
+        }//憑依体であれば破棄する
+        else
+        {
+            Destroy(gameObject);
+        }
         //対象にプレイヤーコントローラーを追加
         targetObj.gameObject.AddComponent<CharacterController>();
         CharacterController characterController = targetObj?.gameObject.GetComponent<CharacterController>();
@@ -309,16 +333,19 @@ public class PlayerController : MonoBehaviour
             playerController.hp = playerController.maxHp;
             playerController.attackPower = currentPossession.attackPower;
             playerController.inputActions = inputActions;
+            playerController.player = player;
+            playerController.PossessionEnemyName = currentPossession.enemyName;
+            player = null;
+            playerController.currentPossession = currentPossession;
+            currentPossession = null;
         }
 
+        //EnemyControllerの機能をオフにする
         targetObj.GetComponent<EnemyController>().enabled = false;
             
         //タグをPlayerに変更
         targetObj.tag = "Player";
         targetObj.layer = gameObject.layer;
-
-        tag = "Untagged";
-        gameObject.layer = 0;
 
         //カメラのターゲットを憑依キャラに切り替える
         GameObject camera = GameObject.Find("MainCamera");
@@ -333,6 +360,26 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void Return()
     {
-        GetComponent<Renderer>().enabled = true;
+        if (player != null)
+        {
+            //"Player"(人間)を表示する
+            player.SetActive(true);
+            
+            //カメラのターゲットを"Player"(人間)に戻す
+            GameObject camera = GameObject.Find("MainCamera");
+            if (camera != null)
+            {
+               camera.GetComponent<CameraMovement>().SetCameraTarget(player);
+            }
+
+            //憑依体を削除
+            player = null;
+            Destroy(gameObject);
+        }
     }
-}
+
+    public EnemyData GetPossessionData()
+    {
+        return currentPossession;
+    }
+}   
