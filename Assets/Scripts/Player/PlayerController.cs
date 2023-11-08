@@ -137,7 +137,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnEnable()
     {
-        //gameObject.transform.position = returnPosition;
+        
     }
 
     // Update is called once per frame
@@ -254,6 +254,11 @@ public class PlayerController : MonoBehaviour
         //移動させる
         controller.Move(moveDelta);
 
+        if (player != null)
+        {
+            player.transform.position = transform.position;
+        }
+
         //キャラクターの回転
         if (inputMove != Vector2.zero)
         {
@@ -354,8 +359,7 @@ public class PlayerController : MonoBehaviour
         {
             //"Player"(人間)を表示する
             player.SetActive(true);
-            //現在の座標に"Player"(人間)を移動させる
-            player.GetComponent<PlayerController>().returnPosition = transform.position;
+            
             //カメラのターゲットを"Player"(人間)に戻す
             GameObject camera = GameObject.Find("MainCamera");
             if (camera != null)
