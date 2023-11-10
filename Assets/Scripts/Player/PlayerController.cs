@@ -124,7 +124,7 @@ public class PlayerController : MonoBehaviour
         returnAction.performed += _ => Return();
         returnAction.Enable();
 
-        //currentPossession = null;
+        currentPossession = null;
 
         // マウスカーソルを非表示にする
         //Cursor.visible = false;
