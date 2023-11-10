@@ -124,7 +124,7 @@ public class PlayerController : MonoBehaviour
         returnAction.performed += _ => Return();
         returnAction.Enable();
 
-        //currentPossession = null;
+        currentPossession = null;
 
         // マウスカーソルを非表示にする
         //Cursor.visible = false;
@@ -151,18 +151,11 @@ public class PlayerController : MonoBehaviour
         {
             PlayerMove();
         }
-
-        if(fireAction.IsPressed() == false)
-        {
-            isAttacking = false;
-        }
     }
 
     void AttackAnimation()
     {
-        isAttacking = true;
-        Debug.Log("Attack");
-        if (animator != null)
+        if (animator != null && isAttacking == false)
         {
             animator.SetTrigger("AttackTrigger");
         }
@@ -170,6 +163,18 @@ public class PlayerController : MonoBehaviour
         {
             particleSystem.Play();
         }
+    }
+
+    // アニメーションイベントから呼び出される関数
+    public void PerformAttack()
+    {
+        isAttacking = true;
+        //Debug.Log("attack:" + isAttacking);
+    }
+    public void EndAttack()
+    {
+        isAttacking = false;
+        //Debug.Log("attack:" + isAttacking);
     }
 
     private void OnTriggerStay(Collider other)
@@ -181,13 +186,7 @@ public class PlayerController : MonoBehaviour
 
             if (enemy != null)
             {
-                //攻撃処理
-                if (isAttacking == true)
-                {
-                    enemy.Damage(attackPower);
-                    isAttacking = false;
-                }//憑依処理
-                else if (possessionAction != null)
+                if (possessionAction != null)
                 {
                     if (possessionAction.IsPressed() == true)
                     {
@@ -208,8 +207,28 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Enemy"))
+        {
+            Debug.Log("attack=" + isAttacking);
+            EnemyController enemy = other.gameObject.GetComponent<EnemyController>();
+
+            if (enemy != null)
+            {
+                //攻撃
+                if (isAttacking == true)
+                {
+                    enemy.Damage(attackPower);
+                    Debug.Log("attack");
+                }
+            }
+        }
+    }
+
     public void Damage(int damage)
     {
+       
         //Debug.Log("エネミーから攻撃されています");
         hp -= damage;
         if (hp <= 0)
