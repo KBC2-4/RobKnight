@@ -5,6 +5,10 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "EnemyBehavior")]
 public class EnemyBehavior : ScriptableObject
 {
+
+    public bool UseAction = false;  //アクション配列に基づいて行動する? 
+    private int ActionNum = 0;  //現在の行動(Action配列を使う場合のみ使用)
+
     public List<EnemyAction> actions;
     public EnemyAction attackAction;
     public EnemyAction idleAction;
@@ -28,66 +32,84 @@ public class EnemyBehavior : ScriptableObject
 
     public void PerformActions(EnemyController controller)
     {
-        Debug.Log($"State:{currentState}");
+        //Debug.Log($"State:{currentState}");
         float distanceToPlayer = Vector3.Distance(controller.transform.position, controller.player.position);
 
-        if (controller.IsPlayerFound())
+        //UseActionをチェックする
+        if (UseAction)
         {
-            if (distanceToPlayer <= attackRange)
+            Debug.Log($"State:{ActionNum}");
+            //アクション配列に基づいて行動する
+            actions[ActionNum].Act(controller);
+            if (actions[ActionNum].IsComplete)
             {
-                attackAction.Act(controller);
-                currentState = EnemyState.Attack;
-                // foreach (var action in actions)
-                // {
-                //     action.Act(controller);
-                // }
+                //if (++ActionNum >= actions.Count) ActionNum = 0;
+                actions[ActionNum].IsComplete = false;
             }
-            else
-            {
-                chaseAction.Act(controller);
-                currentState = EnemyState.Chase;
-            }
-            
-            // プレイヤー発見時はアイドルタイマーをリセット
-            idleTimer = 0f;
-            isIdle = false;
+
         }
         else
         {
-            if (isIdle)
+            //アクション配列に基づかない行動
+            if (controller.IsPlayerFound())
             {
-                if (idleTimer < idleTime)
+                if (distanceToPlayer <= attackRange)
                 {
-                    idleAction.Act(controller);
-                    currentState = EnemyState.Idle;
-                    idleTimer += Time.deltaTime; // タイマーを更新
+                    attackAction.Act(controller);
+                    currentState = EnemyState.Attack;
+                    // foreach (var action in actions)
+                    // {
+                    //     action.Act(controller);
+                    // }
                 }
                 else
                 {
-                    // アイドル時間が経過したら、状態を切り替え
-                    isIdle = false;
-                    idleTimer = 0f;
+                    chaseAction.Act(controller);
+                    currentState = EnemyState.Chase;
                 }
+
+                // プレイヤー発見時はアイドルタイマーをリセット
+                idleTimer = 0f;
+                isIdle = false;
             }
             else
             {
-                wanderAction[0].Act(controller);
-                currentState = EnemyState.Wander;
-
-                //if (_selectedAction == null)
-                //{
-                //    SelectAction(controller, wanderAction);
-                //}
-                //_selectedAction.Act(controller);
-                //currentState = EnemyState.Wander;
-
-                // ランダムな確率でアイドル状態に切り替える
-                if (Random.value < idleFrequency)
+                if (isIdle)
                 {
-                    isIdle = true;
+                    if (idleTimer < idleTime)
+                    {
+                        idleAction.Act(controller);
+                        currentState = EnemyState.Idle;
+                        idleTimer += Time.deltaTime; // タイマーを更新
+                    }
+                    else
+                    {
+                        // アイドル時間が経過したら、状態を切り替え
+                        isIdle = false;
+                        idleTimer = 0f;
+                    }
+                }
+                else
+                {
+                    wanderAction[0].Act(controller);
+                    currentState = EnemyState.Wander;
+
+                    //if (_selectedAction == null)
+                    //{
+                    //    SelectAction(controller, wanderAction);
+                    //}
+                    //_selectedAction.Act(controller);
+                    //currentState = EnemyState.Wander;
+
+                    // ランダムな確率でアイドル状態に切り替える
+                    if (Random.value < idleFrequency)
+                    {
+                        isIdle = true;
+                    }
                 }
             }
         }
+       
     }
     
     

@@ -77,7 +77,7 @@ public class EnemyController : MonoBehaviour
 
     public void Damage(int damage)
     {
-        Debug.Log("当たってます");
+        //Debug.Log("当たってます");
         enemyData.hp -= damage;
         if (enemyData.hp <= 0)
         {
@@ -137,13 +137,13 @@ public class EnemyController : MonoBehaviour
     {
         _isAttacking = true;
         // ここでプレイヤーにダメージを与える処理を書く
-        Debug.Log("エネミーが攻撃!");
+        //Debug.Log("エネミーが攻撃!");
     }
     public void EndAttack()
     {
         _isAttacking = false;
         // ここでプレイヤーにダメージを与える処理を書く
-        Debug.Log("エネミーが攻撃終了!");
+        //Debug.Log("エネミーが攻撃終了!");
     }
 
     void OnTriggerEnter(Collider other)
@@ -202,7 +202,7 @@ public class EnemyController : MonoBehaviour
                     {
                         // プレイヤーが見つからなかった時の処理
                         _playerFound = true;
-                        Debug.Log("エネミー：プレイヤーを見つけたよ！");
+                        //Debug.Log("エネミー：プレイヤーを見つけたよ！");
                     }
                     // else　// Raycastテスト
                     // {

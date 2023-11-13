@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa08958e6a864cb49ac00649f48382f1, type: 3}
+  m_Name: BossGoblinB
+  m_EditorClassIdentifier: 
+  UseAction: 1
+  actions:
+  - {fileID: 11400000, guid: 682d776904ce8e644ac01d51b8b45531, type: 2}
+  - {fileID: 11400000, guid: 6732d8228c598eb44afe7cb103ac6a53, type: 2}
+  attackAction: {fileID: 11400000, guid: 6732d8228c598eb44afe7cb103ac6a53, type: 2}
+  idleAction: {fileID: 11400000, guid: b9ad5e1a12e88e54886113b51dfbb52f, type: 2}
+  wanderAction:
+  - {fileID: 11400000, guid: c0982e0ea1c69fd49a3450e6235ce0d5, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
+  chaseAction: {fileID: 11400000, guid: f161d41363aa76943b5786c267644574, type: 2}
+  idleFrequency: 0.002
+  idleTime: 3
+  attackRange: 8
