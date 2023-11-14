@@ -5,7 +5,7 @@ using UnityEngine;
 public class EnemySpawner : MonoBehaviour
 {
     public Transform playerTransform;
-    public float despawnDistance = 50f;
+    public float despawnDistance = 10f;
     public GameObject objectToSpawn;
     public int maxSpawnedObjects = 5;   // スポーンさせるオブジェクトの最大数
     private List<GameObject> spawnedObjects = new List<GameObject>(); // スポーンされたオブジェクトを追跡するためのリスト
