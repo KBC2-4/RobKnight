@@ -169,17 +169,14 @@ public class PlayerController : MonoBehaviour
     public void PerformAttack()
     {
         isAttacking = true;
-        //Debug.Log("attack:" + isAttacking);
     }
     public void EndAttack()
     {
         isAttacking = false;
-        //Debug.Log("attack:" + isAttacking);
     }
 
     private void OnTriggerStay(Collider other)
     {
-        //Debug.Log("Enemyかな？");
         if (other.gameObject.CompareTag("Enemy"))
         {
             EnemyController enemy = other.gameObject.GetComponent<EnemyController>();
@@ -211,7 +208,6 @@ public class PlayerController : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Enemy"))
         {
-            Debug.Log("attack=" + isAttacking);
             EnemyController enemy = other.gameObject.GetComponent<EnemyController>();
 
             if (enemy != null)
@@ -220,7 +216,6 @@ public class PlayerController : MonoBehaviour
                 if (isAttacking == true)
                 {
                     enemy.Damage(attackPower);
-                    Debug.Log("attack");
                 }
             }
         }
@@ -228,8 +223,6 @@ public class PlayerController : MonoBehaviour
 
     public void Damage(int damage)
     {
-       
-        //Debug.Log("エネミーから攻撃されています");
         hp -= damage;
         if (hp <= 0)
         {
