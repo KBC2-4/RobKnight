@@ -40,11 +40,12 @@ public class EnemyBehavior : ScriptableObject
         {
             Debug.Log($"State:{ActionNum}");
             //アクション配列に基づいて行動する
-            actions[ActionNum].Act(controller);
-            if (actions[ActionNum].IsComplete)
+            actions[ActionNum-1].Act(controller);
+
+            if (actions[ActionNum-1].IsComplete)
             {
-                //if (++ActionNum >= actions.Count) ActionNum = 0;
                 actions[ActionNum].IsComplete = false;
+                if (++ActionNum-1 >= actions.Count) ActionNum = 1;
             }
 
         }

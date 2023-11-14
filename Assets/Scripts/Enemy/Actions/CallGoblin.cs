@@ -1,3 +1,7 @@
+//-------------------------------
+//  ボスゴブリン：仲間呼び
+//-------------------------------
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,21 +17,21 @@ public class CallGoblin : EnemyAction
         AnimatorStateInfo stateInfo = controller.animator.GetCurrentAnimatorStateInfo(0);
 
         Debug.Log($"State:{IsCalled}");
-        if (!stateInfo.IsName("Call"))
+
+        if (!IsCalled)
         {
-            if (!IsCalled)
-            {
-                controller.animator.SetTrigger("CallTrigger");
-            }
-            else
-            {
-                IsComplete = true;
-            }
+            //仲間を呼ぶモーションのトリガーをセット
+            controller.animator.SetTrigger("CallTrigger");
         }
-        else 
+        else
         {
-            IsCalled = true;
+            //モーションが終了してアニメーターがIdle状態になれば行動終了
+            IsComplete = true;
+            return;
         }
+
+        //仲間を呼ぶモーションを行ったことを記録
+        if (stateInfo.IsName("Call")) IsCalled = true;
     }
 }
 
