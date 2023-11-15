@@ -51,9 +51,6 @@ public class TestStoneStatue : MonoBehaviour
             {
                 during_rotation = false;
             }
-
-            //UnityEngine.Debug.Log(transform.localEulerAngles.y); //デバッグ用
-            //UnityEngine.Debug.Log(_old_rotaey + 15); //デバッグ用
         }
     }
 }
