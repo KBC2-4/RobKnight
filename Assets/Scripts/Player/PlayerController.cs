@@ -213,7 +213,7 @@ public class PlayerController : MonoBehaviour
             if (enemy != null)
             {
                 //UŒ‚
-                if (isAttacking == true)
+                if (isAttacking == true && 0 < enemy.enemyData.hp)
                 {
                     enemy.Damage(attackPower);
                 }
