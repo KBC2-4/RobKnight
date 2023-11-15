@@ -9,25 +9,12 @@ public class AttackAction : EnemyAction
 
     public override void Act(EnemyController controller)
     {
-        // if (controller == null || controller.player == null)
-        // {
-        //     Debug.LogError("ControllerまたはPlayerがnullです!");
-        //     return;
-        // }
-        //
-        //float distanceToPlayer = Vector3.Distance(controller.transform.position, controller.player.position);
-        // if (distanceToPlayer <= attackRange)
-        // {
-        //     Debug.Log("エネミー：攻撃モーション");
-        //     controller.GetComponent<Animator>().SetBool("IsWalking", false);
-        //     controller.GetComponent<Animator>().SetTrigger("AttackTrigger");
-        // }
         
         // 現在再生中のアニメーションの状態を取得
         AnimatorStateInfo stateInfo = controller.animator.GetCurrentAnimatorStateInfo(0);
         
             controller.animator.SetFloat("Speed", 0);
-        if (!stateInfo.IsName("Attack"))
+        if (!stateInfo.IsName("Attack") && !stateInfo.IsTag("Attack"))
         {
 
             Vector3 direction = (controller.player.position - controller.transform.position).normalized;
