@@ -1,12 +1,25 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 
 public class TestStoneStatue : MonoBehaviour
 {
+    /*
+     * 各変数の宣言の仕方
+    [Serializable] Int32 a = 3;　　private publicの中間
+    private Int32 _b = 4;
+    public Int32 c = 5;
+    */
+
+    public bool attacked = false; //攻撃を食らったのか
+    public bool during_rotation = false; //回転中なのか
+
+    private float _old_rotaey = 0;
 
 
-   void Awake()
+    void Awake()
     {
 
     }
@@ -14,24 +27,33 @@ public class TestStoneStatue : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        Transform myTransform = this.transform;
 
-        //永遠と回転する処理
-        // transformを取得
-        //// ワールド座標基準で、現在の回転量へ加算する
-        //myTransform.Rotate(0, 1.0f, 0, Space.World);
+        if (attacked == true && during_rotation == false)
+        {
+            _old_rotaey = transform.localEulerAngles.y;
+            during_rotation = true;
+            attacked = false;
+        }
 
+        if (during_rotation)
+        {
+            if (_old_rotaey + 15 >= transform.localEulerAngles.y)
+            {
+                transform.Rotate(0f, 0f, 6 * Time.deltaTime); //回転
+            }
+            else
+            {
+                during_rotation = false;
+            }
 
-        Vector3 localAngle = myTransform.localEulerAngles;
-        localAngle.z = 15.0f; // ローカル座標を基準に、z軸を軸にした回転を10度に変更
-
-        myTransform.localEulerAngles = localAngle; // 回転角度を設定
-
+            //UnityEngine.Debug.Log(transform.localEulerAngles.y); //デバッグ用
+            //UnityEngine.Debug.Log(_old_rotaey + 15); //デバッグ用
+        }
     }
 }
