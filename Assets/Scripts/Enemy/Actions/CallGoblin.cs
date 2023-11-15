@@ -10,6 +10,11 @@ using UnityEngine;
 public class CallGoblin : EnemyAction
 {
     private bool IsCalled = false;
+    private void OnEnable()
+    {
+        //行動の初期化
+        IsCalled = false;
+    }
 
     public override void Act(EnemyController controller)
     {
@@ -18,20 +23,23 @@ public class CallGoblin : EnemyAction
 
         Debug.Log($"State:{IsCalled}");
 
+        //アクション開始から一定時間が経っていないならIsCalledをリセット
+        if (ActionTime < 60) IsCalled = false;
+
+        //仲間を呼ぶモーションを行ったことを記録
+        if (stateInfo.IsName("Call") && 60 <= ActionTime) IsCalled = true;
+
         if (!IsCalled)
         {
             //仲間を呼ぶモーションのトリガーをセット
             controller.animator.SetTrigger("CallTrigger");
         }
-        else
+        else if(stateInfo.IsName("Idle"))
         {
             //モーションが終了してアニメーターがIdle状態になれば行動終了
             IsComplete = true;
             return;
         }
-
-        //仲間を呼ぶモーションを行ったことを記録
-        if (stateInfo.IsName("Call")) IsCalled = true;
     }
 }
 
