@@ -23,8 +23,7 @@ public class miniCameraMovement : MonoBehaviour
     {
         //ƒJƒƒ‰‚ÌˆÊ’u‚ğİ’è
         Vector3 position = target.transform.position;
-        position.z -= 0;
-        position.y += 20;
+        position.y += 60;
         gameObject.transform.position = position;
 
 
