@@ -57,7 +57,7 @@ public class TestStoneStatue : MonoBehaviour
                     {
                         if (_old_rotaey + 15 >= transform.localEulerAngles.y)
                         {
-                            transform.Rotate(0f, 0f, 6 * Time.deltaTime); //‰ñ“]
+                            transform.Rotate(0f, 0f, 10 * Time.deltaTime); //‰ñ“]
                         }
                         else
                         {

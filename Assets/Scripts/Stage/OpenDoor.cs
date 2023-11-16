@@ -5,28 +5,31 @@ using UnityEngine;
 public class OpenDoor : MonoBehaviour
 {
     private Vector3 initialPosition;
-    private bool openDoor;
+    private bool isOpen;
 
     // Start is called before the first frame update
     void Start()
     {
         initialPosition = transform.position;
-        openDoor = true;
+        isOpen = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (transform.position.y >= initialPosition.y + 5.0f) openDoor = false;
+        if (transform.position.y >= initialPosition.y + 4.0f) isOpen = false;
 
-        if (openDoor)
+        if (isOpen)
         {
             transform.position += transform.up * Time.deltaTime;
         }
     }
 
-    //void OnTriggerEnter(Collision collision)
-    //{
-    //    openDoor = true
-    //}
+    private void OnTriggerEnter(Collider collider)
+    {
+        if (collider.gameObject.CompareTag("Player"))
+        {
+            isOpen = true;
+        }
+    }
 }
