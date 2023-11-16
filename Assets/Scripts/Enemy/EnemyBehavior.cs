@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "EnemyBehavior")]
@@ -7,7 +8,8 @@ public class EnemyBehavior : ScriptableObject
 {
 
     public bool UseAction = false;  //アクション配列に基づいて行動する? 
-    private int ActionNum = 0;  //現在の行動(Action配列を使う場合のみ使用)
+    private int ActionNum = 0;      //現在の行動配列番号(Action配列を使う場合のみ使用)
+    private EnemyAction NowAction;  //現在の行動        (Action配列を使う場合のみ使用)
 
     public List<EnemyAction> actions;
     public EnemyAction attackAction;
@@ -21,6 +23,18 @@ public class EnemyBehavior : ScriptableObject
     public float attackRange = 2f; // 攻撃範囲
     private EnemyState currentState;
     private EnemyAction _selectedAction;
+
+    private void OnEnable()
+    {
+        //行動の初期化
+        ActionNum = 0;
+        for (int i = 0; i < actions.Count; i++) 
+        {
+            actions[ActionNum].ActionTime = 0;
+            actions[ActionNum].IsComplete = false;
+        }
+        Debug.Log($"State:{ActionNum}");
+    }
 
     private enum EnemyState
     {
@@ -38,14 +52,19 @@ public class EnemyBehavior : ScriptableObject
         //UseActionをチェックする
         if (UseAction)
         {
-            Debug.Log($"State:{ActionNum}");
             //アクション配列に基づいて行動する
-            actions[ActionNum-1].Act(controller);
+            actions[ActionNum].Act(controller);
+            actions[ActionNum].ActionTime++;
 
-            if (actions[ActionNum-1].IsComplete)
+            Debug.Log($"State:{actions[ActionNum].ActionTime}");
+
+            //行動終了時、新たな行動をセットする
+            if (actions[ActionNum].IsComplete)
             {
+                if (++ActionNum >= actions.Count) ActionNum = 0;
+
                 actions[ActionNum].IsComplete = false;
-                if (++ActionNum-1 >= actions.Count) ActionNum = 1;
+                actions[ActionNum].ActionTime = 0;
             }
 
         }

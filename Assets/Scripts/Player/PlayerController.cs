@@ -49,7 +49,7 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// 憑依アクションに必要な入力時間
     /// </summary>
-    public const float inputTimePossession = 0f;
+    public const float inputTimePossession = 0.3f;
 
     /// <summary>
     /// 憑依後に保存するための変数
@@ -133,7 +133,7 @@ public class PlayerController : MonoBehaviour
         //// マウスカーソルを画面の中央に固定する
         //Cursor.lockState = CursorLockMode.Locked;
 
-        inputTimerPossession = 0;
+        
 
         if (Application.isEditor)
         {
@@ -143,7 +143,8 @@ public class PlayerController : MonoBehaviour
 
     private void OnEnable()
     {
-        
+        inputTimerPossession = 0;
+        isPossession = false;
     }
 
     // Update is called once per frame
@@ -189,10 +190,11 @@ public class PlayerController : MonoBehaviour
                 {
                     if (possessionAction.IsPressed() == true)
                     {
+                        Debug.Log("posTime" + inputTimerPossession);
                         inputTimerPossession += Time.deltaTime;
 
                         if (inputTimePossession < inputTimerPossession
-                            && enemy.enemyData.hp <= 0 && currentPossession == null)
+                            && enemy.enemyData.hp <= 0 && isPossession == false)
                         {
                             Possession(other.gameObject);
                         }
@@ -318,6 +320,7 @@ public class PlayerController : MonoBehaviour
         }//憑依体であれば破棄する
         else
         {
+           
             Destroy(gameObject);
         }
         //対象にプレイヤーコントローラーを追加
@@ -374,6 +377,8 @@ public class PlayerController : MonoBehaviour
         {
             camera.GetComponent<CameraMovement>().SetCameraTarget(targetObj);
         }
+
+        isPossession = true;
     }
 
     /// <summary>

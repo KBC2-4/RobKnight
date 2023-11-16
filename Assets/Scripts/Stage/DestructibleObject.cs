@@ -16,23 +16,24 @@ public class DestructibleObject : MonoBehaviour
         
     }
 
-    void OnCollisionEnter(Collision collision)
+    void OnTriggerStay(Collider other)
     {
         // 衝突したオブジェクトがプレイヤーの場合
-        if (collision.gameObject.CompareTag("Player"))
+        if (other.gameObject.CompareTag("Player"))
         {
             // プレイヤーコントローラーを取得
-            PlayerController playerController = collision.gameObject.GetComponent<PlayerController>();
-
-            Debug.Log("プレイヤーが破壊しようとしています");
+            PlayerController playerController = other.gameObject.GetComponent<PlayerController>();
 
             // プレイヤーが憑依している状態か確認します。
-            if (playerController != null && playerController.isPossession)
+            if (playerController != null)
             {
                 if (playerController.PossessionEnemyName == "Gobrin")
                 {
-                    // 憑依しているエネミーがゴブリンの場合オブジェクトを破壊
-                    Destroy(gameObject);
+                    if (playerController.IsAttacking == true)
+                    {
+                        // 憑依しているエネミーがゴブリンの場合オブジェクトを破壊
+                        Destroy(gameObject);
+                    }
                 }
             }
         }
