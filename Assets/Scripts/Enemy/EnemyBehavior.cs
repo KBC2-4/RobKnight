@@ -54,9 +54,9 @@ public class EnemyBehavior : ScriptableObject
         {
             //アクション配列に基づいて行動する
             actions[ActionNum].Act(controller);
-            actions[ActionNum].ActionTime++;
+            actions[ActionNum].ActionTime += Time.fixedDeltaTime;
 
-            Debug.Log($"State:{actions[ActionNum].ActionTime}");
+            //Debug.Log($"State:{Time.fixedDeltaTime}");
 
             //行動終了時、新たな行動をセットする
             if (actions[ActionNum].IsComplete)
