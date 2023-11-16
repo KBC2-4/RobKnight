@@ -83,6 +83,8 @@ public class PlayerController : MonoBehaviour
     public ParticleSystem particleSystem;
 
     public static GameOverController Instance { get; private set; }
+    public bool IsAttacking { get => isAttacking; set => isAttacking = value; }
+
     // 憑依しているか
     public bool isPossession = false;
     // 憑依しているエネミーの名前を取得
