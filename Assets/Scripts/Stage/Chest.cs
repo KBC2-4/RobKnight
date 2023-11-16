@@ -18,7 +18,7 @@ public class Chest : MonoBehaviour
         
     }
 
-    private void OnTriggerStay(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         // 衝突したオブジェクトがプレイヤーの場合
         if (other.gameObject.CompareTag("Player"))
