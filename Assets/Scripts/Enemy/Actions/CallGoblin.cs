@@ -9,29 +9,27 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "EnemyActions/CallGoblin")]
 public class CallGoblin : EnemyAction
 {
-    private bool IsCalled = false;
 
     public override void Act(EnemyController controller)
     {
         // 現在再生中のアニメーションの状態を取得
         AnimatorStateInfo stateInfo = controller.animator.GetCurrentAnimatorStateInfo(0);
 
-        Debug.Log($"State:{IsCalled}");
+        if (stateInfo.IsName("EndCall")) 
+        {
+            //モーションが終了してアニメーターがIdle状態になれば行動終了
+            IsComplete = true;
+            controller.animator.ResetTrigger("CallTrigger");
 
-        if (!IsCalled)
+
+
+            return;
+        }
+        else if (stateInfo.IsName("Idle") && !IsComplete)
         {
             //仲間を呼ぶモーションのトリガーをセット
             controller.animator.SetTrigger("CallTrigger");
         }
-        else
-        {
-            //モーションが終了してアニメーターがIdle状態になれば行動終了
-            IsComplete = true;
-            return;
-        }
-
-        //仲間を呼ぶモーションを行ったことを記録
-        if (stateInfo.IsName("Call")) IsCalled = true;
     }
 }
 
