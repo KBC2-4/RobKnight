@@ -22,9 +22,20 @@ public class AttackAction : EnemyAction
             Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
             controller.transform.rotation = Quaternion.Slerp(controller.transform.rotation, lookRotation, Time.deltaTime * 5f);
 
-            // 攻撃アニメーションが再生中でない場合のみ、トリガーをセット
-            controller.animator.SetTrigger("AttackTrigger");
+            //プレイヤー間の距離を取る
+            float distanceToPlayer = Vector3.Distance(controller.transform.position, controller.player.position);
+            if (distanceToPlayer <= attackRange)
+            {
+                // 攻撃アニメーションが再生中でないかつAttackRange内にプレイヤーがいる場合のみ、トリガーをセット
+                controller.animator.SetTrigger("AttackTrigger");
+            }
+
+            if (600 <= ActionTime || IsComplete)
+            {
+                IsComplete = true;
+            }
         }
+
     }
 }
 
