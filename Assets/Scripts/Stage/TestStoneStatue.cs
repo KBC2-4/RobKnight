@@ -29,9 +29,22 @@ public class TestStoneStatue : MonoBehaviour
 
     }
 
-    // Update is called once per frame
+    void Update()
+    {
+        if (during_rotation)
+        {
+            if (_old_rotaey + 15 >= transform.localEulerAngles.y)
+            {
+                transform.Rotate(0f, 0f, 10 * Time.deltaTime); //‰ñ“]
+            }
+            else
+            {
+                during_rotation = false;
+            }
+        }
+    }
 
-    public float pushPower = 2.0F;
+    // Update is called once per frame
 
     void OnTriggerStay(Collider other)
     {
@@ -51,18 +64,6 @@ public class TestStoneStatue : MonoBehaviour
                         _old_rotaey = transform.localEulerAngles.y;
                         during_rotation = true;
                         isAttacked = false;
-                    }
-
-                    if (during_rotation)
-                    {
-                        if (_old_rotaey + 15 >= transform.localEulerAngles.y)
-                        {
-                            transform.Rotate(0f, 0f, 10 * Time.deltaTime); //‰ñ“]
-                        }
-                        else
-                        {
-                            during_rotation = false;
-                        }
                     }
                 }
             }
