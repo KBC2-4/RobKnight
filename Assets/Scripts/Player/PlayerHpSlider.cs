@@ -20,7 +20,7 @@ public class PlayerHpSlider : MonoBehaviour
             hpSlider.value = playerMovement.maxHp;
         }
     }
-
+    
     // Update is called once per frame
     void Update()
     {
