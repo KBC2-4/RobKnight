@@ -146,7 +146,7 @@ public class EnemyController : MonoBehaviour
         //Debug.Log("エネミーが攻撃終了!");
     }
 
-    void OnTriggerEnter(Collider other)
+    void OnTriggerStay(Collider other)
     {
         if (_isAttacking && other.CompareTag("Player"))
         {
@@ -226,6 +226,12 @@ public class EnemyController : MonoBehaviour
     public bool IsPlayerFound()
     {
         return _playerFound;
+    }
+
+    //ステータス取得
+    public int IsGetPower() 
+    {
+        return enemyData.attackPower;
     }
 
 }

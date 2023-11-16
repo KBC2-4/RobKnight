@@ -20,6 +20,9 @@ public class CallGoblin : EnemyAction
             //モーションが終了してアニメーターがIdle状態になれば行動終了
             IsComplete = true;
             controller.animator.ResetTrigger("CallTrigger");
+
+
+
             return;
         }
         else if (stateInfo.IsName("Idle") && !IsComplete)
