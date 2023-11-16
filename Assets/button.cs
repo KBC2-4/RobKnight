@@ -5,13 +5,13 @@ using UnityEngine;
 public class button : MonoBehaviour
 {
 
-    bool push_flg;
+    public bool push_flg;
     float start_pds_y;
 
     // Start is called before the first frame update
     void Start()
     {
-        push_flg = false;
+        
         start_pds_y = transform.position.y;
     }
 

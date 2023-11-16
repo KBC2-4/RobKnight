@@ -8,16 +8,19 @@ public class box : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-       a = true;
+        button button;
+        GameObject obj = GameObject.Find("Cylinder");
+        button = obj.GetComponent<button>();
+        button.push_flg = true;
     }
 
     // Update is called once per frame
-    void Update()
+   /* void Update()
     {
         if (a == true)
         {
-            transform.position -= transform.up * Time.deltaTime;
-            if (transform.position.y <= 61) { a = false; }
+            transform.position += transform.up * Time.deltaTime;
+            //if (transform.position.y <= 61) { a = false; }
         }
-    }
+    }*/
 }
