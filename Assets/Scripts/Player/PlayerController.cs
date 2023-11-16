@@ -83,9 +83,11 @@ public class PlayerController : MonoBehaviour
     public ParticleSystem particleSystem;
 
     public static GameOverController Instance { get; private set; }
+    public bool IsAttacking { get => isAttacking; set => isAttacking = value; }
+
     // 憑依しているか
     public bool isPossession = false;
-    // 評しているエネミーの名前を取得
+    // 憑依しているエネミーの名前を取得
     public string PossessionEnemyName;
 
 
@@ -350,11 +352,18 @@ public class PlayerController : MonoBehaviour
             player = null;
             playerController.currentPossession = currentPossession;
             currentPossession = null;
+
         }
 
-        //EnemyControllerの機能をオフにする
-        targetObj.GetComponent<EnemyController>().enabled = false;
-            
+        EnemyController enemyController = targetObj?.GetComponent<EnemyController>();
+        if(enemyController != null) 
+        {
+            //ライトエフェクトを削除
+            enemyController.lightEffect.SetActive(false);
+            enemyController.enemyData.hp = playerController.maxHp;
+            enemyController.enabled = false;
+        }
+
         //タグをPlayerに変更
         targetObj.tag = "Player";
         targetObj.layer = gameObject.layer;
