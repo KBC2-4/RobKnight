@@ -133,7 +133,7 @@ public class PlayerController : MonoBehaviour
         //// マウスカーソルを画面の中央に固定する
         //Cursor.lockState = CursorLockMode.Locked;
 
-        inputTimerPossession = 0;
+        
 
         if (Application.isEditor)
         {
@@ -143,7 +143,8 @@ public class PlayerController : MonoBehaviour
 
     private void OnEnable()
     {
-        
+        inputTimerPossession = 0;
+        isPossession = false;
     }
 
     // Update is called once per frame
@@ -189,6 +190,7 @@ public class PlayerController : MonoBehaviour
                 {
                     if (possessionAction.IsPressed() == true)
                     {
+                        Debug.Log("posTime" + inputTimerPossession);
                         inputTimerPossession += Time.deltaTime;
 
                         if (inputTimePossession < inputTimerPossession
@@ -318,6 +320,7 @@ public class PlayerController : MonoBehaviour
         }//憑依体であれば破棄する
         else
         {
+           
             Destroy(gameObject);
         }
         //対象にプレイヤーコントローラーを追加

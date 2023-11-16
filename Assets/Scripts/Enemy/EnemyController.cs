@@ -56,8 +56,19 @@ public class EnemyController : MonoBehaviour
     {
         if (!isDeath)
         {
-            DetectPlayer();
-            behavior?.PerformActions(this);
+            if (player != null)
+            {
+                if (player.root.gameObject.activeSelf == false)
+                {
+                    player = GameObject.FindWithTag("Player").transform;
+                }
+                DetectPlayer();
+                behavior?.PerformActions(this);
+            }
+            else
+            {
+                player = GameObject.FindWithTag("Player").transform;
+            }
         }
     }
 
