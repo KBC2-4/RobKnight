@@ -51,12 +51,12 @@ public class EnemySpawner : MonoBehaviour
             {
                 float distanceToPlayer = Vector3.Distance(playerTransform.position, spawnedObjects[i].transform.position);
 
-                if (distanceToPlayer > despawnDistance)
-                {
-                    // プレイヤーが離れたらオブジェクトを非アクティブ化
-                    spawnedObjects[i].SetActive(false);
-                }
-                else
+               
+                //{
+                //    // プレイヤーが離れたらオブジェクトを非アクティブ化
+                //    spawnedObjects[i].SetActive(false);
+                //}
+                if (distanceToPlayer < despawnDistance)
                 {
                     // プレイヤーが近づいたらオブジェクトをアクティブ化
                     spawnedObjects[i].SetActive(true);
@@ -118,19 +118,19 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
-    void OnTriggerExit(Collider other)
-    {
-        if (other.transform == playerTransform)
-        {
-            // プレイヤーが範囲外に出たら全てのエネミーを非アクティブ化
-            foreach (var enemy in spawnedObjects)
-            {
-                if (enemy != null)
-                {
-                    enemy.SetActive(false);
-                }
-            }
-        }
-    }
+    //void OnTriggerExit(Collider other)
+    //{
+    //    if (other.transform == playerTransform)
+    //    {
+    //        // プレイヤーが範囲外に出たら全てのエネミーを非アクティブ化
+    //        foreach (var enemy in spawnedObjects)
+    //        {
+    //            if (enemy != null)
+    //            {
+    //                enemy.SetActive(false);
+    //            }
+    //        }
+    //    }
+    //}
 }
 
