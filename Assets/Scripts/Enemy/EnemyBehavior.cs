@@ -33,7 +33,6 @@ public class EnemyBehavior : ScriptableObject
             actions[ActionNum].ActionTime = 0;
             actions[ActionNum].IsComplete = false;
         }
-        Debug.Log($"State:{ActionNum}");
     }
 
     private enum EnemyState

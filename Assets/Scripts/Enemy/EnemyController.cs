@@ -90,6 +90,8 @@ public class EnemyController : MonoBehaviour
     {
         //Debug.Log("当たってます");
         enemyData.hp -= damage;
+
+        Debug.Log($"State:{enemyData.hp}");
         if (enemyData.hp <= 0)
         {
             OnDeath();
@@ -183,7 +185,7 @@ public class EnemyController : MonoBehaviour
     void DetectPlayer()
     {
         // プレイヤー検出フラグをリセット
-        _playerFound = false;
+       _playerFound = false;
         
         // エネミーとプレイヤーの間の距離を計算
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);

@@ -45,19 +45,19 @@ public class RushAttack : EnemyAction
         //突進に伴う移動
         if (stateInfo.IsName("Rush") || stateInfo.IsName("EndRush")) 
         {
-            Rigidbody rb = controller.GetComponent<Rigidbody>();
-            if (rb != null)
+            CharacterController Cc = controller.GetComponent<CharacterController>();
+            if (Cc != null)
             {
                 // エネミーを移動させる
-                Vector3 newPosition = rb.position + direction * (NowSpeed * Time.fixedDeltaTime);
-                rb.MovePosition(newPosition);
+                Vector3 newPosition = direction * (NowSpeed * Time.fixedDeltaTime);
+                Cc.Move(newPosition);
             }
 
             //突進中の行動
             if (stateInfo.IsName("Rush")) 
             {
                 //突進開始時、移動速度を徐々に上げる
-                NowSpeed += RushSpeed / (1 / Time.fixedDeltaTime * 0.6f);
+                NowSpeed += RushSpeed / (1 / Time.fixedDeltaTime * 0.3f);
                 if (RushSpeed < NowSpeed) NowSpeed = RushSpeed;
 
                 //プレイヤー間の距離を取る
