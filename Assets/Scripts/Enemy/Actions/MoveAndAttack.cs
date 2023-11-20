@@ -72,12 +72,14 @@ public class MoveAndAttack : EnemyAction
                 else 
                 {
                     controller.animator.SetBool("IsEndWalk", true);
+
                 }
             }
 
             if (5.0 <= ActionTime || IsComplete)
             {
                 IsComplete = true;
+                controller.animator.SetBool("IsEndWalk", true);
             }
         }
         else

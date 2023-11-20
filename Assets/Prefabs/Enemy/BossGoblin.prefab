@@ -108,6 +108,7 @@ GameObject:
   - component: {fileID: 3721638642836551418}
   - component: {fileID: 3068548247299400618}
   - component: {fileID: 2054109741120014561}
+  - component: {fileID: 7989734727374991679}
   m_Layer: 0
   m_Name: BossGoblin
   m_TagString: Enemy
@@ -198,6 +199,7 @@ MonoBehaviour:
     m_Bits: 136
   fieldOfViewAngle: 90
   rayCount: 60
+  uiPrompt: {fileID: 0}
   lightEffect: {fileID: 0}
 --- !u!54 &2054109741120014561
 Rigidbody:
@@ -222,10 +224,36 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!143 &7989734727374991679
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 679024357308705860}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 1
+  m_Radius: 0.8
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 1.5, z: 0}
 --- !u!1 &1180932535167312673
 GameObject:
   m_ObjectHideFlags: 0
