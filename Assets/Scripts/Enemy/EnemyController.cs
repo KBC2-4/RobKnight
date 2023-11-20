@@ -25,14 +25,19 @@ public class EnemyController : MonoBehaviour
     //private LayerMask detectionLayer = LayerMask.GetMask("Player", "Wall");
     public float fieldOfViewAngle = 90f; // 視野角
     public int rayCount = 10; // 放射するRayの数
+    public GameObject uiPrompt; // 憑依を促すUI
     
     public GameObject lightEffect;
 
+    // 攻撃受けた場合のイベント
+    public event Action OnDamage;
 
     // Start is called before the first frame update
     void Awake()
     {
         animator = GetComponent<Animator>();
+        
+        // プレイヤーが見つからない場合、再度検索する
         if (player == null)
         {
             player = GameObject.FindWithTag("Player").transform;
@@ -49,6 +54,16 @@ public class EnemyController : MonoBehaviour
         
         enemyData = Instantiate(enemyBaseData);
         enemyData.hp = enemyData.maxHp;
+
+        if (behavior != null)
+        {
+            // ビヘイビアの初期化(イベントハンドラの登録)
+            behavior.Initialize(this);   
+        }
+        else
+        {
+            Debug.LogError("EnemyBehaviorがセットされていません。");
+        }
     }
 
     // Update is called once per frame
@@ -58,6 +73,7 @@ public class EnemyController : MonoBehaviour
         {
             if (player != null)
             {
+                // プレイヤーオブジェクトが非アクティブなら、再度検索する
                 if (player.root.gameObject.activeSelf == false)
                 {
                     player = GameObject.FindWithTag("Player").transform;
@@ -80,6 +96,14 @@ public class EnemyController : MonoBehaviour
     //     }
     // }
 
+    void OnDestroy()
+    {
+        if (behavior != null)
+        {
+            behavior.Cleanup(this);
+        }
+    }
+    
     public void Finded()
     {
         _finded = true;
@@ -91,10 +115,14 @@ public class EnemyController : MonoBehaviour
         //Debug.Log("当たってます");
         enemyData.hp -= damage;
 
-        Debug.Log($"State:{enemyData.hp}");
         if (enemyData.hp <= 0)
         {
             OnDeath();
+        }
+        else
+        {
+            // ダメージイベントを発火
+            OnDamage?.Invoke();
         }
     }
 
