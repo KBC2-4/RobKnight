@@ -244,6 +244,7 @@ GameObject:
   - component: {fileID: 5050838742533811210}
   - component: {fileID: 5587414514344035413}
   - component: {fileID: 6196020544541263757}
+  - component: {fileID: 3939242417457929609}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -359,7 +360,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 090dd239a84023541be3372aa091d64b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiPrompt: {fileID: 3502910671685293494}
+  uiForKeyboardMouse: {fileID: 3502910671685293494}
+  uiForGameController: {fileID: 3502910671685293494}
+  uiForMobile: {fileID: 3502910671685293494}
+--- !u!135 &3939242417457929609
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 291703278168160112}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 30
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &914966020919299861
 GameObject:
   m_ObjectHideFlags: 0
@@ -1724,6 +1748,7 @@ MonoBehaviour:
     m_Bits: 136
   fieldOfViewAngle: 90
   rayCount: 60
+  uiPrompt: {fileID: 0}
   lightEffect: {fileID: 528888745756132497}
 --- !u!1 &5876132879308093440
 GameObject:
