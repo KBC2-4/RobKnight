@@ -17,11 +17,11 @@ public class OpenDoor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (transform.position.y >= initialPosition.y + 4.0f) isOpen = false;
+        if (transform.position.y <= initialPosition.y - 6.0f) isOpen = false;
 
         if (isOpen)
         {
-            transform.position += transform.up * Time.deltaTime;
+            transform.position -= transform.up * Time.deltaTime;
         }
     }
 
