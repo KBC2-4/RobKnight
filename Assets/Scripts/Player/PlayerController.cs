@@ -382,7 +382,7 @@ public class PlayerController : MonoBehaviour
             //ライトエフェクトを削除
             enemyController.lightEffect.SetActive(false);
             enemyController.enemyData.hp = playerController.maxHp;
-            enemyController.enabled = false;
+            Destroy(enemyController);
         }
 
         //タグをPlayerに変更
