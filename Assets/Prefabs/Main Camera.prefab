@@ -12,8 +12,6 @@ GameObject:
   - component: {fileID: 3634030527683003064}
   - component: {fileID: 3652459964896993453}
   - component: {fileID: 5436117518744342144}
-  - component: {fileID: 3539805718728677792}
-  - component: {fileID: 4084098330980756979}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -75,7 +73,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 511
+    m_Bits: 4294967295
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -139,29 +137,3 @@ MonoBehaviour:
     mipBias: 0
     varianceClampScale: 0.9
     contrastAdaptiveSharpening: 0
---- !u!114 &3539805718728677792
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9186039953054806701}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 71057b41a01687648a42a3fa346093d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 0}
-  offset: {x: 0, y: 0, z: 0}
---- !u!114 &4084098330980756979
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9186039953054806701}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6de7e14ace09bb8469e70c5402a373b0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

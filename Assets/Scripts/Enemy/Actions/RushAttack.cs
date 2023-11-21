@@ -9,15 +9,15 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "EnemyActions/RushAttack")]
 public class RushAttack : EnemyAction
 {
-    public float RushTime = 1.5f;    //突進の継続時間
+    public int RushTime = 60;    //突進の継続時間
     public float RushSpeed = 5;  //突進の初期速度
     public float RushRange = 3;  //突進の攻撃範囲
-    public float HitCool = 0.33f;     //突進の当たり判定クールタイム
+    public int HitCool = 20;     //突進の当たり判定クールタイム
 
     private float NowSpeed = 5;  //突進の速度
     private Vector3 direction;  //突進の角度
-    private float StartTime;  //突進の開始時間
-    private float NowCool;    //現在のクールタイム
+    private int StartTime;  //突進の開始時間
+    private int NowCool;    //現在のクールタイム
 
     public override void Act(EnemyController controller)
     {
@@ -45,19 +45,19 @@ public class RushAttack : EnemyAction
         //突進に伴う移動
         if (stateInfo.IsName("Rush") || stateInfo.IsName("EndRush")) 
         {
-            CharacterController Cc = controller.GetComponent<CharacterController>();
-            if (Cc != null)
+            Rigidbody rb = controller.GetComponent<Rigidbody>();
+            if (rb != null)
             {
                 // エネミーを移動させる
-                Vector3 newPosition = direction * (NowSpeed * Time.fixedDeltaTime);
-                Cc.Move(newPosition);
+                Vector3 newPosition = rb.position + direction * (NowSpeed * Time.fixedDeltaTime);
+                rb.MovePosition(newPosition);
             }
 
             //突進中の行動
             if (stateInfo.IsName("Rush")) 
             {
                 //突進開始時、移動速度を徐々に上げる
-                NowSpeed += RushSpeed / (1 / Time.fixedDeltaTime * 0.3f);
+                NowSpeed += RushSpeed / (RushTime * 0.6f);
                 if (RushSpeed < NowSpeed) NowSpeed = RushSpeed;
 
                 //プレイヤー間の距離を取る
@@ -73,18 +73,13 @@ public class RushAttack : EnemyAction
             else
             {
                 //突進終了時、移動速度を徐々に減らす
-                NowSpeed -= RushSpeed / (1 / Time.fixedDeltaTime * 0.5f);
+                NowSpeed -= RushSpeed / 30;
                 if (NowSpeed < 0) NowSpeed = 0;
-
-                //トリガーリセット
-                controller.animator.ResetTrigger("RushTrigger");
-                controller.animator.ResetTrigger("RushEndTrigger");
             }
         }
 
         //突進クールタイムを減少させる
-        NowCool -= Time.fixedDeltaTime;
-        if (NowCool < 0) NowCool = 0;
+        if (--NowCool < 0) NowCool = 0;
 
         //アニメーションの状態遷移
         if (stateInfo.IsName("EndRush"))
