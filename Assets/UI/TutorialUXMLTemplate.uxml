@@ -3,6 +3,6 @@
     <ui:VisualElement class="popup">
         <ui:Label tabindex="-1" text="チュートリアル" parse-escape-sequences="true" display-tooltip-when-elided="true" name="title" class="title" style="color: rgb(255, 251, 25);" />
         <ui:Label tabindex="-1" text="徘徊している敵を倒すと敵に憑依することができます。&#10;憑依すると憑依した敵の特性を活かしてステージを解き明かそう！" parse-escape-sequences="true" display-tooltip-when-elided="true" name="text" class="contents" style="font-size: 25px; color: rgb(155, 255, 214);" />
-        <ui:Button text="わかった！" parse-escape-sequences="true" display-tooltip-when-elided="true" class="ok-button" style="-unity-text-align: middle-center; align-items: auto; transform-origin: right bottom; top: auto; margin-right: 50px; justify-content: center;" />
+        <ui:Button text="わかった！" parse-escape-sequences="true" display-tooltip-when-elided="true" class="ok-button" style="-unity-text-align: middle-center; align-items: auto; transform-origin: right bottom; top: auto; margin-right: 50px; justify-content: center; visibility: visible; display: flex; overflow: hidden;" />
     </ui:VisualElement>
 </ui:UXML>
