@@ -1,13 +1,9 @@
 using UnityEngine;
-using UnityEngine.Rendering;
-using UnityEngine.Rendering.Universal;
 
 public class PauseController : MonoBehaviour
 {
     private bool isPaused = false;
     public GameObject pauseMenu; // ポーズメニューのUIをアタッチします
-    [SerializeField] private Volume postProcessVolume;
-    private DepthOfField _depthOfField;
 
     void Start()
     {
@@ -16,11 +12,7 @@ public class PauseController : MonoBehaviour
         // ポーズメニューのUIを非表示に設定
         pauseMenu.SetActive(false);
 
-        // VolumeからDepth of Fieldコンポーネントを取得
-        if (postProcessVolume.profile.TryGet<DepthOfField>(out _depthOfField))
-        {
-            // 初期設定（必要に応じて）
-        }
+
     }
 
     void Update()
@@ -41,11 +33,6 @@ public class PauseController : MonoBehaviour
             Time.timeScale = 0f;
             // ポーズメニューのUIを表示
             pauseMenu.SetActive(true);
-            
-            if (_depthOfField != null)
-            {
-                _depthOfField.active = true;
-            }
         }
         else
         {
@@ -53,11 +40,6 @@ public class PauseController : MonoBehaviour
             Time.timeScale = 1f;
             // ポーズメニューのUIを非表示
             pauseMenu.SetActive(false);
-            
-            if (_depthOfField != null)
-            {
-                _depthOfField.active = false;
-            }
         }
     }
 }
