@@ -30,7 +30,7 @@ public class AttackAction : EnemyAction
                 controller.animator.SetTrigger("AttackTrigger");
             }
 
-            if (600 <= ActionTime || IsComplete)
+            if (5.0 <= ActionTime || IsComplete)
             {
                 IsComplete = true;
             }
