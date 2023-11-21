@@ -343,7 +343,7 @@ public class PlayerController : MonoBehaviour
             characterController.height = capsuleCollider.height;
             characterController.center = capsuleCollider.center;
             characterController.radius = capsuleCollider.radius;
-            //Destroy(targetObj.GetComponent<CapsuleCollider>());
+            Destroy(targetObj.GetComponent<CapsuleCollider>());
         }
         targetObj.gameObject.AddComponent<PlayerController>();
 
@@ -382,7 +382,7 @@ public class PlayerController : MonoBehaviour
             //ライトエフェクトを削除
             enemyController.lightEffect.SetActive(false);
             enemyController.enemyData.hp = playerController.maxHp;
-            Destroy(enemyController);
+            enemyController.enabled = false;
         }
 
         //タグをPlayerに変更

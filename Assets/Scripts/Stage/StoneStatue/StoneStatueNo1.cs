@@ -33,6 +33,7 @@ public class StoneStatueNo1 : MonoBehaviour
         if (_fixation > transform.localEulerAngles.y)
         {
 
+
             if (during_rotation)
             {
                 if (_old_rotaey + 15 >= transform.localEulerAngles.y)
