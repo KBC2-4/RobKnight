@@ -10,8 +10,6 @@ using UnityEngine;
 public class CallGoblin : EnemyAction
 {
 
-    public GameObject objectToSpawn;
-
     public override void Act(EnemyController controller)
     {
         // 現在再生中のアニメーションの状態を取得
@@ -23,11 +21,7 @@ public class CallGoblin : EnemyAction
             IsComplete = true;
             controller.animator.ResetTrigger("CallTrigger");
 
-            GameObject enemy = Instantiate(objectToSpawn);
-            enemy.transform.position = new Vector3(0, 0, 5) + controller.transform.position;
 
-            enemy = Instantiate(objectToSpawn);
-            enemy.transform.position = new Vector3(0, 0, -5) + controller.transform.position;
 
             return;
         }
