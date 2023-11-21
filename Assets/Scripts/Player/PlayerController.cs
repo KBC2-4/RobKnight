@@ -151,17 +151,15 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isAttacking == false)
-        {
-            PlayerMove();
-        }
+        PlayerMove();
     }
 
     void AttackAnimation()
     {
         if (animator != null && isAttacking == false)
         {
-            animator.SetTrigger("AttackTrigger");
+            animator.Play("Attack");
+                //animator.SetTrigger("AttackTrigger");
         }
         if (particleSystem != null && particleSystem.isStopped)
         {
@@ -282,18 +280,19 @@ public class PlayerController : MonoBehaviour
         //現在フレームの移動量を移動速度から計算
         Vector3 moveDelta = moveVelocity * Time.deltaTime;
 
-        //移動させる
-        controller.Move(moveDelta);
-
-        if (player != null)
+        if (inputMove != Vector2.zero
+            && animator.GetCurrentAnimatorStateInfo(0).IsName("Attack") == false)
         {
-            player.transform.position = transform.position;
-        }
+            //移動させる
+            controller.Move(moveDelta);
 
-        //キャラクターの回転
-        if (inputMove != Vector2.zero)
-        {
+            if (player != null)
+            {
+                player.transform.position = transform.position;
+            }
+
             animator.SetFloat("Speed", 1.0f);
+            //キャラクターの回転
             MoveRotation();
         }
         else
