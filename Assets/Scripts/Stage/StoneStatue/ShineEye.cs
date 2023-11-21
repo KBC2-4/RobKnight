@@ -5,6 +5,8 @@ using UnityEngine;
 public class shineeye : MonoBehaviour
 {
 
+    public Stone stone;
+
     [SerializeField] Material color = default;
     Material cubeMaterial;
     private bool isShine;
@@ -18,7 +20,8 @@ public class shineeye : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isShine == false)
+
+        if (stone.end && !isShine)
         {
             GetComponent<MeshRenderer>().material = color;
             isShine = true;
