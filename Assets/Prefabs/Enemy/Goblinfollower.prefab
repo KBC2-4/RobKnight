@@ -537,7 +537,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 090dd239a84023541be3372aa091d64b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiPrompt: {fileID: 0}
+  uiForKeyboardMouse: {fileID: 0}
+  uiForGameController: {fileID: 0}
+  uiForMobile: {fileID: 0}
 --- !u!135 &4934080789981726893
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -2047,7 +2049,7 @@ Animator:
   m_GameObject: {fileID: 8012295354714575429}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: a0c20659838f8e147847eda60ff6bdb5, type: 3}
-  m_Controller: {fileID: 9100000, guid: e05266ec6c2ba1245a25804c72d56c7d, type: 2}
+  m_Controller: {fileID: 9100000, guid: ec1adb76bb675aa4ba0dc5459efb04de, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
@@ -2149,8 +2151,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68f519673467449449e6527c59c465f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyBaseData: {fileID: 11400000, guid: 5ee5bd87b3a3e584299248274c51a51a, type: 2}
-  enemyData: {fileID: 11400000, guid: 5ee5bd87b3a3e584299248274c51a51a, type: 2}
+  enemyBaseData: {fileID: 11400000, guid: 28d3a8b302f861140aebecc309ab7baf, type: 2}
+  enemyData: {fileID: 11400000, guid: 28d3a8b302f861140aebecc309ab7baf, type: 2}
   animator: {fileID: 0}
   behavior: {fileID: 11400000, guid: 37c986ad7af1cb84b98604868e14179f, type: 2}
   isDeath: 0

@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using UnityEngine;
 
 public class Stone : MonoBehaviour
@@ -25,7 +24,7 @@ public class Stone : MonoBehaviour
         end = false;
     }
 
-    //// Update is called once per frame
+    // Update is called once per frame
     void Update()
     {
 
