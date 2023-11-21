@@ -7,19 +7,19 @@ public class EnemySpawner : MonoBehaviour
     public Transform playerTransform;
     public float despawnDistance = 10f;
     public GameObject objectToSpawn;
-    public int maxSpawnedObjects = 5;   // ƒXƒ|[ƒ“‚³‚¹‚éƒIƒuƒWƒFƒNƒg‚ÌÅ‘å”
-    private List<GameObject> spawnedObjects = new List<GameObject>(); // ƒXƒ|[ƒ“‚³‚ê‚½ƒIƒuƒWƒFƒNƒg‚ğ’ÇÕ‚·‚é‚½‚ß‚ÌƒŠƒXƒg
-    private int currentSpawnedObjects = 0;  // ƒXƒ|[ƒ“‚³‚¹‚½ƒIƒuƒWƒFƒNƒg‚Ì”
-    //public Vector3 areaSize = new Vector3(10, 0, 10); // ƒXƒ|[ƒ“ƒGƒŠƒA‚ÌƒTƒCƒY
-    //public Vector3 areaOffset; // ƒXƒ|[ƒ“ƒGƒŠƒA‚ÌƒIƒtƒZƒbƒg
+    public int maxSpawnedObjects = 5;   // ã‚¹ãƒãƒ¼ãƒ³ã•ã›ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®æœ€å¤§æ•°
+    private List<GameObject> spawnedObjects = new List<GameObject>(); // ã‚¹ãƒãƒ¼ãƒ³ã•ã‚ŒãŸã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’è¿½è·¡ã™ã‚‹ãŸã‚ã®ãƒªã‚¹ãƒˆ
+    private int currentSpawnedObjects = 0;  // ã‚¹ãƒãƒ¼ãƒ³ã•ã›ãŸã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®æ•°
+    //public Vector3 areaSize = new Vector3(10, 0, 10); // ã‚¹ãƒãƒ¼ãƒ³ã‚¨ãƒªã‚¢ã®ã‚µã‚¤ã‚º
+    //public Vector3 areaOffset; // ã‚¹ãƒãƒ¼ãƒ³ã‚¨ãƒªã‚¢ã®ã‚ªãƒ•ã‚»ãƒƒãƒˆ
     private BoxCollider spawnArea;
-    public float spawnDelay = 2.0f; // ƒXƒ|[ƒ“‚Ì’x‰„ŠÔi•bj
+    public float spawnDelay = 2.0f; // ã‚¹ãƒãƒ¼ãƒ³ã®é…å»¶æ™‚é–“ï¼ˆç§’ï¼‰
 
     void Start()
     {
         spawnArea = GetComponent<BoxCollider>();
-        StartCoroutine(SpawnRoutine()); // ƒXƒ|[ƒ“ƒ‹[ƒ`ƒ“‚ğŠJn
-        playerTransform = GameObject.FindGameObjectWithTag("Player").transform; // playerƒ^ƒO‚ğ‚ÂƒIƒuƒWƒFƒNƒg‚ÌTransform‚ğæ“¾
+        StartCoroutine(SpawnRoutine()); // ã‚¹ãƒãƒ¼ãƒ³ãƒ«ãƒ¼ãƒãƒ³ã‚’é–‹å§‹
+        playerTransform = GameObject.FindGameObjectWithTag("Player").transform; // playerã‚¿ã‚°ã‚’æŒã¤ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®Transformã‚’å–å¾—
     }
 
     void Update()
@@ -29,23 +29,23 @@ public class EnemySpawner : MonoBehaviour
         //     SpawnObjectInRandomPosition();
         // }
 
-        // ƒGƒlƒ~[‚ÌƒfƒXƒ|[ƒ“
+        // ã‚¨ãƒãƒŸãƒ¼ã®ãƒ‡ã‚¹ãƒãƒ¼ãƒ³
         //ObjectPoolManager.Instance.PerformActionOnActiveObjects(enemy =>
         //{
         //    if (Vector3.Distance(playerTransform.position, enemy.transform.position) > despawnDistance)
         //    {
-        //        // ƒvƒŒƒCƒ„[‚©‚ç—£‚ê‚½ƒGƒlƒ~[‚ğƒv[ƒ‹‚É–ß‚·
+        //        // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‹ã‚‰é›¢ã‚ŒãŸã‚¨ãƒãƒŸãƒ¼ã‚’ãƒ—ãƒ¼ãƒ«ã«æˆ»ã™
         //        ObjectPoolManager.Instance.ReturnEnemy(enemy);
         //    }
         //});
         
         
-        // ƒXƒ|[ƒ“‚³‚ê‚½ƒGƒlƒ~[‚ÌƒAƒNƒeƒBƒuó‘Ô‚ğƒ`ƒFƒbƒN
+        // ã‚¹ãƒãƒ¼ãƒ³ã•ã‚ŒãŸã‚¨ãƒãƒŸãƒ¼ã®ã‚¢ã‚¯ãƒ†ã‚£ãƒ–çŠ¶æ…‹ã‚’ãƒã‚§ãƒƒã‚¯
         for (int i = spawnedObjects.Count - 1; i >= 0; i--)
         {
             if (spawnedObjects[i] == null)
             {
-                spawnedObjects.RemoveAt(i); // Šù‚É”jŠü‚³‚ê‚½ƒIƒuƒWƒFƒNƒg‚ğƒŠƒXƒg‚©‚çíœ
+                spawnedObjects.RemoveAt(i); // æ—¢ã«ç ´æ£„ã•ã‚ŒãŸã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ãƒªã‚¹ãƒˆã‹ã‚‰å‰Šé™¤
             }
             else
             {
@@ -53,12 +53,12 @@ public class EnemySpawner : MonoBehaviour
 
                
                 //{
-                //    // ƒvƒŒƒCƒ„[‚ª—£‚ê‚½‚çƒIƒuƒWƒFƒNƒg‚ğ”ñƒAƒNƒeƒBƒu‰»
+                //    // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒé›¢ã‚ŒãŸã‚‰ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’éã‚¢ã‚¯ãƒ†ã‚£ãƒ–åŒ–
                 //    spawnedObjects[i].SetActive(false);
                 //}
                 if (distanceToPlayer < despawnDistance)
                 {
-                    // ƒvƒŒƒCƒ„[‚ª‹ß‚Ã‚¢‚½‚çƒIƒuƒWƒFƒNƒg‚ğƒAƒNƒeƒBƒu‰»
+                    // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒè¿‘ã¥ã„ãŸã‚‰ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ã‚¢ã‚¯ãƒ†ã‚£ãƒ–åŒ–
                     spawnedObjects[i].SetActive(true);
                 }
             }
@@ -69,7 +69,7 @@ public class EnemySpawner : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(spawnDelay); // ’x‰„
+            yield return new WaitForSeconds(spawnDelay); // é…å»¶
 
             if (spawnedObjects.Count < maxSpawnedObjects)
             {
@@ -94,12 +94,12 @@ public class EnemySpawner : MonoBehaviour
             Random.Range(-spawnArea.size.z / 2, spawnArea.size.z / 2)
         ) + spawnArea.center;
 
-        // ƒGƒlƒ~[ƒv[ƒ‹‚©‚çƒGƒlƒ~[‚ğƒXƒ|[ƒ“
+        // ã‚¨ãƒãƒŸãƒ¼ãƒ—ãƒ¼ãƒ«ã‹ã‚‰ã‚¨ãƒãƒŸãƒ¼ã‚’ã‚¹ãƒãƒ¼ãƒ³
         //EnemyController spawnedEnemy = enemyPoolManager.SpawnEnemy(spawnPosition, spawnRotation);
-        // EnemyPoolManager ‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğ Singleton Œo—R‚Åæ“¾‚µAƒGƒlƒ~[‚ğƒXƒ|[ƒ“
+        // EnemyPoolManager ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ Singleton çµŒç”±ã§å–å¾—ã—ã€ã‚¨ãƒãƒŸãƒ¼ã‚’ã‚¹ãƒãƒ¼ãƒ³
         //EnemyController spawnedEnemy = EnemyPoolManager.Instance.SpawnEnemy(transform.TransformPoint(randomPoint), Quaternion.identity);
         GameObject spawned = Instantiate(objectToSpawn, transform.TransformPoint(randomPoint), Quaternion.identity);
-        spawnedObjects.Add(spawned); // ƒXƒ|[ƒ“‚³‚ê‚½ƒIƒuƒWƒFƒNƒg‚ğƒŠƒXƒg‚É’Ç‰Á
+        spawnedObjects.Add(spawned); // ã‚¹ãƒãƒ¼ãƒ³ã•ã‚ŒãŸã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ãƒªã‚¹ãƒˆã«è¿½åŠ 
         currentSpawnedObjects++;
     }
     
@@ -107,7 +107,7 @@ public class EnemySpawner : MonoBehaviour
     {
         if (other.transform == playerTransform)
         {
-            // ƒvƒŒƒCƒ„[‚ª”ÍˆÍ“à‚É“ü‚Á‚½‚ç‘S‚Ä‚ÌƒGƒlƒ~[‚ğƒAƒNƒeƒBƒu‰»
+            // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒç¯„å›²å†…ã«å…¥ã£ãŸã‚‰å…¨ã¦ã®ã‚¨ãƒãƒŸãƒ¼ã‚’ã‚¢ã‚¯ãƒ†ã‚£ãƒ–åŒ–
             foreach (var enemy in spawnedObjects)
             {
                 if (enemy != null)
@@ -122,7 +122,7 @@ public class EnemySpawner : MonoBehaviour
     //{
     //    if (other.transform == playerTransform)
     //    {
-    //        // ƒvƒŒƒCƒ„[‚ª”ÍˆÍŠO‚Éo‚½‚ç‘S‚Ä‚ÌƒGƒlƒ~[‚ğ”ñƒAƒNƒeƒBƒu‰»
+    //        // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒç¯„å›²å¤–ã«å‡ºãŸã‚‰å…¨ã¦ã®ã‚¨ãƒãƒŸãƒ¼ã‚’éã‚¢ã‚¯ãƒ†ã‚£ãƒ–åŒ–
     //        foreach (var enemy in spawnedObjects)
     //        {
     //            if (enemy != null)

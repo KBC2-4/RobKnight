@@ -11,6 +11,8 @@ public class WaitAction : EnemyAction
     {
         //プレイヤー間の距離を取る
         float distanceToPlayer = Vector3.Distance(controller.transform.position, controller.player.position);
+        
+        //プレイヤー間の距離が一定以下なら行動終了
         if (distanceToPlayer <= FoundRange)
         {
             IsComplete = true;
