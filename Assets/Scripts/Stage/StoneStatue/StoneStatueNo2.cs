@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class StoneStatueNo2 : MonoBehaviour
 {
-    public bool isAttacked = false; //UŒ‚‚ðH‚ç‚Á‚½‚Ì‚©
+     public bool isAttacked = false; //UŒ‚‚ðH‚ç‚Á‚½‚Ì‚©
     public bool during_rotation = false; //‰ñ“]’†‚È‚Ì‚©
 
     private float _old_rotaey = 0;
@@ -32,7 +32,6 @@ public class StoneStatueNo2 : MonoBehaviour
         if (_fixation > transform.localEulerAngles.y)
         {
 
-
             if (during_rotation)
             {
                 if (_old_rotaey + 15 >= transform.localEulerAngles.y)
@@ -58,8 +57,6 @@ public class StoneStatueNo2 : MonoBehaviour
             }
 
         }
-
-
     }
 
     // Update is called once per frame
