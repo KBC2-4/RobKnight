@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -230,7 +231,17 @@ public class PlayerController : MonoBehaviour
         hp -= damage;
         if (hp <= 0)
         {
-            OnDeath();
+            //憑依状態であれば人間体に戻す
+            if (name != "Player")
+            {
+                Debug.Log("Damage:return");
+                Return();
+            }
+            else
+            {
+                Debug.Log("Damage:deth");
+                OnDeath();
+            }
         }
     }
 
@@ -347,6 +358,7 @@ public class PlayerController : MonoBehaviour
             //憑依キャラのパラメータを設定
             currentPossession = targetObj?.GetComponent<EnemyController>().enemyData;
             playerController.maxHp = currentPossession.maxHp;
+            
             playerController.hp = playerController.maxHp;
             playerController.attackPower = currentPossession.attackPower;
             playerController.inputActions = inputActions;
@@ -356,6 +368,13 @@ public class PlayerController : MonoBehaviour
             playerController.currentPossession = currentPossession;
             currentPossession = null;
 
+            //PlayerのHPsliderを憑依体のHPに設定
+            PlayerHpSlider playerHpSlider = GameObject.Find("HP").GetComponent<PlayerHpSlider>();
+            if (playerHpSlider != null)
+            {
+                playerHpSlider.SetPlayerHp(playerController);
+                playerHpSlider.hpSlider.fillRect.GetComponent<Image>().color = new Color(0.8030842f, 0.4134211f, 0.9245283f, 1.0f);
+            }
         }
 
         EnemyController enemyController = targetObj?.GetComponent<EnemyController>();
@@ -371,6 +390,13 @@ public class PlayerController : MonoBehaviour
         targetObj.tag = "Player";
         targetObj.layer = gameObject.layer;
 
+        //憑依した敵のHPバーを削除
+        Canvas canvas=targetObj?.GetComponentInChildren<Canvas>();
+        if(canvas != null) 
+        {
+            canvas.enabled = false;
+        }
+        
         //カメラのターゲットを憑依キャラに切り替える
         GameObject camera = GameObject.Find("MainCamera");
         if (camera != null)
@@ -390,7 +416,15 @@ public class PlayerController : MonoBehaviour
         {
             //"Player"(人間)を表示する
             player.SetActive(true);
-            
+
+            //PlayerのHPsliderを元に戻す
+            PlayerHpSlider playerHpSlider = GameObject.Find("HP").GetComponent<PlayerHpSlider>();
+            if (playerHpSlider != null)
+            {
+                playerHpSlider.SetPlayerHp(player.GetComponent<PlayerController>());
+                playerHpSlider.hpSlider.fillRect.GetComponent<Image>().color = new Color(0.6705883f, 1.0f, 0.5803922f, 1.0f);
+            }
+
             //カメラのターゲットを"Player"(人間)に戻す
             GameObject camera = GameObject.Find("MainCamera");
             if (camera != null)
