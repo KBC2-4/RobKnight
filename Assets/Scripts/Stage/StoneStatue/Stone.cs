@@ -26,15 +26,14 @@ public class Stone : MonoBehaviour
     //// Update is called once per frame
     void Update()
     {
-        if (stonestatueno1.end && stonestatueno2.end && stonestatueno3.end && stonestatueno4.end )
+        if (stonestatueno1.end && stonestatueno2.end && stonestatueno3.end && stonestatueno4.end)
         {
-            if (end == false)
+
+            foreach (Transform child in transform)
             {
-                foreach (Transform child in transform)
-                {
-                    child.gameObject.SetActive(true);
-                }
+                child.gameObject.SetActive(true);
             }
+
         }
     }
 }
