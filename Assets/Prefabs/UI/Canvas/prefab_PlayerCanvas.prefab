@@ -122,7 +122,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5001070027275647590
 RectTransform:
   m_ObjectHideFlags: 0
@@ -254,12 +254,12 @@ PrefabInstance:
     - target: {fileID: 7205506026101718435, guid: 25b9d936a0220094e987fc7d11b36a84,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 20
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 7205506026101718435, guid: 25b9d936a0220094e987fc7d11b36a84,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 20
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 7205506026101718435, guid: 25b9d936a0220094e987fc7d11b36a84,
         type: 3}
@@ -393,6 +393,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 3648340689895731283}
+    - targetCorrespondingSourceObject: {fileID: 3273683026779360760, guid: 25b9d936a0220094e987fc7d11b36a84,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2386508553245177174}
   m_SourcePrefab: {fileID: 100100000, guid: 25b9d936a0220094e987fc7d11b36a84, type: 3}
 --- !u!1 &4018814278439204184 stripped
 GameObject:
@@ -416,6 +420,22 @@ MonoBehaviour:
   minimapRectTransform: {fileID: 7808228149687838631}
   worldSize: {x: 1000, y: 1000}
   icon: {fileID: 5001070027275647590}
+--- !u!114 &2386508553245177174
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4018814278439204184}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f5018abf2e95a344943bd1520b7ff06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  minimapRectTransform: {fileID: 7808228149687838631}
+  worldSize: {x: 1000, y: 1000}
+  icon: {fileID: 0}
 --- !u!224 &7808228149687838631 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8572497664486366983, guid: 25b9d936a0220094e987fc7d11b36a84,
@@ -444,6 +464,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: RradarMap
+      objectReference: {fileID: 0}
+    - target: {fileID: 3273683026779360760, guid: 25b9d936a0220094e987fc7d11b36a84,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3390637834735455140, guid: 25b9d936a0220094e987fc7d11b36a84,
         type: 3}
