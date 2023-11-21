@@ -5,7 +5,7 @@ using UnityEngine;
 public abstract class EnemyAction : ScriptableObject
 {
     public bool IsComplete = false;
-    public float ActionTime = 0;
+    public int ActionTime = 0;
     public abstract void Act(EnemyController controller);
 }
 

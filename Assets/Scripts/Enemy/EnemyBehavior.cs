@@ -1,7 +1,7 @@
-using System;
+using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 [CreateAssetMenu(menuName = "EnemyBehavior")]
 public class EnemyBehavior : ScriptableObject
@@ -23,7 +23,6 @@ public class EnemyBehavior : ScriptableObject
     public float attackRange = 2f; // 攻撃範囲
     private EnemyState currentState;
     private EnemyAction _selectedAction;
-    private event Action _onDamageHandler;  // 攻撃受けたときに発生するイベントの経由イベント
 
     private void OnEnable()
     {
@@ -34,17 +33,7 @@ public class EnemyBehavior : ScriptableObject
             actions[ActionNum].ActionTime = 0;
             actions[ActionNum].IsComplete = false;
         }
-    }
-    
-    public void Initialize(EnemyController controller)
-    {
-        _onDamageHandler = () => TriggerCounterAttack(controller);
-        controller.OnDamage += _onDamageHandler;
-    }
-    
-    public void Cleanup(EnemyController controller)
-    {
-        controller.OnDamage -= _onDamageHandler;
+        Debug.Log($"State:{ActionNum}");
     }
 
     private enum EnemyState
@@ -55,23 +44,8 @@ public class EnemyBehavior : ScriptableObject
         Attack
     }
 
-    private void TriggerCounterAttack(EnemyController controller)
-    {
-        controller.transform.LookAt(controller.player); // プレイヤーの方向を向く
-        attackAction.Act(controller); // 攻撃行動に移る
-    }
-
     public void PerformActions(EnemyController controller)
     {
-        // ダメージを受けたら即座に攻撃行動に移る
-        // controller.OnDamage += () => attackAction.Act(controller);;
-        // ダメージを受けたら即座に攻撃行動に移る
-        // controller.OnDamage += () => {
-        //     controller.transform.LookAt(controller.player); // プレイヤーの方向を向く
-        //     attackAction.Act(controller); // 攻撃行動に移る
-        // };
-
-
         //Debug.Log($"State:{currentState}");
         float distanceToPlayer = Vector3.Distance(controller.transform.position, controller.player.position);
 
@@ -80,9 +54,9 @@ public class EnemyBehavior : ScriptableObject
         {
             //アクション配列に基づいて行動する
             actions[ActionNum].Act(controller);
-            actions[ActionNum].ActionTime += Time.fixedDeltaTime;
+            actions[ActionNum].ActionTime++;
 
-            //Debug.Log($"State:{Time.fixedDeltaTime}");
+            Debug.Log($"State:{actions[ActionNum].ActionTime}");
 
             //行動終了時、新たな行動をセットする
             if (actions[ActionNum].IsComplete)
