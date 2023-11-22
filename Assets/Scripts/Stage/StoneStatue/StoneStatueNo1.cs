@@ -60,7 +60,7 @@ public class StoneStatueNo1 : MonoBehaviour
 
         }
 
-
+        UnityEngine.Debug.Log(end);
     }
 
     // Update is called once per frame

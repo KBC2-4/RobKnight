@@ -57,8 +57,6 @@ public class StoneStatueNo3 : MonoBehaviour
             }
 
         }
-
-
     }
 
     // Update is called once per frame
