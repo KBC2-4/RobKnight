@@ -11,6 +11,10 @@ public class InteractionPrompt : MonoBehaviour
     [SerializeField] private GameObject uiForMobile; // モバイル用のUIオブジェクト
     // public GameObject uiPrompt;
     private InputDevice lastActiveDevice; // 前回アクティブになったデバイス
+    private bool _isDisplay = false; // UIを表示するかどうかのフラグ
+    
+    public GameObject player; // プレイヤーオブジェクトへの参照
+    public float displayDistance = 5.0f; // UIを表示する距離
     
     private void OnEnable()
     {
@@ -72,6 +76,19 @@ public class InteractionPrompt : MonoBehaviour
         //     float v = Input.GetAxis("Vertical");
         //     Debug.Log($"ジョイスティック: 水平 {h}, 垂直 {v}");
         // }
+        
+        // プレイヤーとUIオブジェクトの距離を計算
+        float distance = Vector3.Distance(player.transform.position, transform.position);
+
+        // 距離に基づいてUIを表示または非表示
+        if (distance <= displayDistance)
+        {
+            _isDisplay = true;
+        }
+        else
+        {
+            _isDisplay = false;
+        }
     }
 
     private void OnDeviceChange(InputDevice device, InputDeviceChange change)
@@ -85,21 +102,21 @@ public class InteractionPrompt : MonoBehaviour
     
     private void UpdateUI(bool show)
     {
-        // bool isGamepad = Gamepad.current != null;
-        // bool isKeyboardMouse = Keyboard.current != null && Mouse.current != null;
+        // // bool isGamepad = Gamepad.current != null;
+        // // bool isKeyboardMouse = Keyboard.current != null && Mouse.current != null;
+        // // bool isMobile = Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer;
+        // // bool isDesktop = Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer || Application
+        //
+        // bool isGamepad = Gamepad.current != null && lastActiveDevice is Gamepad;
+        // bool isKeyboardMouse = (Keyboard.current != null || Mouse.current != null) && lastActiveDevice is Keyboard || lastActiveDevice is Mouse;
         // bool isMobile = Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer;
-        // bool isDesktop = Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer || Application
-        
-        bool isGamepad = Gamepad.current != null && lastActiveDevice is Gamepad;
-        bool isKeyboardMouse = (Keyboard.current != null || Mouse.current != null) && lastActiveDevice is Keyboard || lastActiveDevice is Mouse;
-        bool isMobile = Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer;
-
-        uiForKeyboardMouse.SetActive(show && isKeyboardMouse && !isMobile);
-        uiForGameController.SetActive(show && isGamepad && !isMobile);
-        //Debug.Log("モバイル： " + isMobile);
-        //Debug.Log("キーボード＆マウス： " + isKeyboardMouse);
-        //Debug.Log("ゲームコントローラー： " + isGamepad);
-        uiForMobile.SetActive(show && isMobile);
+        //
+        // uiForKeyboardMouse.SetActive(show && isKeyboardMouse && !isMobile);
+        // uiForGameController.SetActive(show && isGamepad && !isMobile);
+        // //Debug.Log("モバイル： " + isMobile);
+        // //Debug.Log("キーボード＆マウス： " + isKeyboardMouse);
+        // //Debug.Log("ゲームコントローラー： " + isGamepad);
+        // uiForMobile.SetActive(show && isMobile);
     }
     
     void OnTriggerEnter(Collider other)
@@ -108,8 +125,10 @@ public class InteractionPrompt : MonoBehaviour
         if (other.tag == "Player")
         {
             // UIを表示
-            UpdateUI(true); // UIを表示
+            // UpdateUI(true); // UIを表示
             // uiPrompt.SetActive(true);
+            
+            // _isDisplay = true;
         }
     }
 
@@ -119,8 +138,10 @@ public class InteractionPrompt : MonoBehaviour
         if (other.tag == "Player")
         {
             // UIを非表示
-            UpdateUI(false); // UIを非表示
+            // UpdateUI(false); // UIを非表示
             // uiPrompt.SetActive(false);
+            
+            // _isDisplay = false;
         }
     }
     
@@ -145,6 +166,8 @@ public class InteractionPrompt : MonoBehaviour
     
     private void ActivateUI(GameObject uiGroup)
     {
+        if (_isDisplay == false){return;}
+        
         // すべてのUIグループを非アクティブにします
         uiForKeyboardMouse.SetActive(false);
         uiForGameController.SetActive(false);

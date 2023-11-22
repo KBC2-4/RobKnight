@@ -32,8 +32,7 @@ public class CameraMovement : MonoBehaviour
         offset = gameObject.transform.position - target.transform.position;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void LateUpdate()
     {
         //ターゲットの位置にカメラを追従させる
         gameObject.transform.position = target.transform.position + offset;
