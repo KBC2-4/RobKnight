@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 6272147631527964205}
   - component: {fileID: 2109544513042325788}
   - component: {fileID: 5147172761830054365}
+  - component: {fileID: 4854137657698805737}
   m_Layer: 0
   m_Name: CentralStoneStatue 1
   m_TagString: Untagged
@@ -152,6 +153,24 @@ CapsuleCollider:
   m_Height: 172
   m_Direction: 2
   m_Center: {x: -0.028100014, y: 1.0510504, z: 84.84252}
+--- !u!114 &4854137657698805737
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3393166116382297890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 588617e96317ad043b31099cd01363aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stonestatueno1: {fileID: 0}
+  stonestatueno2: {fileID: 5132767178498029452, guid: 3ee23f18f885c85429e432e295ef8a3d,
+    type: 3}
+  stonestatueno3: {fileID: 0}
+  stonestatueno4: {fileID: 0}
+  end: 0
 --- !u!1 &6278140072884802716
 GameObject:
   m_ObjectHideFlags: 0
@@ -170,7 +189,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &166413350227574300
 Transform:
   m_ObjectHideFlags: 0

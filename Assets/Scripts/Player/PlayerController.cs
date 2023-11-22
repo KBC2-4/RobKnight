@@ -313,6 +313,10 @@ public class PlayerController : MonoBehaviour
         var angleY = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngleY, ref turnVelocity, smoothTime);
         //回転させる
         transform.rotation = Quaternion.Euler(0, angleY, 0);
+        if(player != null) 
+        {
+            player.transform.rotation= Quaternion.Euler(0, angleY, 0);
+        }
     }
 
     /// <summary>
@@ -343,7 +347,7 @@ public class PlayerController : MonoBehaviour
             characterController.height = capsuleCollider.height;
             characterController.center = capsuleCollider.center;
             characterController.radius = capsuleCollider.radius;
-            Destroy(targetObj.GetComponent<CapsuleCollider>());
+            //Destroy(targetObj.GetComponent<CapsuleCollider>());
         }
         targetObj.gameObject.AddComponent<PlayerController>();
 
@@ -382,7 +386,7 @@ public class PlayerController : MonoBehaviour
             //ライトエフェクトを削除
             enemyController.lightEffect.SetActive(false);
             enemyController.enemyData.hp = playerController.maxHp;
-            enemyController.enabled = false;
+            Destroy(enemyController);
         }
 
         //タグをPlayerに変更
