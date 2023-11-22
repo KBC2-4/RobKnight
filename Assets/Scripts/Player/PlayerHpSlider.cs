@@ -10,13 +10,8 @@ public class PlayerHpSlider : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Slider hpSlider = GetComponent<Slider>();
-        if (hpSlider != null)
-        {
-            // スライダーの最大値と現在値を設定
-            hpSlider.maxValue = playerController.hp;
-            hpSlider.value = playerController.maxHp;
-        }
+        hpSlider.maxValue = playerController.maxHp;
+        hpSlider.value = hpSlider.maxValue;
     }
     
     // Update is called once per frame

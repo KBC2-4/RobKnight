@@ -102,6 +102,7 @@ public class PlayerController : MonoBehaviour
         animator.enabled = true;
         animator.Play("Idle");
         particleSystem = GetComponentInChildren<ParticleSystem>();
+        particleSystem.Stop();
         //particleSystem.Stop();
         if (animator == null)
         {
