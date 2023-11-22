@@ -313,6 +313,10 @@ public class PlayerController : MonoBehaviour
         var angleY = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngleY, ref turnVelocity, smoothTime);
         //‰ñ“]‚³‚¹‚é
         transform.rotation = Quaternion.Euler(0, angleY, 0);
+        if(player != null) 
+        {
+            player.transform.rotation= Quaternion.Euler(0, angleY, 0);
+        }
     }
 
     /// <summary>
