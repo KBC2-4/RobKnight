@@ -13,9 +13,19 @@ public class InteractionPrompt : MonoBehaviour
     private InputDevice lastActiveDevice; // 前回アクティブになったデバイス
     private bool _isDisplay = false; // UIを表示するかどうかのフラグ
     
-    public GameObject player; // プレイヤーオブジェクトへの参照
+    public Transform player; // プレイヤーオブジェクトへの参照
     public float displayDistance = 5.0f; // UIを表示する距離
-    
+
+    void Awake()
+    {
+
+        // プレイヤーが見つからない場合、再度検索する
+        if (player == null)
+        {
+            player = GameObject.FindWithTag("Player").transform;
+        }
+    }
+
     private void OnEnable()
     {
         InputSystem.onDeviceChange += OnDeviceChange;
