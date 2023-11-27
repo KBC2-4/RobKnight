@@ -12,6 +12,7 @@ public class RushAttack : EnemyAction
     public float RushTime = 1.5f;    //突進の継続時間
     public float RushSpeed = 5;  //突進の初期速度
     public float RushRange = 3;  //突進の攻撃範囲
+    public int RushPower = 3;  //突進の攻撃力
     public float HitCool = 0.33f;     //突進の当たり判定クールタイム
 
     private float NowSpeed = 5;  //突進の速度
@@ -65,7 +66,7 @@ public class RushAttack : EnemyAction
                 //プレイヤーの距離が一定以下なら突進ダメージを与える
                 if (distanceToPlayer <= RushRange && NowCool <= 0) 
                 {
-                    controller.player.GetComponent<PlayerController>().Damage(controller.IsGetPower());
+                    controller.player.GetComponent<PlayerController>().Damage(RushPower);
                     NowCool = HitCool;
                 }
             }
