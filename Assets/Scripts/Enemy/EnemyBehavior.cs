@@ -55,10 +55,15 @@ public class EnemyBehavior : ScriptableObject
         Attack
     }
 
+    //プレイヤーの方向を向く
     private void TriggerCounterAttack(EnemyController controller)
     {
-        controller.transform.LookAt(controller.player); // プレイヤーの方向を向く
-        attackAction.Act(controller); // 攻撃行動に移る
+        //攻撃動作中でない場合にプレイヤーの方を向く
+        if (!controller.GetAttacking())
+        {
+            controller.transform.LookAt(controller.player); // プレイヤーの方向を向く
+            //attackAction.Act(controller); // 攻撃行動に移る
+        }
     }
 
     public void PerformActions(EnemyController controller)
