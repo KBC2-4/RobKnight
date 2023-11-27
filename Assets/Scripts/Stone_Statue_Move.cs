@@ -5,17 +5,13 @@ using UnityEngine;
 public class Stone_Statue_Move : MonoBehaviour
 {
 
-    public float pushPower;
     public bool push_flg;
-    public Vector3 pushDir;
-    private Rigidbody rb;
+    
 
     // Start is called before the first frame update
     void Start()
     {
         push_flg = false;
-        pushPower = 2.0f;
-        rb = this.GetComponent<Rigidbody>();  // rigidbodyを取得
     }
 
     // Update is called once per frame
@@ -30,12 +26,20 @@ public class Stone_Statue_Move : MonoBehaviour
 
     void OnTriggerStay(Collider other)
     {
-        
+        // 衝突したオブジェクトがプレイヤーの場合
         if (other.gameObject.CompareTag("Player"))
         {
-            pushDir = new Vector3(10 * Time.deltaTime, 0,10 * Time.deltaTime);
-
-            push_flg = true;
+            // プレイヤーコントローラーを取得
+            PlayerController playerController = other.gameObject.GetComponent<PlayerController>();
+            // プレイヤーが憑依している状態か確認します。
+            if (playerController != null)
+            {
+                if (playerController.PossessionEnemyName == "Gobrin")
+                {
+                    push_flg = true;
+                    
+                }
+            }
         }
     }
 }
