@@ -16,7 +16,10 @@ public class EnemyController : MonoBehaviour
     public EnemyBehavior behavior;
 
     private bool _finded;
-    private bool _isAttacking = false;
+
+    private bool _isAttacking = false;  //攻撃中か否か
+    private bool _isHit = false;        //当たり判定が残っているか？
+
     private bool _playerFound = false;
     public bool isDeath = false;
     public Transform player;
@@ -133,7 +136,8 @@ public class EnemyController : MonoBehaviour
         StartCoroutine(DestroyAfterAnimation("Die01", 0));
         lightEffect.SetActive(true);
         // Animator animator = lightEffect.GetComponent<Animator>();
-        animator.SetBool("IsWalking", false);   
+        animator.SetBool("IsWalking", false);
+        animator.ResetTrigger("AttackTrigger");
         Animation lightEffectAnimation = lightEffect.GetComponent<Animation>();
         if (lightEffectAnimation != null)
         {
@@ -183,21 +187,34 @@ public class EnemyController : MonoBehaviour
     public void EndAttack()
     {
         _isAttacking = false;
+        animator.ResetTrigger("AttackTrigger");
+        // ここでプレイヤーにダメージを与える処理を書く
+        //Debug.Log("エネミーが攻撃終了!");
+    }
+
+    //攻撃の当たり判定を有効化する
+    public void EnableHit()
+    {
+        _isHit = true;
+        // ここでプレイヤーにダメージを与える処理を書く
+        //Debug.Log("エネミーが攻撃!");
+    }
+
+    //攻撃の当たり判定を無効化する
+    public void DisableHit()
+    {
+        _isHit = false;
         // ここでプレイヤーにダメージを与える処理を書く
         //Debug.Log("エネミーが攻撃終了!");
     }
 
     void OnTriggerStay(Collider other)
     {
-        if (_isAttacking && other.CompareTag("Player"))
+        if (_isHit && other.CompareTag("Player"))
         {
-            // if (other.name == "AttackTrigger1")
-            // {
-            //     
-            // }
             other.GetComponent<PlayerController>().Damage(enemyData.attackPower);
             //playerFound = true;
-            EndAttack();
+            _isHit = false;
         }
     }
 
