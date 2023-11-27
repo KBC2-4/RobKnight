@@ -76,8 +76,8 @@ public class PlayerController : MonoBehaviour
     private EnemyData currentPossession; // 現在憑依しているエネミーのデータ
     private GameObject currentModel;
 
-    public int hp = 100;
-    public int maxHp = 100;
+    private int hp = 250;
+    private int maxHp = 250;
     public int mp = 100;
     public int attackPower = 10;
     private bool isAttacking = false;
@@ -102,7 +102,11 @@ public class PlayerController : MonoBehaviour
         animator.enabled = true;
         animator.Play("Idle");
         particleSystem = GetComponentInChildren<ParticleSystem>();
-        particleSystem.Stop();
+        if (particleSystem != null)
+        {
+            particleSystem.Stop();
+        }
+
         //particleSystem.Stop();
         if (animator == null)
         {
@@ -135,7 +139,7 @@ public class PlayerController : MonoBehaviour
         //// マウスカーソルを画面の中央に固定する
         //Cursor.lockState = CursorLockMode.Locked;
 
-        
+
 
         if (Application.isEditor)
         {
@@ -445,5 +449,15 @@ public class PlayerController : MonoBehaviour
     public EnemyData GetPossessionData()
     {
         return currentPossession;
+    }
+
+    public int GetPlayerMaxHp()
+    {
+        return maxHp;
+    }
+
+    public int GetPlayerHp() 
+    {
+        return hp;
     }
 }   
