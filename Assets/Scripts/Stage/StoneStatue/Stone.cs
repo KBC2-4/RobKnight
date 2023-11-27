@@ -28,8 +28,8 @@ public class Stone : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        UnityEngine.Debug.Log(stonestatueno1.end);
        
+
         if (stonestatueno1.end && stonestatueno2.end && stonestatueno3.end && stonestatueno4.end)
         {
             end = true;
