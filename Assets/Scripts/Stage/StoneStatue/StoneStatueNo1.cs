@@ -10,7 +10,7 @@ public class StoneStatueNo1 : MonoBehaviour
 
     private float _old_rotaey = 0;
 
-    private float _fixation = 135; //指定した角度になったら回転を停止
+    private float _fixation = 130; //指定した角度になったら回転を停止
 
     public bool end = false; //オブジェクト終了
 
@@ -59,8 +59,6 @@ public class StoneStatueNo1 : MonoBehaviour
             }
 
         }
-
-
     }
 
     // Update is called once per frame

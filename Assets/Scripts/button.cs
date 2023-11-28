@@ -5,13 +5,15 @@ using UnityEngine;
 public class button : MonoBehaviour
 {
 
-    bool push_flg;
+    public bool push_flg;
+    public bool event_flg; //これに中央エリアの石像を光らせるかの確認をする
     float start_pds_y;
+
 
     // Start is called before the first frame update
     void Start()
     {
-        push_flg = false;
+        event_flg = false;
         start_pds_y = transform.position.y;
     }
 
@@ -21,8 +23,11 @@ public class button : MonoBehaviour
 
         if (push_flg == true)
         {
-            transform.position  += -transform.up * Time.deltaTime;
-            if (start_pds_y-0.1 >= transform.position.y)   { push_flg = false; }
+            transform.position += -transform.up * Time.deltaTime;
+            if (start_pds_y - 0.1 >= transform.position.y) {
+                push_flg = false;
+                event_flg = true;
+            }
         }
     }
 
