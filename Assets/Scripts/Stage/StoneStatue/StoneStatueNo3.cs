@@ -9,7 +9,7 @@ public class StoneStatueNo3 : MonoBehaviour
 
     private float _old_rotaey = 0;
 
-    private float _fixation = 320; //指定した角度になったら回転を停止
+    private float _fixation = 313; //指定した角度になったら回転を停止
     public bool end = false; //オブジェクト終了
 
     public GameObject obj;

@@ -76,8 +76,8 @@ public class PlayerController : MonoBehaviour
     private EnemyData currentPossession; // 現在憑依しているエネミーのデータ
     private GameObject currentModel;
 
-    public int hp = 100;
-    public int maxHp = 100;
+    private int hp = 250;
+    private int maxHp = 250;
     public int mp = 100;
     public int attackPower = 10;
     private bool isAttacking = false;
@@ -102,6 +102,11 @@ public class PlayerController : MonoBehaviour
         animator.enabled = true;
         animator.Play("Idle");
         particleSystem = GetComponentInChildren<ParticleSystem>();
+        if (particleSystem != null)
+        {
+            particleSystem.Stop();
+        }
+
         //particleSystem.Stop();
         if (animator == null)
         {
@@ -134,7 +139,7 @@ public class PlayerController : MonoBehaviour
         //// マウスカーソルを画面の中央に固定する
         //Cursor.lockState = CursorLockMode.Locked;
 
-        
+
 
         if (Application.isEditor)
         {
@@ -152,14 +157,24 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         PlayerMove();
+        //Debug.Log($"State:{isAttacking}");
+
+        if (animator.GetCurrentAnimatorStateInfo(0).IsTag("Idle")) 
+        {
+            isAttacking = false;
+        }
     }
 
     void AttackAnimation()
     {
-        if (animator != null && isAttacking == false)
+        // 現在再生中のアニメーションの状態を取得
+        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+
+        Debug.Log($"State:{isAttacking}");
+        if (animator != null && !isAttacking)
         {
-            animator.Play("Attack");
-                //animator.SetTrigger("AttackTrigger");
+            //animator.Play("Attack");
+            animator.SetTrigger("AttackTrigger");
         }
         if (particleSystem != null && particleSystem.isStopped)
         {
@@ -281,7 +296,7 @@ public class PlayerController : MonoBehaviour
         Vector3 moveDelta = moveVelocity * Time.deltaTime;
 
         if (inputMove != Vector2.zero
-            && animator.GetCurrentAnimatorStateInfo(0).IsName("Attack") == false)
+            && animator.GetCurrentAnimatorStateInfo(0).IsTag("Attack") == false)
         {
             //移動させる
             controller.Move(moveDelta);
@@ -313,6 +328,10 @@ public class PlayerController : MonoBehaviour
         var angleY = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngleY, ref turnVelocity, smoothTime);
         //回転させる
         transform.rotation = Quaternion.Euler(0, angleY, 0);
+        if(player != null) 
+        {
+            player.transform.rotation= Quaternion.Euler(0, angleY, 0);
+        }
     }
 
     /// <summary>
@@ -374,11 +393,15 @@ public class PlayerController : MonoBehaviour
                 playerHpSlider.SetPlayerHp(playerController);
                 playerHpSlider.hpSlider.fillRect.GetComponent<Image>().color = new Color(0.8030842f, 0.4134211f, 0.9245283f, 1.0f);
             }
+
         }
 
         EnemyController enemyController = targetObj?.GetComponent<EnemyController>();
         if(enemyController != null) 
         {
+            //敵のアニメーターステータスを変更
+            enemyController.animator.SetBool("IsPossession", true);
+
             //ライトエフェクトを削除
             enemyController.lightEffect.SetActive(false);
             enemyController.enemyData.hp = playerController.maxHp;
@@ -444,5 +467,15 @@ public class PlayerController : MonoBehaviour
     public EnemyData GetPossessionData()
     {
         return currentPossession;
+    }
+
+    public int GetPlayerMaxHp()
+    {
+        return maxHp;
+    }
+
+    public int GetPlayerHp() 
+    {
+        return hp;
     }
 }   
