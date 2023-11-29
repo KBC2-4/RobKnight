@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
+using static UnityEngine.Rendering.VirtualTexturing.Debugging;
 
 public class HintManager : MonoBehaviour
 {
@@ -12,10 +15,13 @@ public class HintManager : MonoBehaviour
     public Material highlightMaterial;   // ハイライト用のマテリアル
     private Material originalMaterial;   // オリジナルのマテリアル
     private Renderer renderer;
+    // private Animator _animator;
+    private AsyncOperationHandle<GameObject> _handle;
 
 
     void Start()
     {
+
         // ヒントUIのインスタンスを作成
         _hintInstance = Instantiate(hintPrefab, transform);
         // 非表示にする
@@ -24,7 +30,28 @@ public class HintManager : MonoBehaviour
 
         renderer = GetComponent<Renderer>();
         originalMaterial = renderer.material;
+
+        // _animator = GetComponent<Animator>();
+        // _animator.enabled = true;
+
+        LoadMaterial();
     }
+
+    void LoadMaterial()
+    {
+        Addressables.LoadAssetAsync<Material>("Assets/Materials/UI/select.mat").Completed += OnMaterialLoaded;
+    }
+
+    void OnMaterialLoaded(AsyncOperationHandle<Material> handle)
+    {
+        if (handle.Status == AsyncOperationStatus.Succeeded)
+        {
+            // Material loadedMaterial = handle.Result;
+            highlightMaterial = handle.Result;
+            // renderer.material = loadedMaterial;
+        }
+    }
+
 
     void OnTriggerEnter(Collider other)
     {
@@ -48,6 +75,7 @@ public class HintManager : MonoBehaviour
         }
 
         RemoveHighlight();
+        // _animator.SetTrigger("isHide");
     }
 
     // ヒントを表示する
@@ -82,4 +110,9 @@ public class HintManager : MonoBehaviour
         renderer.material = originalMaterial;
     }
 
+    private void OnDestroy()
+    {
+        // 解放
+        Addressables.Release(_handle);
+    }
 }
