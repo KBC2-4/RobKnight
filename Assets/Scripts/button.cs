@@ -33,7 +33,9 @@ public class button : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        //if (collision.Player.Body05) { }
-        push_flg = true;
+        if (collision.gameObject.CompareTag("Stone_Statue_area1"))
+        {
+            push_flg = true;
+        }
     }
 }

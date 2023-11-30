@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -15,42 +16,29 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// 入力用
     /// </summary>
-    public InputActionAsset inputActions;
+    private InputControls inputActions;
+
+    public Dictionary<string, InputAction> actions = new Dictionary<string, InputAction>();
 
     /// <summary>
     /// 移動用入力変数
     /// </summary>
-    private InputAction moveAction;
+    //private InputAction moveAction;
 
-    /// <summary>
-    /// 攻撃用入力変数
-    /// </summary>
-    private InputAction fireAction;
+    ///// <summary>
+    ///// 攻撃用入力変数
+    ///// </summary>
+    //private InputAction fireAction;
 
-    /// <summary>
-    /// 憑依用入力変数
-    /// </summary>
-    private InputAction possessionAction;
+    ///// <summary>
+    ///// 憑依用入力変数
+    ///// </summary>
+    //private InputAction possessionAction;
 
-    /// <summary>
-    /// 人間に戻る用入力変数
-    /// </summary>
-    private InputAction returnAction;
-
-    /// <summary>
-    /// 人間に戻ったときの座標
-    /// </summary>
-    private Vector3 returnPosition = new Vector3(300f, 1f, 400f);
-
-    /// <summary>
-    /// 憑依アクション入力タイマー
-    /// </summary>
-    private float inputTimerPossession;
-
-    /// <summary>
-    /// 憑依アクションに必要な入力時間
-    /// </summary>
-    public const float inputTimePossession = 0.3f;
+    ///// <summary>
+    ///// 人間に戻る用入力変数
+    ///// </summary>
+    //private InputAction returnAction;
 
     /// <summary>
     /// 憑依後に保存するための変数
@@ -72,9 +60,7 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     [SerializeField] private float smoothTime = 0.1f;
 
-    float rotX, rotY;
     private EnemyData currentPossession; // 現在憑依しているエネミーのデータ
-    private GameObject currentModel;
 
     private int hp = 250;
     private int maxHp = 250;
@@ -88,18 +74,23 @@ public class PlayerController : MonoBehaviour
 
     // 憑依しているか
     public bool isPossession = false;
+    private bool canPossesion = false;
     // 憑依しているエネミーの名前を取得
     public string PossessionEnemyName;
 
+    private void Awake()
+    {
+        inputActions = new InputControls();
+
+        inputActions.Enable();
+    }
 
     // Start is called before the first frame update
     void Start()
     {
         startPos = transform.position;
-        returnPosition = transform.position;
         controller = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
-        animator.enabled = true;
         animator.Play("Idle");
         particleSystem = GetComponentInChildren<ParticleSystem>();
         if (particleSystem != null)
@@ -112,25 +103,6 @@ public class PlayerController : MonoBehaviour
         {
             Debug.LogError("Animator component is missing on this GameObject!");
         }
-
-        //inputActionsから[移動アクション]を取得
-        moveAction = inputActions.FindActionMap("Player").FindAction("Move");
-        moveAction.Enable();
-
-        //inputActionsから[攻撃アクション]を取得
-        fireAction = inputActions.FindActionMap("Player").FindAction("Fire");
-        //[攻撃]アクションから呼ばれる関数を設定
-        fireAction.performed += _ => AttackAnimation();
-        fireAction.Enable();
-
-        //inputActionsから[憑依アクション]を取得
-        possessionAction = inputActions.FindActionMap("Player").FindAction("Possession");
-        possessionAction.Enable();
-
-        //inputActionsから[人間に戻るアクション]を取得
-        returnAction = inputActions.FindActionMap("Player").FindAction("Return");
-        returnAction.performed += _ => Return();
-        returnAction.Enable();
 
         currentPossession = null;
 
@@ -148,37 +120,67 @@ public class PlayerController : MonoBehaviour
     }
 
     private void OnEnable()
-    {
-        inputTimerPossession = 0;
+    { 
+        inputActions.Enable();
+        inputActions.Player.Move.performed += OnMove;
+        inputActions.Player.Move.canceled += OnMove;
+        inputActions.Player.Fire.performed += AttackAnimation;
+        inputActions.Player.Possession.performed += CanPossesion;
+        inputActions.Player.Possession.canceled += CanPossesion;
+        inputActions.Player.Return.performed += ReturnAction;
+
         isPossession = false;
+    }
+
+    private void OnDisable()
+    {
+        inputActions.Disable();
+    }
+
+    private void OnDestroy()
+    {
+        //inputActinosのコールバックの解除
+        inputActions.Player.Move.performed -= OnMove;
+        inputActions.Player.Move.canceled -= OnMove;
+        inputActions.Player.Fire.performed -= AttackAnimation;
+        inputActions.Player.Possession.performed -= CanPossesion;
+        inputActions.Player.Possession.canceled -= CanPossesion;
+        inputActions.Player.Return.performed -= ReturnAction;
+
+        //入力コントローラーの削除
+        inputActions.Dispose();
     }
 
     // Update is called once per frame
     void Update()
     {
         PlayerMove();
-        //Debug.Log($"State:{isAttacking}");
-
+      
         if (animator.GetCurrentAnimatorStateInfo(0).IsTag("Idle")) 
         {
             isAttacking = false;
         }
+
+        //Debug.Log($"State:{transform.position}");
+        //Debug.Log($"State:{GetComponent<Rigidbody>().position}");
     }
 
-    void AttackAnimation()
+    void AttackAnimation(InputAction.CallbackContext context)
     {
-        // 現在再生中のアニメーションの状態を取得
-        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        if (context.performed == true)
+        {
+            // 現在再生中のアニメーションの状態を取得
+            //AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
 
-        Debug.Log($"State:{isAttacking}");
-        if (animator != null && !isAttacking)
-        {
-            //animator.Play("Attack");
-            animator.SetTrigger("AttackTrigger");
-        }
-        if (particleSystem != null && particleSystem.isStopped)
-        {
-            particleSystem.Play();
+            if (animator != null && !isAttacking)
+            {
+                animator.Play("Attack");
+                //animator.SetTrigger("AttackTrigger");
+            }
+            if (particleSystem != null && particleSystem.isStopped)
+            {
+                particleSystem.Play();
+            }
         }
     }
 
@@ -200,24 +202,21 @@ public class PlayerController : MonoBehaviour
 
             if (enemy != null)
             {
-                if (possessionAction != null)
-                {
-                    if (possessionAction.IsPressed() == true)
-                    {
-                        Debug.Log("posTime" + inputTimerPossession);
-                        inputTimerPossession += Time.deltaTime;
+                ////攻撃
+                //if (isAttacking == true && 0 < enemy.enemyData.hp)
+                //{
+                //    enemy.Damage(attackPower);
+                //    isAttacking = false;
+                //}
 
-                        if (inputTimePossession < inputTimerPossession
-                            && enemy.enemyData.hp <= 0 && isPossession == false)
-                        {
-                            Possession(other.gameObject);
-                        }
-                    }
-                    else
+                if (enemy.enemyData.hp <= 0)
+                {
+                    if (isPossession == false && canPossesion == true)
                     {
-                        inputTimerPossession = 0;
+                        Possession(enemy.gameObject);
                     }
                 }
+                
             }
         }
     }
@@ -282,10 +281,11 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// 移動用関数
     /// </summary>
+    private Vector3 force = new Vector3(0, 0, 0);   //押し出す力
+    private Vector3 forcedecay = new Vector3(0, 0, 0);   //押し出す力の減衰
+    private float forcetime = 0;                      //押し出す時間
     private void PlayerMove()
     {
-        inputMove = moveAction.ReadValue<Vector2>();
-
         float speedX = inputMove.x * speed;
         float speedY = inputMove.y * speed;
 
@@ -295,11 +295,15 @@ public class PlayerController : MonoBehaviour
         //現在フレームの移動量を移動速度から計算
         Vector3 moveDelta = moveVelocity * Time.deltaTime;
 
-        if (inputMove != Vector2.zero
+
+        if ((inputMove != Vector2.zero || 0 < forcetime)
             && animator.GetCurrentAnimatorStateInfo(0).IsTag("Attack") == false)
         {
             //移動させる
             controller.Move(moveDelta);
+
+            //押し出す力を移動に加える
+            if (0 < forcetime) controller.Move(force);
 
             if (player != null)
             {
@@ -315,6 +319,18 @@ public class PlayerController : MonoBehaviour
             animator.SetFloat("Speed", 0);
         }
 
+        //押し出す時間と力を減らす
+        forcetime -= Time.fixedDeltaTime;
+        if (forcetime < 0)
+        {
+            force = Vector3.zero;
+            forcedecay = Vector3.zero;
+            forcetime = 0;
+        }
+        else 
+        {
+            force -= (forcedecay * Time.fixedDeltaTime);
+        }
     }
 
     /// <summary>
@@ -334,6 +350,31 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    //プレイヤーがノックバックする force:押し出す力 Base:ノックバックの発生地点
+    public void KnockBack(float force, float time, Vector3 Base)
+    {
+        Vector3 PlayerPos = transform.position;
+
+        PlayerPos.y = 0;
+        Base.y = 0;
+
+        //プレイヤーと対象間の角度を取る
+        var diff = (PlayerPos - Base).normalized;
+        Vector3 PushAngle = diff * (force * time);
+
+        this.force = PushAngle;
+        forcedecay = PushAngle / time;
+        forcetime = time;
+    }
+
+    /// <summary>
+    /// 移動キーの入力値を取得する
+    /// </summary>
+    private void OnMove(InputAction.CallbackContext context)
+    {
+        inputMove = context.ReadValue<Vector2>();
+    }
+
     /// <summary>
     /// 憑依アクション
     /// </summary>
@@ -343,7 +384,6 @@ public class PlayerController : MonoBehaviour
         //"Player"(人間)であれば非表示にする
         if (name == "Player")
         {
-            inputTimerPossession = 0f;
             player = gameObject;
             gameObject.SetActive(false);
         }//憑依体であれば破棄する
@@ -379,10 +419,10 @@ public class PlayerController : MonoBehaviour
             
             playerController.hp = playerController.maxHp;
             playerController.attackPower = currentPossession.attackPower;
-            playerController.inputActions = inputActions;
+            //playerController.inputActions = inputActions;
             playerController.player = player;
             playerController.PossessionEnemyName = currentPossession.enemyName;
-            player = null;
+            player = null;  
             playerController.currentPossession = currentPossession;
             currentPossession = null;
 
@@ -406,6 +446,9 @@ public class PlayerController : MonoBehaviour
             enemyController.lightEffect.SetActive(false);
             enemyController.enemyData.hp = playerController.maxHp;
             Destroy(enemyController);
+
+            // UI表示
+            ActionStateManager.Instance.RecordEnemyPossession(playerController.PossessionEnemyName);
         }
 
         //タグをPlayerに変更
@@ -425,16 +468,39 @@ public class PlayerController : MonoBehaviour
         {
             camera.GetComponent<CameraMovement>().SetCameraTarget(targetObj);
         }
-
         isPossession = true;
 
+    }
 
-        // UI表示
-        ActionStateManager.Instance.RecordEnemyPossession(playerController.PossessionEnemyName);
+    /// <summary>
+    /// 憑依可能にする
+    /// </summary>
+    /// <param name="context">憑依ボタン</param>
+    private void CanPossesion(InputAction.CallbackContext context)
+    {
+        if (context.performed == true)
+        {
+            canPossesion = true;
+        }
+        else if (context.canceled == true)
+        {
+            canPossesion = false;
+        }
     }
 
     /// <summary>
     /// 人間に戻るアクション
+    /// </summary>
+    private void ReturnAction(InputAction.CallbackContext context)
+    {
+        if(context.performed == true)
+        {
+            Return();
+        }
+    }
+
+    /// <summary>
+    /// 人間に戻る処理
     /// </summary>
     private void Return()
     {
@@ -455,7 +521,7 @@ public class PlayerController : MonoBehaviour
             GameObject camera = GameObject.Find("MainCamera");
             if (camera != null)
             {
-               camera.GetComponent<CameraMovement>().SetCameraTarget(player);
+                camera.GetComponent<CameraMovement>().SetCameraTarget(player);
             }
 
             //憑依体を削除
@@ -477,5 +543,21 @@ public class PlayerController : MonoBehaviour
     public int GetPlayerHp() 
     {
         return hp;
+    }
+
+    /// <summary>
+    /// プレイヤーの入力操作を有効、無効化する関数
+    /// </summary>
+    /// <param name="value">true=有効　false=無効</param>
+    public void SetInputAction(bool value)
+    {
+        if(value == true)
+        {
+            inputActions.Enable();
+        }
+        else
+        {
+            inputActions.Disable();
+        }
     }
 }   
