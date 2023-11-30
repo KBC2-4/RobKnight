@@ -406,6 +406,9 @@ public class PlayerController : MonoBehaviour
             enemyController.lightEffect.SetActive(false);
             enemyController.enemyData.hp = playerController.maxHp;
             Destroy(enemyController);
+
+            // UI表示
+            ActionStateManager.Instance.RecordEnemyPossession(playerController.PossessionEnemyName);
         }
 
         //タグをPlayerに変更
@@ -428,9 +431,6 @@ public class PlayerController : MonoBehaviour
 
         isPossession = true;
 
-
-        // UI表示
-        ActionStateManager.Instance.RecordEnemyPossession(playerController.PossessionEnemyName);
     }
 
     /// <summary>
