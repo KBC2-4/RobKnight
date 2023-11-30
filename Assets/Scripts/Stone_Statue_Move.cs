@@ -6,7 +6,9 @@ public class Stone_Statue_Move : MonoBehaviour
 {
 
     public bool push_flg;
-    
+    public bool isAttacked = false; //çUåÇÇêHÇÁÇ¡ÇΩÇÃÇ©
+    public bool during_rotation = false; //âÒì]íÜÇ»ÇÃÇ©
+
 
     // Start is called before the first frame update
     void Start()
@@ -22,6 +24,11 @@ public class Stone_Statue_Move : MonoBehaviour
             transform.position += -transform.up * Time.deltaTime;
             push_flg = false;
         }
+        if (during_rotation == true)
+        {
+            transform.Rotate(0f, 0f, 10 * Time.deltaTime); //âÒì]
+        }
+        transform.position = (new Vector3(Mathf.Clamp(transform.position.x, 347, 372), transform.position.y, Mathf.Clamp(transform.position.z, 707, 729)));
     }
 
     void OnTriggerStay(Collider other)
@@ -37,7 +44,13 @@ public class Stone_Statue_Move : MonoBehaviour
                 if (playerController.PossessionEnemyName == "Gobrin")
                 {
                     push_flg = true;
-                    
+                    if (playerController.IsAttacking == true )
+                    {
+                        during_rotation = true;
+                        isAttacked = false;
+                    }
+
+
                 }
             }
         }
