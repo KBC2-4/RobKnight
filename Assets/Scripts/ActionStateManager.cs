@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -90,6 +91,9 @@ public class ActionStateManager : MonoBehaviour
         enemyPossessionUI.SetActive(true);
         uiAnimator.SetTrigger("Show");
 
+        // コルーチンの起動
+        StartCoroutine(DelayCoroutine());
+
     }
 
     private void SaveActionStates()
@@ -110,5 +114,16 @@ public class ActionStateManager : MonoBehaviour
                 firstEnemyPossession[action.Key] = PlayerPrefs.GetInt(action.Key) == 1;
             }
         }
+    }
+
+    private IEnumerator DelayCoroutine()
+    {
+
+        // 5秒間待つ
+        yield return new WaitForSeconds(5);
+
+        enemyPossessionUI.SetActive(false);
+
+
     }
 }
