@@ -12,6 +12,17 @@ public class TutorialNav : MonoBehaviour
     public GameObject p1;
     public GameObject p2;
 
+    private PlayerController player;
+
+    private void Awake()
+    {
+        GameObject playerObject = GameObject.Find("Player");
+        if (playerObject != null)
+        {
+            player = playerObject.GetComponent<PlayerController>();
+        }
+    }
+
     public void OnPushButtonP1()
     {
         EventSystem.current.SetSelectedGameObject(NextP2);
@@ -28,12 +39,16 @@ public class TutorialNav : MonoBehaviour
     {
         p1.SetActive(false);
         p2.SetActive(false);
+        player?.SetInputAction(true);
     }
 
     // Start is called before the first frame update
     void Start()
     {
         OnPushButtonP1();
+
+        player?.SetInputAction(false);
+        
     }
 
     // Update is called once per frame
