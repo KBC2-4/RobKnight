@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -15,27 +16,29 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// 入力用
     /// </summary>
-    public InputActionAsset inputActions;
+    private InputControls inputActions;
+
+    public Dictionary<string, InputAction> actions = new Dictionary<string, InputAction>();
 
     /// <summary>
     /// 移動用入力変数
     /// </summary>
-    private InputAction moveAction;
+    //private InputAction moveAction;
 
-    /// <summary>
-    /// 攻撃用入力変数
-    /// </summary>
-    private InputAction fireAction;
+    ///// <summary>
+    ///// 攻撃用入力変数
+    ///// </summary>
+    //private InputAction fireAction;
 
-    /// <summary>
-    /// 憑依用入力変数
-    /// </summary>
-    private InputAction possessionAction;
+    ///// <summary>
+    ///// 憑依用入力変数
+    ///// </summary>
+    //private InputAction possessionAction;
 
-    /// <summary>
-    /// 人間に戻る用入力変数
-    /// </summary>
-    private InputAction returnAction;
+    ///// <summary>
+    ///// 人間に戻る用入力変数
+    ///// </summary>
+    //private InputAction returnAction;
 
     /// <summary>
     /// 人間に戻ったときの座標
@@ -91,6 +94,12 @@ public class PlayerController : MonoBehaviour
     // 憑依しているエネミーの名前を取得
     public string PossessionEnemyName;
 
+    private void Awake()
+    {
+        inputActions = new InputControls();
+
+        inputActions.Enable();
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -99,7 +108,6 @@ public class PlayerController : MonoBehaviour
         returnPosition = transform.position;
         controller = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
-        animator.enabled = true;
         animator.Play("Idle");
         particleSystem = GetComponentInChildren<ParticleSystem>();
         if (particleSystem != null)
@@ -112,25 +120,6 @@ public class PlayerController : MonoBehaviour
         {
             Debug.LogError("Animator component is missing on this GameObject!");
         }
-
-        //inputActionsから[移動アクション]を取得
-        moveAction = inputActions.FindActionMap("Player").FindAction("Move");
-        moveAction.Enable();
-
-        //inputActionsから[攻撃アクション]を取得
-        fireAction = inputActions.FindActionMap("Player").FindAction("Fire");
-        //[攻撃]アクションから呼ばれる関数を設定
-        fireAction.performed += _ => AttackAnimation();
-        fireAction.Enable();
-
-        //inputActionsから[憑依アクション]を取得
-        possessionAction = inputActions.FindActionMap("Player").FindAction("Possession");
-        possessionAction.Enable();
-
-        //inputActionsから[人間に戻るアクション]を取得
-        returnAction = inputActions.FindActionMap("Player").FindAction("Return");
-        returnAction.performed += _ => Return();
-        returnAction.Enable();
 
         currentPossession = null;
 
@@ -148,37 +137,63 @@ public class PlayerController : MonoBehaviour
     }
 
     private void OnEnable()
-    {
+    { 
+        inputActions.Enable();
+        inputActions.Player.Move.performed += OnMove;
+        inputActions.Player.Move.canceled += OnMove;
+        inputActions.Player.Fire.performed += AttackAnimation;
+        inputActions.Player.Possession.performed += IsPossesion;
+        inputActions.Player.Possession.canceled += IsPossesion;
+        inputActions.Player.Return.performed += ReturnAction;
         inputTimerPossession = 0;
         isPossession = false;
+        //animator.enabled = true;
+    }
+
+    private void OnDisable()
+    {
+        inputActions.Disable();
+    }
+
+    private void OnDestroy()
+    {
+        //inputActinosのコールバックの解除
+        inputActions.Player.Move.performed -= OnMove;
+        inputActions.Player.Fire.performed -= AttackAnimation;
+        inputActions.Player.Possession.performed -= IsPossesion;
+        inputActions.Player.Return.performed -= ReturnAction;
+
+        //入力コントローラーの削除
+        inputActions.Dispose();
     }
 
     // Update is called once per frame
     void Update()
     {
         PlayerMove();
-        //Debug.Log($"State:{isAttacking}");
-
+      
         if (animator.GetCurrentAnimatorStateInfo(0).IsTag("Idle")) 
         {
             isAttacking = false;
         }
     }
 
-    void AttackAnimation()
+    void AttackAnimation(InputAction.CallbackContext context)
     {
-        // 現在再生中のアニメーションの状態を取得
-        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        if (context.performed == true)
+        {
+            // 現在再生中のアニメーションの状態を取得
+            //AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
 
-        Debug.Log($"State:{isAttacking}");
-        if (animator != null && !isAttacking)
-        {
-            //animator.Play("Attack");
-            animator.SetTrigger("AttackTrigger");
-        }
-        if (particleSystem != null && particleSystem.isStopped)
-        {
-            particleSystem.Play();
+            if (animator != null && !isAttacking)
+            {
+                animator.Play("Attack");
+                //animator.SetTrigger("AttackTrigger");
+            }
+            if (particleSystem != null && particleSystem.isStopped)
+            {
+                particleSystem.Play();
+            }
         }
     }
 
@@ -200,24 +215,14 @@ public class PlayerController : MonoBehaviour
 
             if (enemy != null)
             {
-                if (possessionAction != null)
+                if (enemy.enemyData.hp <= 0)
                 {
-                    if (possessionAction.IsPressed() == true)
+                    if (isPossession == true )
                     {
-                        Debug.Log("posTime" + inputTimerPossession);
-                        inputTimerPossession += Time.deltaTime;
-
-                        if (inputTimePossession < inputTimerPossession
-                            && enemy.enemyData.hp <= 0 && isPossession == false)
-                        {
-                            Possession(other.gameObject);
-                        }
-                    }
-                    else
-                    {
-                        inputTimerPossession = 0;
+                        Possession(enemy.gameObject);
                     }
                 }
+                
             }
         }
     }
@@ -284,8 +289,6 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void PlayerMove()
     {
-        inputMove = moveAction.ReadValue<Vector2>();
-
         float speedX = inputMove.x * speed;
         float speedY = inputMove.y * speed;
 
@@ -335,6 +338,14 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
+    /// 移動キーの入力値を取得する
+    /// </summary>
+    private void OnMove(InputAction.CallbackContext context)
+    {
+        inputMove = context.ReadValue<Vector2>();
+    }
+
+    /// <summary>
     /// 憑依アクション
     /// </summary>
     /// <param name="targetObj">憑依するキャラクター</param>
@@ -379,10 +390,10 @@ public class PlayerController : MonoBehaviour
             
             playerController.hp = playerController.maxHp;
             playerController.attackPower = currentPossession.attackPower;
-            playerController.inputActions = inputActions;
+            //playerController.inputActions = inputActions;
             playerController.player = player;
             playerController.PossessionEnemyName = currentPossession.enemyName;
-            player = null;
+            player = null;  
             playerController.currentPossession = currentPossession;
             currentPossession = null;
 
@@ -425,12 +436,39 @@ public class PlayerController : MonoBehaviour
         {
             camera.GetComponent<CameraMovement>().SetCameraTarget(targetObj);
         }
+        isPossession = false;
 
-        isPossession = true;
+    }
+
+    /// <summary>
+    /// 憑依可能にする
+    /// </summary>
+    /// <param name="context">憑依ボタン</param>
+    private void IsPossesion(InputAction.CallbackContext context)
+    {
+        if (context.performed == true)
+        {
+            isPossession = true;
+        }
+        else if (context.canceled == true)
+        {
+            isPossession = false;
+        }
     }
 
     /// <summary>
     /// 人間に戻るアクション
+    /// </summary>
+    private void ReturnAction(InputAction.CallbackContext context)
+    {
+        if(context.performed == true)
+        {
+            Return();
+        }
+    }
+
+    /// <summary>
+    /// 人間に戻る処理
     /// </summary>
     private void Return()
     {
@@ -438,6 +476,7 @@ public class PlayerController : MonoBehaviour
         {
             //"Player"(人間)を表示する
             player.SetActive(true);
+            player.GetComponent<PlayerController>().animator.enabled = true;
 
             //PlayerのHPsliderを元に戻す
             PlayerHpSlider playerHpSlider = GameObject.Find("HP").GetComponent<PlayerHpSlider>();
@@ -451,7 +490,7 @@ public class PlayerController : MonoBehaviour
             GameObject camera = GameObject.Find("MainCamera");
             if (camera != null)
             {
-               camera.GetComponent<CameraMovement>().SetCameraTarget(player);
+                camera.GetComponent<CameraMovement>().SetCameraTarget(player);
             }
 
             //憑依体を削除
