@@ -41,21 +41,6 @@ public class PlayerController : MonoBehaviour
     //private InputAction returnAction;
 
     /// <summary>
-    /// 人間に戻ったときの座標
-    /// </summary>
-    private Vector3 returnPosition = new Vector3(300f, 1f, 400f);
-
-    /// <summary>
-    /// 憑依アクション入力タイマー
-    /// </summary>
-    private float inputTimerPossession;
-
-    /// <summary>
-    /// 憑依アクションに必要な入力時間
-    /// </summary>
-    public const float inputTimePossession = 0.3f;
-
-    /// <summary>
     /// 憑依後に保存するための変数
     /// </summary>
     private GameObject player = null;
@@ -75,9 +60,7 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     [SerializeField] private float smoothTime = 0.1f;
 
-    float rotX, rotY;
     private EnemyData currentPossession; // 現在憑依しているエネミーのデータ
-    private GameObject currentModel;
 
     private int hp = 250;
     private int maxHp = 250;
@@ -91,6 +74,7 @@ public class PlayerController : MonoBehaviour
 
     // 憑依しているか
     public bool isPossession = false;
+    private bool canPossesion = false;
     // 憑依しているエネミーの名前を取得
     public string PossessionEnemyName;
 
@@ -105,7 +89,6 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         startPos = transform.position;
-        returnPosition = transform.position;
         controller = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
         animator.Play("Idle");
@@ -142,12 +125,11 @@ public class PlayerController : MonoBehaviour
         inputActions.Player.Move.performed += OnMove;
         inputActions.Player.Move.canceled += OnMove;
         inputActions.Player.Fire.performed += AttackAnimation;
-        inputActions.Player.Possession.performed += IsPossesion;
-        inputActions.Player.Possession.canceled += IsPossesion;
+        inputActions.Player.Possession.performed += CanPossesion;
+        inputActions.Player.Possession.canceled += CanPossesion;
         inputActions.Player.Return.performed += ReturnAction;
-        inputTimerPossession = 0;
+
         isPossession = false;
-        //animator.enabled = true;
     }
 
     private void OnDisable()
@@ -159,8 +141,10 @@ public class PlayerController : MonoBehaviour
     {
         //inputActinosのコールバックの解除
         inputActions.Player.Move.performed -= OnMove;
+        inputActions.Player.Move.canceled -= OnMove;
         inputActions.Player.Fire.performed -= AttackAnimation;
-        inputActions.Player.Possession.performed -= IsPossesion;
+        inputActions.Player.Possession.performed -= CanPossesion;
+        inputActions.Player.Possession.canceled -= CanPossesion;
         inputActions.Player.Return.performed -= ReturnAction;
 
         //入力コントローラーの削除
@@ -176,6 +160,9 @@ public class PlayerController : MonoBehaviour
         {
             isAttacking = false;
         }
+
+        //Debug.Log($"State:{transform.position}");
+        //Debug.Log($"State:{GetComponent<Rigidbody>().position}");
     }
 
     void AttackAnimation(InputAction.CallbackContext context)
@@ -215,21 +202,38 @@ public class PlayerController : MonoBehaviour
 
             if (enemy != null)
             {
-                //攻撃
-                if (isAttacking == true && 0 < enemy.enemyData.hp)
-                {
-                    enemy.Damage(attackPower);
-                    isAttacking = false;
-                }
+                ////攻撃
+                //if (isAttacking == true && 0 < enemy.enemyData.hp)
+                //{
+                //    enemy.Damage(attackPower);
+                //    isAttacking = false;
+                //}
 
                 if (enemy.enemyData.hp <= 0)
                 {
-                    if (isPossession == true )
+                    if (isPossession == false && canPossesion == true)
                     {
                         Possession(enemy.gameObject);
                     }
                 }
                 
+            }
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Enemy"))
+        {
+            EnemyController enemy = other.gameObject.GetComponent<EnemyController>();
+
+            if (enemy != null)
+            {
+                //攻撃
+                if (isAttacking == true && 0 < enemy.enemyData.hp)
+                {
+                    enemy.Damage(attackPower);
+                }
             }
         }
     }
@@ -277,6 +281,9 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// 移動用関数
     /// </summary>
+    private Vector3 force = new Vector3(0, 0, 0);   //押し出す力
+    private Vector3 forcedecay = new Vector3(0, 0, 0);   //押し出す力の減衰
+    private float forcetime = 0;                      //押し出す時間
     private void PlayerMove()
     {
         float speedX = inputMove.x * speed;
@@ -288,11 +295,15 @@ public class PlayerController : MonoBehaviour
         //現在フレームの移動量を移動速度から計算
         Vector3 moveDelta = moveVelocity * Time.deltaTime;
 
-        if (inputMove != Vector2.zero
+
+        if ((inputMove != Vector2.zero || 0 < forcetime)
             && animator.GetCurrentAnimatorStateInfo(0).IsTag("Attack") == false)
         {
             //移動させる
             controller.Move(moveDelta);
+
+            //押し出す力を移動に加える
+            if (0 < forcetime) controller.Move(force);
 
             if (player != null)
             {
@@ -308,6 +319,18 @@ public class PlayerController : MonoBehaviour
             animator.SetFloat("Speed", 0);
         }
 
+        //押し出す時間と力を減らす
+        forcetime -= Time.fixedDeltaTime;
+        if (forcetime < 0)
+        {
+            force = Vector3.zero;
+            forcedecay = Vector3.zero;
+            forcetime = 0;
+        }
+        else 
+        {
+            force -= (forcedecay * Time.fixedDeltaTime);
+        }
     }
 
     /// <summary>
@@ -327,6 +350,23 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    //プレイヤーがノックバックする force:押し出す力 Base:ノックバックの発生地点
+    public void KnockBack(float force, float time, Vector3 Base)
+    {
+        Vector3 PlayerPos = transform.position;
+
+        PlayerPos.y = 0;
+        Base.y = 0;
+
+        //プレイヤーと対象間の角度を取る
+        var diff = (PlayerPos - Base).normalized;
+        Vector3 PushAngle = diff * (force * time);
+
+        this.force = PushAngle;
+        forcedecay = PushAngle / time;
+        forcetime = time;
+    }
+
     /// <summary>
     /// 移動キーの入力値を取得する
     /// </summary>
@@ -344,7 +384,6 @@ public class PlayerController : MonoBehaviour
         //"Player"(人間)であれば非表示にする
         if (name == "Player")
         {
-            inputTimerPossession = 0f;
             player = gameObject;
             gameObject.SetActive(false);
         }//憑依体であれば破棄する
@@ -429,27 +468,23 @@ public class PlayerController : MonoBehaviour
         {
             camera.GetComponent<CameraMovement>().SetCameraTarget(targetObj);
         }
-    
         isPossession = true;
 
-        
-        // UI表示
-        ActionStateManager.Instance.RecordEnemyPossession(playerController.PossessionEnemyName);
     }
 
     /// <summary>
     /// 憑依可能にする
     /// </summary>
     /// <param name="context">憑依ボタン</param>
-    private void IsPossesion(InputAction.CallbackContext context)
+    private void CanPossesion(InputAction.CallbackContext context)
     {
         if (context.performed == true)
         {
-            isPossession = true;
+            canPossesion = true;
         }
         else if (context.canceled == true)
         {
-            isPossession = false;
+            canPossesion = false;
         }
     }
 
@@ -473,7 +508,6 @@ public class PlayerController : MonoBehaviour
         {
             //"Player"(人間)を表示する
             player.SetActive(true);
-            player.GetComponent<PlayerController>().animator.enabled = true;
 
             //PlayerのHPsliderを元に戻す
             PlayerHpSlider playerHpSlider = GameObject.Find("HP").GetComponent<PlayerHpSlider>();
@@ -509,5 +543,21 @@ public class PlayerController : MonoBehaviour
     public int GetPlayerHp() 
     {
         return hp;
+    }
+
+    /// <summary>
+    /// プレイヤーの入力操作を有効、無効化する関数
+    /// </summary>
+    /// <param name="value">true=有効　false=無効</param>
+    public void SetInputAction(bool value)
+    {
+        if(value == true)
+        {
+            inputActions.Enable();
+        }
+        else
+        {
+            inputActions.Disable();
+        }
     }
 }   
