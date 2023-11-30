@@ -3,12 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.EnhancedTouch;
 
 public class InteractionPrompt : MonoBehaviour
 {
-    [SerializeField] private GameObject uiForKeyboardMouse; // キーボード＆マウス用のUIオブジェクト
-    [SerializeField] private GameObject uiForGameController; // ゲームコントローラー用のUIオブジェクト
-    [SerializeField] private GameObject uiForMobile; // モバイル用のUIオブジェクト
+    [SerializeField] private GameObject keyboardMouseUI; // キーボード＆マウス用のUIオブジェクト
+    [SerializeField] private GameObject gamepadUI; // ゲームコントローラー用のUIオブジェクト
+    [SerializeField] private GameObject touchUI; // モバイル用のUIオブジェクト
     // public GameObject uiPrompt;
     private InputDevice lastActiveDevice; // 前回アクティブになったデバイス
     private bool _isDisplay = false; // UIを表示するかどうかのフラグ
@@ -28,19 +29,21 @@ public class InteractionPrompt : MonoBehaviour
 
     private void OnEnable()
     {
-        InputSystem.onDeviceChange += OnDeviceChange;
-        DeviceTypeDetector.OnDeviceTypeChanged += OnDeviceTypeChanged;
+        // InputSystem.onDeviceChange += OnDeviceChange;
+        // DeviceTypeDetector.OnDeviceTypeChanged += OnDeviceTypeChanged;
+        DeviceTypeDetector.OnDeviceTypeChanged += UpdateUI;
     }
 
     private void Start()
     {
-        UpdateUI(false); // 初期状態でUIを非表示にする
+        // UpdateUI(false); // 初期状態でUIを非表示にする
     }
 
     private void OnDisable()
     {
-        InputSystem.onDeviceChange -= OnDeviceChange;
-        DeviceTypeDetector.OnDeviceTypeChanged -= OnDeviceTypeChanged;
+        // InputSystem.onDeviceChange -= OnDeviceChange;
+        // DeviceTypeDetector.OnDeviceTypeChanged -= OnDeviceTypeChanged;
+        DeviceTypeDetector.OnDeviceTypeChanged -= UpdateUI;
     }
 
     private void Update()
@@ -49,7 +52,7 @@ public class InteractionPrompt : MonoBehaviour
         if (currentDevice != null && lastActiveDevice != currentDevice)
         {
             lastActiveDevice = currentDevice;
-            UpdateUI(true);
+            // UpdateUI(true);
         }
 
         if (Input.anyKey)
@@ -99,36 +102,58 @@ public class InteractionPrompt : MonoBehaviour
         {
             _isDisplay = false;
         }
-    }
 
-    private void OnDeviceChange(InputDevice device, InputDeviceChange change)
-    {
-        if (change == InputDeviceChange.Added || change == InputDeviceChange.Removed || 
-            change == InputDeviceChange.Enabled || change == InputDeviceChange.Disabled)
+        // デバイスタイプに基づいてUIを表示・非表示
+        if (Keyboard.current != null || Mouse.current != null)
         {
-            UpdateUI(uiForKeyboardMouse.activeSelf || uiForGameController.activeSelf || uiForMobile.activeSelf);
+            keyboardMouseUI.SetActive(_isDisplay);
+        }
+        else if (Gamepad.current != null)
+        {
+            gamepadUI.SetActive(_isDisplay);
+        }
+        else if (Touchscreen.current != null)
+        {
+            touchUI.SetActive(_isDisplay);
         }
     }
+
+    //private void OnDeviceChange(InputDevice device, InputDeviceChange change)
+    //{
+    //    if (change == InputDeviceChange.Added || change == InputDeviceChange.Removed || 
+    //        change == InputDeviceChange.Enabled || change == InputDeviceChange.Disabled)
+    //    {
+    //        UpdateUI(keyboardMouseUI.activeSelf || gamepadUI.activeSelf || touchUI.activeSelf);
+    //    }
+    //}
     
-    private void UpdateUI(bool show)
+    //private void UpdateUI(bool show)
+    //{
+    //    // // bool isGamepad = Gamepad.current != null;
+    //    // // bool isKeyboardMouse = Keyboard.current != null && Mouse.current != null;
+    //    // // bool isMobile = Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer;
+    //    // // bool isDesktop = Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer || Application
+    //    //
+    //    // bool isGamepad = Gamepad.current != null && lastActiveDevice is Gamepad;
+    //    // bool isKeyboardMouse = (Keyboard.current != null || Mouse.current != null) && lastActiveDevice is Keyboard || lastActiveDevice is Mouse;
+    //    // bool isMobile = Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer;
+    //    //
+    //    // keyboardMouseUI.SetActive(show && isKeyboardMouse && !isMobile);
+    //    // gamepadUI.SetActive(show && isGamepad && !isMobile);
+    //    // //Debug.Log("モバイル： " + isMobile);
+    //    // //Debug.Log("キーボード＆マウス： " + isKeyboardMouse);
+    //    // //Debug.Log("ゲームコントローラー： " + isGamepad);
+    //    // touchUI.SetActive(show && isMobile);
+    //}
+
+    private void UpdateUI(InputDevice device)
     {
-        // // bool isGamepad = Gamepad.current != null;
-        // // bool isKeyboardMouse = Keyboard.current != null && Mouse.current != null;
-        // // bool isMobile = Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer;
-        // // bool isDesktop = Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer || Application
-        //
-        // bool isGamepad = Gamepad.current != null && lastActiveDevice is Gamepad;
-        // bool isKeyboardMouse = (Keyboard.current != null || Mouse.current != null) && lastActiveDevice is Keyboard || lastActiveDevice is Mouse;
-        // bool isMobile = Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer;
-        //
-        // uiForKeyboardMouse.SetActive(show && isKeyboardMouse && !isMobile);
-        // uiForGameController.SetActive(show && isGamepad && !isMobile);
-        // //Debug.Log("モバイル： " + isMobile);
-        // //Debug.Log("キーボード＆マウス： " + isKeyboardMouse);
-        // //Debug.Log("ゲームコントローラー： " + isGamepad);
-        // uiForMobile.SetActive(show && isMobile);
+        // デバイスタイプに基づいてUIを初期設定
+        keyboardMouseUI.SetActive(device is Keyboard || device is Mouse);
+        gamepadUI.SetActive(device is Gamepad);
+        touchUI.SetActive(device is Touchscreen);
     }
-    
+
     void OnTriggerEnter(Collider other)
     {
         // プレイヤーが近づいたら
@@ -162,15 +187,15 @@ public class InteractionPrompt : MonoBehaviour
         
         if (device is Keyboard || device is Mouse)
         {
-            ActivateUI(uiForKeyboardMouse);
+            ActivateUI(keyboardMouseUI);
         }
         else if (device is Gamepad)
         {
-            ActivateUI(uiForGameController);
+            ActivateUI(gamepadUI);
         }
         else if (device is Touchscreen)
         {
-            ActivateUI(uiForMobile);
+            ActivateUI(touchUI);
         }
     }
     
@@ -179,9 +204,9 @@ public class InteractionPrompt : MonoBehaviour
         if (_isDisplay == false){return;}
         
         // すべてのUIグループを非アクティブにします
-        uiForKeyboardMouse.SetActive(false);
-        uiForGameController.SetActive(false);
-        uiForMobile.SetActive(false);
+        keyboardMouseUI.SetActive(false);
+        gamepadUI.SetActive(false);
+        touchUI.SetActive(false);
 
         // 指定されたUIグループをアクティブにします
         if (uiGroup != null)

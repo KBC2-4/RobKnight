@@ -438,6 +438,9 @@ public class PlayerController : MonoBehaviour
         }
         isPossession = false;
 
+        
+        // UI•\Ž¦
+        ActionStateManager.Instance.RecordEnemyPossession(playerController.PossessionEnemyName);
     }
 
     /// <summary>
