@@ -215,6 +215,13 @@ public class PlayerController : MonoBehaviour
 
             if (enemy != null)
             {
+                //攻撃
+                if (isAttacking == true && 0 < enemy.enemyData.hp)
+                {
+                    enemy.Damage(attackPower);
+                    isAttacking = false;
+                }
+
                 if (enemy.enemyData.hp <= 0)
                 {
                     if (isPossession == true )
@@ -223,23 +230,6 @@ public class PlayerController : MonoBehaviour
                     }
                 }
                 
-            }
-        }
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.CompareTag("Enemy"))
-        {
-            EnemyController enemy = other.gameObject.GetComponent<EnemyController>();
-
-            if (enemy != null)
-            {
-                //攻撃
-                if (isAttacking == true && 0 < enemy.enemyData.hp)
-                {
-                    enemy.Damage(attackPower);
-                }
             }
         }
     }
@@ -417,6 +407,9 @@ public class PlayerController : MonoBehaviour
             enemyController.lightEffect.SetActive(false);
             enemyController.enemyData.hp = playerController.maxHp;
             Destroy(enemyController);
+
+            // UI表示
+            ActionStateManager.Instance.RecordEnemyPossession(playerController.PossessionEnemyName);
         }
 
         //タグをPlayerに変更
@@ -436,7 +429,8 @@ public class PlayerController : MonoBehaviour
         {
             camera.GetComponent<CameraMovement>().SetCameraTarget(targetObj);
         }
-        isPossession = false;
+    
+        isPossession = true;
 
         
         // UI表示
