@@ -176,6 +176,9 @@ public class PlayerController : MonoBehaviour
         {
             isAttacking = false;
         }
+
+        //Debug.Log($"State:{transform.position}");
+        //Debug.Log($"State:{GetComponent<Rigidbody>().position}");
     }
 
     void AttackAnimation(InputAction.CallbackContext context)
@@ -287,6 +290,9 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// 移動用関数
     /// </summary>
+    private Vector3 force = new Vector3(0, 0, 0);   //押し出す力
+    private Vector3 forcedecay = new Vector3(0, 0, 0);   //押し出す力の減衰
+    private float forcetime = 0;                      //押し出す時間
     private void PlayerMove()
     {
         float speedX = inputMove.x * speed;
@@ -298,11 +304,15 @@ public class PlayerController : MonoBehaviour
         //現在フレームの移動量を移動速度から計算
         Vector3 moveDelta = moveVelocity * Time.deltaTime;
 
-        if (inputMove != Vector2.zero
+
+        if ((inputMove != Vector2.zero || 0 < forcetime)
             && animator.GetCurrentAnimatorStateInfo(0).IsTag("Attack") == false)
         {
             //移動させる
             controller.Move(moveDelta);
+
+            //押し出す力を移動に加える
+            if (0 < forcetime) controller.Move(force);
 
             if (player != null)
             {
@@ -318,6 +328,18 @@ public class PlayerController : MonoBehaviour
             animator.SetFloat("Speed", 0);
         }
 
+        //押し出す時間と力を減らす
+        forcetime -= Time.fixedDeltaTime;
+        if (forcetime < 0)
+        {
+            force = Vector3.zero;
+            forcedecay = Vector3.zero;
+            forcetime = 0;
+        }
+        else 
+        {
+            force -= (forcedecay * Time.fixedDeltaTime);
+        }
     }
 
     /// <summary>
@@ -335,6 +357,23 @@ public class PlayerController : MonoBehaviour
         {
             player.transform.rotation= Quaternion.Euler(0, angleY, 0);
         }
+    }
+
+    //プレイヤーがノックバックする force:押し出す力 Base:ノックバックの発生地点
+    public void KnockBack(float force, float time, Vector3 Base)
+    {
+        Vector3 PlayerPos = transform.position;
+
+        PlayerPos.y = 0;
+        Base.y = 0;
+
+        //プレイヤーと対象間の角度を取る
+        var diff = (PlayerPos - Base).normalized;
+        Vector3 PushAngle = diff * (force * time);
+
+        this.force = PushAngle;
+        forcedecay = PushAngle / time;
+        forcetime = time;
     }
 
     /// <summary>
