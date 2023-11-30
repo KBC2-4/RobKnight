@@ -448,7 +448,7 @@ public class PlayerController : MonoBehaviour
             Destroy(enemyController);
 
             // UI表示
-            ActionStateManager.Instance.RecordEnemyPossession(playerController.PossessionEnemyName);
+            //ActionStateManager.Instance.RecordEnemyPossession(playerController.PossessionEnemyName);
         }
 
         //タグをPlayerに変更
@@ -559,5 +559,17 @@ public class PlayerController : MonoBehaviour
         {
             inputActions.Disable();
         }
+    }
+
+    //攻撃の当たり判定を有効化する
+    public void EnableHit()
+    {
+
+    }
+
+    //攻撃の当たり判定を無効化する
+    public void DisableHit()
+    {
+
     }
 }   
