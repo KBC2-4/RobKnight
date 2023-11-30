@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class OpenDoor : MonoBehaviour
 {
+    public Stone stone;
     private Vector3 initialPosition;
     private bool isOpen;
 
@@ -18,6 +19,7 @@ public class OpenDoor : MonoBehaviour
     void Update()
     {
         if (transform.position.y <= initialPosition.y - 6.0f) isOpen = false;
+        if(!stone.end) isOpen = false;
 
         if (isOpen)
         {
