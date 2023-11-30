@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+
 
 public class ActionStateManager : MonoBehaviour
 {
@@ -10,9 +12,11 @@ public class ActionStateManager : MonoBehaviour
     public GameObject enemyPossessionUI; // 憑依したエネミーのUI要素への参照
     public Animator uiAnimator;        // Animatorへの参照
 
-    public Text enemyNameText;         // エネミーの名前を表示するText
+    // public Text enemyNameText;         // エネミーの名前を表示するText
     public Image enemyImage;           // エネミー画像を表示するImage
-    public Text enemyDescriptionText;  // 説明を表示するText
+    // public Text enemyDescriptionText;  // 説明を表示するText
+    public TextMeshProUGUI enemyNameText;         // エネミーの名前を表示するTextMeshProUGUI
+    public TextMeshProUGUI enemyDescriptionText;  // 説明を表示するTextMeshProUGUI
 
     public EnemyInfo[] allEnemyInfo; // すべてのEnemyInfoの配列
 
@@ -30,6 +34,7 @@ public class ActionStateManager : MonoBehaviour
     {
         LoadActionStates();
         enemyPossessionUI.SetActive(false);
+        uiAnimator = GetComponentInChildren<Animator>();
     }
 
     //public void PerformAction(string actionName)
@@ -65,15 +70,26 @@ public class ActionStateManager : MonoBehaviour
     private void ShowEnemyPossessionUI(string enemyName)
     {
         EnemyInfo info = Array.Find(allEnemyInfo, e => e.name == enemyName);
-        if (info != null)
-        {
-            enemyNameText.text = info.name;
-            enemyImage.sprite = info.image;
-            enemyDescriptionText.text = info.description;
 
-            enemyPossessionUI.SetActive(true);
-            uiAnimator.SetTrigger("Show");
+        if (info == null)
+        {
+            Debug.LogError($"EnemyInfo not found for enemy name: {enemyName}");
+            return;
         }
+
+        //if (enemyNameText == null || enemyImage == null || enemyDescriptionText == null || uiAnimator == null)
+        //{
+        //    Debug.LogError("UIコンポーネントが正しく割り当てられていません。");
+        //    return;
+        //}
+
+        enemyNameText.text = info.name;
+        enemyImage.sprite = info.image;
+        enemyDescriptionText.text = info.description;
+
+        enemyPossessionUI.SetActive(true);
+        uiAnimator.SetTrigger("Show");
+
     }
 
     private void SaveActionStates()
