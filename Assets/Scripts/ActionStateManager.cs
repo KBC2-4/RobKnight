@@ -89,7 +89,7 @@ public class ActionStateManager : MonoBehaviour
         enemyDescriptionText.text = info.description;
 
         enemyPossessionUI.SetActive(true);
-        uiAnimator.SetTrigger("Show");
+        //uiAnimator.SetTrigger("Show");
 
         // コルーチンの起動
         StartCoroutine(DelayCoroutine());
