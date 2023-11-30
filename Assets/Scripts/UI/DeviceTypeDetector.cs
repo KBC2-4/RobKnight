@@ -46,7 +46,7 @@ public class DeviceTypeDetector : MonoBehaviour
         gamepadAction.Disable();
         touchAction.Disable();
     }
-
+    
     private void DetectDeviceType(InputAction.CallbackContext context)
     {
         // 入力デバイスを取得

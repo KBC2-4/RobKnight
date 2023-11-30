@@ -157,14 +157,24 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         PlayerMove();
+        //Debug.Log($"State:{isAttacking}");
+
+        if (animator.GetCurrentAnimatorStateInfo(0).IsTag("Idle")) 
+        {
+            isAttacking = false;
+        }
     }
 
     void AttackAnimation()
     {
-        if (animator != null && isAttacking == false)
+        // 現在再生中のアニメーションの状態を取得
+        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+
+        Debug.Log($"State:{isAttacking}");
+        if (animator != null && !isAttacking)
         {
-            animator.Play("Attack");
-                //animator.SetTrigger("AttackTrigger");
+            //animator.Play("Attack");
+            animator.SetTrigger("AttackTrigger");
         }
         if (particleSystem != null && particleSystem.isStopped)
         {
@@ -286,7 +296,7 @@ public class PlayerController : MonoBehaviour
         Vector3 moveDelta = moveVelocity * Time.deltaTime;
 
         if (inputMove != Vector2.zero
-            && animator.GetCurrentAnimatorStateInfo(0).IsName("Attack") == false)
+            && animator.GetCurrentAnimatorStateInfo(0).IsTag("Attack") == false)
         {
             //移動させる
             controller.Move(moveDelta);
@@ -383,11 +393,15 @@ public class PlayerController : MonoBehaviour
                 playerHpSlider.SetPlayerHp(playerController);
                 playerHpSlider.hpSlider.fillRect.GetComponent<Image>().color = new Color(0.8030842f, 0.4134211f, 0.9245283f, 1.0f);
             }
+
         }
 
         EnemyController enemyController = targetObj?.GetComponent<EnemyController>();
         if(enemyController != null) 
         {
+            //敵のアニメーターステータスを変更
+            enemyController.animator.SetBool("IsPossession", true);
+
             //ライトエフェクトを削除
             enemyController.lightEffect.SetActive(false);
             enemyController.enemyData.hp = playerController.maxHp;
@@ -413,6 +427,10 @@ public class PlayerController : MonoBehaviour
         }
 
         isPossession = true;
+
+
+        // UI表示
+        ActionStateManager.Instance.RecordEnemyPossession(playerController.PossessionEnemyName);
     }
 
     /// <summary>
