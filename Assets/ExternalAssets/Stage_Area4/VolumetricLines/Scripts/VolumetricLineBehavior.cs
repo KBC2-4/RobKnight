@@ -220,8 +220,8 @@ namespace VolumetricLines
 		{
 			if (null != m_material)
 			{
-				DestroyImmediate(m_material);
-				m_material = null;
+				DestroyImmediate(m_material, true);
+                 m_material = null;
 			}
 		}
 
