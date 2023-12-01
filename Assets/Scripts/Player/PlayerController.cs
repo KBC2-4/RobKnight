@@ -560,4 +560,15 @@ public class PlayerController : MonoBehaviour
             inputActions.Disable();
         }
     }
-}   
+
+    //UŒ‚‚Ì“–‚½‚è”»’è‚ğ—LŒø‰»‚·‚é
+    public void EnableHit()
+    {
+    }
+
+    //UŒ‚‚Ì“–‚½‚è”»’è‚ğ–³Œø‰»‚·‚é
+    public void DisableHit()
+    {
+    }
+
+}
