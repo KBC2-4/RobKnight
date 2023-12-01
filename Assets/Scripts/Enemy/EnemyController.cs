@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using static UnityEngine.Rendering.VirtualTexturing.Debugging;
 using static UnityEngine.UI.Image;
 using Color = System.Drawing.Color;
 
@@ -31,6 +32,7 @@ public class EnemyController : MonoBehaviour
     public GameObject uiPrompt; // 憑依を促すUI
     
     public GameObject lightEffect;
+    private ParticleSystem _particleSystem; // 倒された時に表示するパーティクル
 
     // 攻撃受けた場合のイベント
     public event Action OnDamage;
@@ -67,6 +69,7 @@ public class EnemyController : MonoBehaviour
         {
             Debug.LogError("EnemyBehaviorがセットされていません。");
         }
+        
     }
 
     // Update is called once per frame
@@ -104,7 +107,7 @@ public class EnemyController : MonoBehaviour
         if (behavior != null)
         {
             behavior.Cleanup(this);
-        }
+        } ;
     }
     
     public void Finded()
@@ -136,15 +139,33 @@ public class EnemyController : MonoBehaviour
         StartCoroutine(DestroyAfterAnimation("Die01", 0));
         lightEffect.SetActive(true);
         // Animator animator = lightEffect.GetComponent<Animator>();
-        animator.SetBool("IsWalking", false);
-        animator.ResetTrigger("AttackTrigger");
-        Animation lightEffectAnimation = lightEffect.GetComponent<Animation>();
-        if (lightEffectAnimation != null)
-        {
-            lightEffectAnimation.Play();
-        }
+        // animator.SetBool("IsWalking", false);
+        // animator.ResetTrigger("AttackTrigger");
+        //Animation lightEffectAnimation = lightEffect.GetComponent<Animation>();
+        //if (lightEffectAnimation != null)
+        //{
+        //    lightEffectAnimation.Play();
+        //}
+        // パーティクルを表示
+        //_particleSystem = GetComponentInChildren<ParticleSystem>();
+
+        //if (_particleSystem != null)
+        //{
+        //    _particleSystem.Play();
+        //}
+        //else
+        //{
+        //    Debug.Log("参照できませんでした。");
+        //}
+
         gameObject.GetComponent<Rigidbody>().isKinematic = true;
         gameObject.GetComponent<CapsuleCollider>().isTrigger = true;
+
+        if (enemyData.enemyName != "BossGoblin")
+        {
+            // 10秒後にオブジェクトを破棄する。
+            Destroy(gameObject, 10.0f);
+        }
     }
 
     private IEnumerator DestroyAfterAnimation(string animationName, int layerIndex)
