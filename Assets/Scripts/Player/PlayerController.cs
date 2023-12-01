@@ -62,7 +62,7 @@ public class PlayerController : MonoBehaviour
 
     private EnemyData currentPossession; // 現在憑依しているエネミーのデータ
 
-    private int hp = 250;
+    private int hp = 1000;
     private int maxHp = 250;
     public int mp = 100;
     public int attackPower = 10;
@@ -443,7 +443,7 @@ public class PlayerController : MonoBehaviour
             enemyController.animator.SetBool("IsPossession", true);
 
             //ライトエフェクトを削除
-            enemyController.lightEffect.SetActive(false);
+            //enemyController.lightEffect.SetActive(false);
             enemyController.enemyData.hp = playerController.maxHp;
             Destroy(enemyController);
 
