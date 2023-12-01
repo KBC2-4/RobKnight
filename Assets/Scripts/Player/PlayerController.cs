@@ -18,27 +18,7 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private InputControls inputActions;
 
-    public Dictionary<string, InputAction> actions = new Dictionary<string, InputAction>();
-
-    /// <summary>
-    /// 移動用入力変数
-    /// </summary>
-    //private InputAction moveAction;
-
-    ///// <summary>
-    ///// 攻撃用入力変数
-    ///// </summary>
-    //private InputAction fireAction;
-
-    ///// <summary>
-    ///// 憑依用入力変数
-    ///// </summary>
-    //private InputAction possessionAction;
-
-    ///// <summary>
-    ///// 人間に戻る用入力変数
-    ///// </summary>
-    //private InputAction returnAction;
+    private HashSet<int> _hitEnemyList;  //攻撃に触れたエネミーリスト
 
     /// <summary>
     /// 憑依後に保存するための変数
@@ -83,6 +63,8 @@ public class PlayerController : MonoBehaviour
         inputActions = new InputControls();
 
         inputActions.Enable();
+
+        _hitEnemyList = new HashSet<int>();
     }
 
     // Start is called before the first frame update
@@ -192,6 +174,7 @@ public class PlayerController : MonoBehaviour
     public void EndAttack()
     {
         isAttacking = false;
+        _hitEnemyList.Clear();
     }
 
     private void OnTriggerStay(Collider other)
@@ -202,12 +185,13 @@ public class PlayerController : MonoBehaviour
 
             if (enemy != null)
             {
-                ////攻撃
-                //if (isAttacking == true && 0 < enemy.enemyData.hp)
-                //{
-                //    enemy.Damage(attackPower);
-                //    isAttacking = false;
-                //}
+                //攻撃
+                if (isAttacking == true && 0 < enemy.enemyData.hp
+                    && _hitEnemyList.Contains(enemy.GetInstanceID()) == false)
+                {
+                    enemy.Damage(attackPower);
+                    _hitEnemyList.Add(enemy.GetInstanceID());
+                }
 
                 if (enemy.enemyData.hp <= 0)
                 {
@@ -221,22 +205,22 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.CompareTag("Enemy"))
-        {
-            EnemyController enemy = other.gameObject.GetComponent<EnemyController>();
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    if (other.gameObject.CompareTag("Enemy"))
+    //    {
+    //        EnemyController enemy = other.gameObject.GetComponent<EnemyController>();
 
-            if (enemy != null)
-            {
-                //攻撃
-                if (isAttacking == true && 0 < enemy.enemyData.hp)
-                {
-                    enemy.Damage(attackPower);
-                }
-            }
-        }
-    }
+    //        if (enemy != null)
+    //        {
+    //            //攻撃
+    //            if (isAttacking == true && 0 < enemy.enemyData.hp)
+    //            {
+    //                enemy.Damage(attackPower);
+    //            }
+    //        }
+    //    }
+    //}
 
     public void Damage(int damage)
     {
