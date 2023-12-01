@@ -11,6 +11,7 @@ public class TutorialNav : MonoBehaviour
 
     public GameObject p1;
     public GameObject p2;
+    public GameObject playercanvas;
 
     private PlayerController player;
 
@@ -28,17 +29,20 @@ public class TutorialNav : MonoBehaviour
         EventSystem.current.SetSelectedGameObject(NextP2);
         p1.SetActive(true);
         p2.SetActive(false);
+        playercanvas.SetActive(false);
     }
     public void OnPushButtonP2()
     {
         p1.SetActive(false);
         p2.SetActive(true);
+        playercanvas.SetActive(false);
         EventSystem.current.SetSelectedGameObject(NextP1);
     }
     public void OnPushButtonFin()
     {
         p1.SetActive(false);
         p2.SetActive(false);
+        playercanvas.SetActive(true);
         player?.SetInputAction(true);
     }
 
