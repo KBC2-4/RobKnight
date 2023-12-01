@@ -144,7 +144,11 @@ public class EnemyController : MonoBehaviour
             lightEffectAnimation.Play();
         }
         gameObject.GetComponent<Rigidbody>().isKinematic = true;
-        gameObject.GetComponent<CapsuleCollider>().isTrigger = true;
+        CapsuleCollider capsule = GetComponent<CapsuleCollider>();
+        if(capsule != null) 
+        {
+            capsule.isTrigger = true;
+        }
     }
 
     private IEnumerator DestroyAfterAnimation(string animationName, int layerIndex)
