@@ -403,6 +403,7 @@ public class PlayerController : MonoBehaviour
             
             playerController.hp = playerController.maxHp;
             playerController.attackPower = currentPossession.attackPower;
+            playerController.speed = 7.0f;
             //playerController.inputActions = inputActions;
             playerController.player = player;
             playerController.PossessionEnemyName = currentPossession.enemyName;
@@ -427,7 +428,7 @@ public class PlayerController : MonoBehaviour
             enemyController.animator.SetBool("IsPossession", true);
 
             //ライトエフェクトを削除
-            //enemyController.lightEffect.SetActive(false);
+            enemyController.lightEffect.SetActive(false);
             enemyController.enemyData.hp = playerController.maxHp;
             Destroy(enemyController);
 
