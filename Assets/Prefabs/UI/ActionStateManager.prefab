@@ -89,6 +89,8 @@ GameObject:
   - component: {fileID: 3293461554283470713}
   - component: {fileID: 4347122099679763056}
   - component: {fileID: 782467320052606164}
+  - component: {fileID: 9140772035608925189}
+  - component: {fileID: 1848558660439968370}
   m_Layer: 5
   m_Name: Panel
   m_TagString: Untagged
@@ -113,7 +115,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 35, y: 75}
+  m_AnchoredPosition: {x: 374, y: 75}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4347122099679763056
@@ -154,6 +156,43 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!95 &9140772035608925189
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6525085496519322292}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: a215f2327e91ca648aa1444ba398aaa4, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!111 &1848558660439968370
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6525085496519322292}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: e9d6e196cac4568438852c3273c675cc, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: e9d6e196cac4568438852c3273c675cc, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &7528187166368350682
 GameObject:
   m_ObjectHideFlags: 0
@@ -573,9 +612,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88e1b8dd0e4ddd843a3fc37067fac707, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyPossessionUI: {fileID: 4007976753123048505, guid: eb69533237e6a6a44896636597d0787b,
-    type: 3}
-  uiAnimator: {fileID: 0}
+  enemyPossessionUI: {fileID: 8308941123223359005}
   enemyImage: {fileID: 3080204916164358178}
   enemyNameText: {fileID: 7191428990149321438}
   enemyDescriptionText: {fileID: 300354726844169187}

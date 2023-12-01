@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 3682459677856190193}
   - component: {fileID: 1221880101831159408}
   - component: {fileID: 8463208903916234033}
-  - component: {fileID: 5688495332779823069}
   - component: {fileID: 3390826201899231882}
   m_Layer: 0
   m_Name: HintCube
@@ -107,27 +106,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!135 &5688495332779823069
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6243015746109505308}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 3
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &3390826201899231882
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -140,8 +118,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 675f27ca924482f4ebc0ae7832a178d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hintPrefab: {fileID: 952399902059011358, guid: bfecb37e5b0a1744aa78ba3427fc7576,
-    type: 3}
-  hintMessage: "\u306A\u306B\u304B\u3067\u53E9\u304F\u3068\u58CA\u308C\u305D\u3046\u3060..."
-  hints: []
-  highlightMaterial: {fileID: 2100000, guid: 9afdef9740f69bb4d9ef56d4a949068c, type: 2}
+  hintMessage: "\u306A\u306B\u304B\u3067\u53E9\u304F\u3068\u58CA\u308C\u305D\u3046\u3060...<br><b>\u3053\u308C\u306F\u592A\u5B57\u3067\u3059</b>
+    \u3053\u308C\u306F\u901A\u5E38\u306E\u30C6\u30AD\u30B9\u30C8\u3067\u3059\u3002 "
+  textColor: {r: 1, g: 1, b: 1, a: 1}
+  fontSize: 20
+  range: 5

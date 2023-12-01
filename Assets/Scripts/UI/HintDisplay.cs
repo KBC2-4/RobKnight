@@ -3,52 +3,67 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
-using static UnityEngine.Rendering.VirtualTexturing.Debugging;
 
 public class HintManager : MonoBehaviour
 {
     public string hintMessage;   // ヒントのテキスト
+    public Color textColor = Color.magenta; // テキスト色
+    [SerializeField, Range(0f, 30f)]
+    private float fontSize = 20; // 初期フォントサイズを36に設定
+    // public TMP_FontAsset font; // フォントアセット
+    [SerializeField, Range(0f, 100f)]
+    private float range = 5.0f; // ヒントを表示する距離
     // public List<string> hints; // ヒントのリスト
+    private GameObject player; // プレイヤーオブジェクト
     private TextMeshProUGUI _hintText;   // ヒントのテキストオブジェクト
     private GameObject _hintInstance; // ヒントのインスタンス
-    private Material highlightMaterial;   // ハイライト用のマテリアル
-    private Material originalMaterial;   // オリジナルのマテリアル
-    private Renderer renderer;
+    // private Material highlightMaterial;   // ハイライト用のマテリアル
+    // private Material originalMaterial;   // オリジナルのマテリアル
+    // private Renderer renderer;
     private Animator _animator;
     // private Animator _animator;
-    private AsyncOperationHandle<Material> _materialHandle; // マテリアルHandle
+    // private AsyncOperationHandle<Material> _materialHandle; // マテリアルHandle
     private AsyncOperationHandle<GameObject> _prefabHandle; // ヒント用のプレファブHandle
     private AsyncOperationHandle<Animator> _animatorHandle; // AnimatorのHandle
+    private Outline _outlineComponent;  // OutLineコンポーネント
 
 
     void Start()
     {
+        player = GameObject.FindWithTag("Player"); // プレイヤーの取得
 
         // ヒントUIのインスタンスを作成
         //_hintInstance = Instantiate(hintPrefab, transform);
         // 非表示にする
 
 
-        renderer = GetComponent<Renderer>();
-        originalMaterial = renderer.material;
+        // renderer = GetComponent<Renderer>();
+        // originalMaterial = renderer.material;
 
         // _animator = GetComponent<Animator>();
         // _animator.enabled = true;
 
         // マテリアルの読み込み
-        LoadMaterial();
+        // LoadMaterial();
         // プレファブの読み込み
         LoadPrefab();
         // Animatorの読み込み
         //LoadAnimator();
+
+        // Outlineコンポーネントの追加と初期化
+        _outlineComponent = gameObject.AddComponent<Outline>();
+        _outlineComponent.OutlineMode = Outline.Mode.OutlineVisible;
+        _outlineComponent.OutlineColor = Color.white; // 好きな色に設定
+        _outlineComponent.OutlineWidth = 5.0f;
+        _outlineComponent.enabled = false; // 初期状態では無効
     }
 
-    void LoadMaterial()
-    {
-        // Addressables.LoadAssetAsync<Material>("Assets/Materials/UI/select.mat").Completed += OnMaterialLoaded;
-        _materialHandle = Addressables.LoadAssetAsync<Material>("Assets/Materials/UI/select.mat");
-        _materialHandle.Completed += OnMaterialLoaded;
-    }
+    //void LoadMaterial()
+    //{
+    //    // Addressables.LoadAssetAsync<Material>("Assets/Materials/UI/select.mat").Completed += OnMaterialLoaded;
+    //    _materialHandle = Addressables.LoadAssetAsync<Material>("Assets/Materials/UI/select.mat");
+    //    _materialHandle.Completed += OnMaterialLoaded;
+    //}
 
     void LoadPrefab()
     {
@@ -62,24 +77,29 @@ public class HintManager : MonoBehaviour
         _animatorHandle.Completed += OnAnimatorLoaded;
     }
 
-    void OnMaterialLoaded(AsyncOperationHandle<Material> handle)
-    {
-        if (handle.Status == AsyncOperationStatus.Succeeded)
-        {
-            // Material loadedMaterial = handle.Result;
-            highlightMaterial = handle.Result;
-            // renderer.material = loadedMaterial;
-        }
-    }
+    //void OnMaterialLoaded(AsyncOperationHandle<Material> handle)
+    //{
+    //    if (handle.Status == AsyncOperationStatus.Succeeded)
+    //    {
+    //        // Material loadedMaterial = handle.Result;
+    //        highlightMaterial = handle.Result;
+    //        // renderer.material = loadedMaterial;
+    //    }
+    //}
 
     void OnPrefabLoaded(AsyncOperationHandle<GameObject> handle)
     {
         if (handle.Status == AsyncOperationStatus.Succeeded)
         {
             // プレファブのインスタンス化
-            _hintInstance = Instantiate(handle.Result, transform.position, Quaternion.identity);
+            // _hintInstance = Instantiate(handle.Result, transform.position, Quaternion.identity);
+            // プレファブのインスタンス化。このスクリプトがアタッチされているオブジェクトを親とする
+            _hintInstance = Instantiate(handle.Result, transform);
             _hintInstance.SetActive(false);
             _hintText = _hintInstance.GetComponentInChildren<TextMeshProUGUI>();
+            _hintText.color = textColor; // テキストの色を設定
+            _hintText.overflowMode = TextOverflowModes.Page; // オーバーフロー時のモードを設定
+            _hintText.fontSize = fontSize; // フォントサイズを設定
             _animator = _hintInstance.GetComponent<Animator>();
         }
     }
@@ -92,30 +112,28 @@ public class HintManager : MonoBehaviour
         }
     }
 
-
-    void OnTriggerEnter(Collider other)
+    void Update()
     {
-        // プレイヤーが近づいたら
-        if (other.tag == "Player")
+        float distance = Vector3.Distance(player.transform.position, transform.position);
+
+        if (distance <= range)
         {
-            // UIを表示
-            ShowHint(hintMessage);
+            // if (!_hintInstance.activeSelf)
+            {
+                // UIを表示
+                ShowHint(hintMessage);
+                Highlight();
+            }
         }
-
-        Highlight();
-    }
-
-    void OnTriggerExit(Collider other)
-    {
-        // プレイヤーが離れたら
-        if (other.tag == "Player")
+        else
         {
-            // UIを非表示
-            HideHint();
+            // if (_hintInstance.activeSelf)
+            {
+                // UIを非表示
+                HideHint();
+                RemoveHighlight();
+            }
         }
-
-        RemoveHighlight();
-        // _animator.SetTrigger("isHide");
     }
 
     // ヒントを表示する
@@ -123,7 +141,11 @@ public class HintManager : MonoBehaviour
     {
         _hintText.text = message;
         _hintInstance.SetActive(true);
-        _animator.SetBool("isHide", false);
+        if (_animator != null)
+        {
+            _animator.SetBool("isVisible", true);
+        }
+
     }
 
     // ヒントを表示する(複数対応)
@@ -138,28 +160,39 @@ public class HintManager : MonoBehaviour
     // ヒントを非表示にする
     public void HideHint()
     {
-        _animator.SetBool("isHide", true);
+        if (_animator != null)
+        {
+            _animator.SetBool("isVisible", false);
+            // _hintInstance.SetActive(false);
+        }
+    }
+
+    // アニメーションイベントから呼ばれるメソッド
+    public void DeactivateHint()
+    {
         _hintInstance.SetActive(false);
     }
 
     public void Highlight()
     {
-        renderer.material = highlightMaterial;
+        // renderer.material = highlightMaterial;
+        _outlineComponent.enabled = true; // 輪郭線を有効化
     }
 
     public void RemoveHighlight()
     {
-        renderer.material = originalMaterial;
+        // renderer.material = originalMaterial;
+        _outlineComponent.enabled = false; // 輪郭線を無効化
     }
 
     private void OnDestroy()
     {
 
         // マテリアルハンドルの解放
-        if (_materialHandle.IsValid())
-        {
-            Addressables.Release(_materialHandle);
-        }
+        //if (_materialHandle.IsValid())
+        //{
+        //    Addressables.Release(_materialHandle);
+        //}
 
         // プレファブハンドルの解放
         if (_prefabHandle.IsValid())

@@ -11,7 +11,7 @@ public class ActionStateManager : MonoBehaviour
     public static ActionStateManager Instance;
 
     public GameObject enemyPossessionUI; // 憑依したエネミーのUI要素への参照
-    public Animator uiAnimator;        // Animatorへの参照
+    private Animator _uiAnimator;        // Animatorへの参照
 
     // public Text enemyNameText;         // エネミーの名前を表示するText
     public Image enemyImage;           // エネミー画像を表示するImage
@@ -35,7 +35,7 @@ public class ActionStateManager : MonoBehaviour
     {
         LoadActionStates();
         enemyPossessionUI.SetActive(false);
-        uiAnimator = GetComponentInChildren<Animator>();
+        _uiAnimator = GetComponentInChildren<Animator>();
     }
 
     //public void PerformAction(string actionName)
@@ -89,11 +89,22 @@ public class ActionStateManager : MonoBehaviour
         enemyDescriptionText.text = info.description;
 
         enemyPossessionUI.SetActive(true);
-        uiAnimator.SetTrigger("Show");
+        // uiAnimator.SetTrigger("Show");
+        _uiAnimator.Play("Show");
 
         // コルーチンの起動
-        StartCoroutine(DelayCoroutine());
+        // StartCoroutine(DelayCoroutine());
 
+        // 5秒後に HideUI メソッドを呼び出す
+        Invoke("HideUI", 5f);
+
+    }
+
+    private void HideUI()
+    {
+        // アニメーションを逆再生
+        _uiAnimator.SetFloat(Animator.StringToHash("speed"), -1);
+        _uiAnimator.Play("Show", 0, 1f);
     }
 
     private void SaveActionStates()
@@ -122,7 +133,11 @@ public class ActionStateManager : MonoBehaviour
         // 5秒間待つ
         yield return new WaitForSeconds(5);
 
-        enemyPossessionUI.SetActive(false);
+        // アニメーションを逆再生
+        _uiAnimator.SetFloat(Animator.StringToHash("speed"), -1);
+        _uiAnimator.Play("Show", 0, 1f);
+
+        // enemyPossessionUI.SetActive(false);
 
 
     }
