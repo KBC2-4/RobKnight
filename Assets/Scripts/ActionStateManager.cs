@@ -84,7 +84,7 @@ public class ActionStateManager : MonoBehaviour
         //    return;
         //}
 
-        enemyNameText.text = info.name;
+        enemyNameText.text = info.displayName;
         enemyImage.sprite = info.image;
         enemyDescriptionText.text = info.description;
 
