@@ -28,7 +28,6 @@ public class Stone : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        end = true;
 
         if (stonestatueno1.end && stonestatueno2.end && stonestatueno3.end && stonestatueno4.end)
         {
