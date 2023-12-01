@@ -34,8 +34,8 @@ public class ActionStateManager : MonoBehaviour
     void Start()
     {
         LoadActionStates();
-        enemyPossessionUI.SetActive(false);
         _uiAnimator = GetComponentInChildren<Animator>();
+        enemyPossessionUI.SetActive(false);
     }
 
     //public void PerformAction(string actionName)
@@ -89,7 +89,8 @@ public class ActionStateManager : MonoBehaviour
         enemyDescriptionText.text = info.description;
 
         enemyPossessionUI.SetActive(true);
-        // uiAnimator.SetTrigger("Show");
+        //_uiAnimator.SetTrigger("Show");
+        _uiAnimator.SetFloat(Animator.StringToHash("speed"), 0.3f);
         _uiAnimator.Play("Show");
 
         // コルーチンの起動
@@ -105,6 +106,7 @@ public class ActionStateManager : MonoBehaviour
         // アニメーションを逆再生
         _uiAnimator.SetFloat(Animator.StringToHash("speed"), -1);
         _uiAnimator.Play("Show", 0, 1f);
+        enemyPossessionUI.SetActive(false);
     }
 
     private void SaveActionStates()
