@@ -18,27 +18,7 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private InputControls inputActions;
 
-    public Dictionary<string, InputAction> actions = new Dictionary<string, InputAction>();
-
-    /// <summary>
-    /// 移動用入力変数
-    /// </summary>
-    //private InputAction moveAction;
-
-    ///// <summary>
-    ///// 攻撃用入力変数
-    ///// </summary>
-    //private InputAction fireAction;
-
-    ///// <summary>
-    ///// 憑依用入力変数
-    ///// </summary>
-    //private InputAction possessionAction;
-
-    ///// <summary>
-    ///// 人間に戻る用入力変数
-    ///// </summary>
-    //private InputAction returnAction;
+    private HashSet<int> _hitEnemyList;  //攻撃に触れたエネミーリスト
 
     /// <summary>
     /// 憑依後に保存するための変数
@@ -62,7 +42,7 @@ public class PlayerController : MonoBehaviour
 
     private EnemyData currentPossession; // 現在憑依しているエネミーのデータ
 
-    private int hp = 250;
+    private int hp = 1000;
     private int maxHp = 250;
     public int mp = 100;
     public int attackPower = 10;
@@ -83,6 +63,8 @@ public class PlayerController : MonoBehaviour
         inputActions = new InputControls();
 
         inputActions.Enable();
+
+        _hitEnemyList = new HashSet<int>();
     }
 
     // Start is called before the first frame update
@@ -152,11 +134,11 @@ public class PlayerController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void FixedUpdate()
     {
         PlayerMove();
-      
-        if (animator.GetCurrentAnimatorStateInfo(0).IsTag("Idle")) 
+
+        if (animator.GetCurrentAnimatorStateInfo(0).IsTag("Idle"))
         {
             isAttacking = false;
         }
@@ -167,7 +149,7 @@ public class PlayerController : MonoBehaviour
 
     void AttackAnimation(InputAction.CallbackContext context)
     {
-        if (context.performed == true)
+        if (context.performed == true && Time.timeScale != 0)
         {
             // 現在再生中のアニメーションの状態を取得
             //AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
@@ -192,6 +174,7 @@ public class PlayerController : MonoBehaviour
     public void EndAttack()
     {
         isAttacking = false;
+        _hitEnemyList.Clear();
     }
 
     private void OnTriggerStay(Collider other)
@@ -202,12 +185,13 @@ public class PlayerController : MonoBehaviour
 
             if (enemy != null)
             {
-                ////攻撃
-                //if (isAttacking == true && 0 < enemy.enemyData.hp)
-                //{
-                //    enemy.Damage(attackPower);
-                //    isAttacking = false;
-                //}
+                //攻撃
+                if (isAttacking == true && 0 < enemy.enemyData.hp
+                    && _hitEnemyList.Contains(enemy.GetInstanceID()) == false)
+                {
+                    enemy.Damage(attackPower);
+                    _hitEnemyList.Add(enemy.GetInstanceID());
+                }
 
                 if (enemy.enemyData.hp <= 0)
                 {
@@ -221,22 +205,22 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.CompareTag("Enemy"))
-        {
-            EnemyController enemy = other.gameObject.GetComponent<EnemyController>();
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    if (other.gameObject.CompareTag("Enemy"))
+    //    {
+    //        EnemyController enemy = other.gameObject.GetComponent<EnemyController>();
 
-            if (enemy != null)
-            {
-                //攻撃
-                if (isAttacking == true && 0 < enemy.enemyData.hp)
-                {
-                    enemy.Damage(attackPower);
-                }
-            }
-        }
-    }
+    //        if (enemy != null)
+    //        {
+    //            //攻撃
+    //            if (isAttacking == true && 0 < enemy.enemyData.hp)
+    //            {
+    //                enemy.Damage(attackPower);
+    //            }
+    //        }
+    //    }
+    //}
 
     public void Damage(int damage)
     {
@@ -443,7 +427,7 @@ public class PlayerController : MonoBehaviour
             enemyController.animator.SetBool("IsPossession", true);
 
             //ライトエフェクトを削除
-            enemyController.lightEffect.SetActive(false);
+            //enemyController.lightEffect.SetActive(false);
             enemyController.enemyData.hp = playerController.maxHp;
             Destroy(enemyController);
 
@@ -560,4 +544,15 @@ public class PlayerController : MonoBehaviour
             inputActions.Disable();
         }
     }
-}   
+
+    //攻撃の当たり判定を有効化する
+    public void EnableHit()
+    {
+    }
+
+    //攻撃の当たり判定を無効化する
+    public void DisableHit()
+    {
+    }
+
+}
