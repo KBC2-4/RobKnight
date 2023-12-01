@@ -223,7 +223,7 @@ GameObject:
   - component: {fileID: 8575928843035451216}
   - component: {fileID: 1594659218600025601}
   m_Layer: 5
-  m_Name: BText (TMP) (1)
+  m_Name: BText (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -245,8 +245,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -15, y: -99.99998}
-  m_SizeDelta: {x: 50, y: 50}
+  m_AnchoredPosition: {x: -10, y: -185}
+  m_SizeDelta: {x: 150, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8575928843035451216
 CanvasRenderer:
@@ -276,7 +276,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u3067"
+  m_text: "\u3067\u6191\u4F9D"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6a50f0c338d651d498b088821d817d60, type: 2}
   m_sharedMaterial: {fileID: 6703409896497920876, guid: 6a50f0c338d651d498b088821d817d60,
@@ -493,7 +493,7 @@ GameObject:
   - component: {fileID: 3945463741694484840}
   - component: {fileID: 4711247946294329979}
   m_Layer: 5
-  m_Name: BText (TMP) (2)
+  m_Name: BText (TMP) (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -515,7 +515,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 45, y: -99.99998}
+  m_AnchoredPosition: {x: 90, y: -185}
   m_SizeDelta: {x: 100, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3945463741694484840
@@ -546,7 +546,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u6191\u4F9D"
+  m_text: "\u89E3\u9664"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6a50f0c338d651d498b088821d817d60, type: 2}
   m_sharedMaterial: {fileID: 6703409896497920876, guid: 6a50f0c338d651d498b088821d817d60,
@@ -556,8 +556,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278198015
-  m_fontColor: {r: 1, g: 0.11764706, b: 0, a: 1}
+    rgba: 4280221695
+  m_fontColor: {r: 1, g: 1, b: 0.11764706, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -921,7 +921,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -65, y: -105}
+  m_AnchoredPosition: {x: -100, y: -190}
   m_SizeDelta: {x: 60, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8748499761419189403
@@ -2509,7 +2509,7 @@ PrefabInstance:
     - target: {fileID: 723730398670765772, guid: 1b70d52a23311f04f8c38c00c19e2c33,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -125
+      value: -160
       objectReference: {fileID: 0}
     - target: {fileID: 723730398670765772, guid: 1b70d52a23311f04f8c38c00c19e2c33,
         type: 3}
@@ -2935,7 +2935,7 @@ PrefabInstance:
     - target: {fileID: 723730398670765772, guid: 1b70d52a23311f04f8c38c00c19e2c33,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -125
+      value: -160
       objectReference: {fileID: 0}
     - target: {fileID: 723730398670765772, guid: 1b70d52a23311f04f8c38c00c19e2c33,
         type: 3}
@@ -2970,13 +2970,13 @@ PrefabInstance:
     - target: {fileID: 2910204961998750905, guid: 1b70d52a23311f04f8c38c00c19e2c33,
         type: 3}
       propertyPath: m_fontSize
-      value: 20.85
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 2910204961998750905, guid: 1b70d52a23311f04f8c38c00c19e2c33,
         type: 3}
       propertyPath: m_fontAsset
       value: 
-      objectReference: {fileID: 11400000, guid: 6a50f0c338d651d498b088821d817d60,
+      objectReference: {fileID: 11400000, guid: 26dcac47cb5616a4f975fdad70794dc1,
         type: 2}
     - target: {fileID: 2910204961998750905, guid: 1b70d52a23311f04f8c38c00c19e2c33,
         type: 3}
@@ -2987,7 +2987,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: 6703409896497920876, guid: 6a50f0c338d651d498b088821d817d60,
+      objectReference: {fileID: 6574186415164399616, guid: 26dcac47cb5616a4f975fdad70794dc1,
         type: 2}
     - target: {fileID: 2910204961998750905, guid: 1b70d52a23311f04f8c38c00c19e2c33,
         type: 3}
