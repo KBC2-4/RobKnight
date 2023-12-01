@@ -134,11 +134,11 @@ public class PlayerController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void FixedUpdate()
     {
         PlayerMove();
-      
-        if (animator.GetCurrentAnimatorStateInfo(0).IsTag("Idle")) 
+
+        if (animator.GetCurrentAnimatorStateInfo(0).IsTag("Idle"))
         {
             isAttacking = false;
         }
@@ -149,7 +149,7 @@ public class PlayerController : MonoBehaviour
 
     void AttackAnimation(InputAction.CallbackContext context)
     {
-        if (context.performed == true)
+        if (context.performed == true && Time.timeScale != 0)
         {
             // 現在再生中のアニメーションの状態を取得
             //AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
