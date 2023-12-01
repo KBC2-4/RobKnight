@@ -139,8 +139,10 @@ public class EnemyController : MonoBehaviour
         StartCoroutine(DestroyAfterAnimation("Die01", 0));
         lightEffect.SetActive(true);
         // Animator animator = lightEffect.GetComponent<Animator>();
-        // animator.SetBool("IsWalking", false);
-        // animator.ResetTrigger("AttackTrigger");
+        animator.SetBool("IsWalking", false);
+        animator.ResetTrigger("AttackTrigger");
+        animator.ResetTrigger("RushTrigger");
+        animator.ResetTrigger("CallTrigger");
         //Animation lightEffectAnimation = lightEffect.GetComponent<Animation>();
         //if (lightEffectAnimation != null)
         //{
