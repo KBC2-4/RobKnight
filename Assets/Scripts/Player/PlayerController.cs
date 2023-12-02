@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -42,12 +43,12 @@ public class PlayerController : MonoBehaviour
 
     private EnemyData currentPossession; // 現在憑依しているエネミーのデータ
 
-    private int hp = 1000;
+    private int hp = 250;
     private int maxHp = 250;
-    public int mp = 100;
     public int attackPower = 10;
     private bool isAttacking = false;
     public ParticleSystem particleSystem;
+    private PlayerHpSlider _hpSlider;
 
     public static GameOverController Instance { get; private set; }
     public bool IsAttacking { get => isAttacking; set => isAttacking = value; }
@@ -65,6 +66,9 @@ public class PlayerController : MonoBehaviour
         inputActions.Enable();
 
         _hitEnemyList = new HashSet<int>();
+
+
+        _hpSlider = GameObject.Find("HP").GetComponent<PlayerHpSlider>();
     }
 
     // Start is called before the first frame update
@@ -92,8 +96,6 @@ public class PlayerController : MonoBehaviour
         //Cursor.visible = false;
         //// マウスカーソルを画面の中央に固定する
         //Cursor.lockState = CursorLockMode.Locked;
-
-
 
         if (Application.isEditor)
         {
@@ -195,7 +197,7 @@ public class PlayerController : MonoBehaviour
 
                 if (enemy.enemyData.hp <= 0)
                 {
-                    if (isPossession == false && canPossesion == true)
+                    if (isPossession == false && canPossesion == true && name == "Player")
                     {
                         Possession(enemy.gameObject);
                     }
@@ -205,26 +207,11 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    //private void OnTriggerEnter(Collider other)
-    //{
-    //    if (other.gameObject.CompareTag("Enemy"))
-    //    {
-    //        EnemyController enemy = other.gameObject.GetComponent<EnemyController>();
-
-    //        if (enemy != null)
-    //        {
-    //            //攻撃
-    //            if (isAttacking == true && 0 < enemy.enemyData.hp)
-    //            {
-    //                enemy.Damage(attackPower);
-    //            }
-    //        }
-    //    }
-    //}
-
     public void Damage(int damage)
     {
         hp -= damage;
+        _hpSlider.UpdateHPSlider();
+       
         if (hp <= 0)
         {
             //憑依状態であれば人間体に戻す
@@ -400,11 +387,10 @@ public class PlayerController : MonoBehaviour
             //憑依キャラのパラメータを設定
             currentPossession = targetObj?.GetComponent<EnemyController>().enemyData;
             playerController.maxHp = currentPossession.maxHp;
-            
             playerController.hp = playerController.maxHp;
+            playerController._hpSlider = _hpSlider;
             playerController.attackPower = currentPossession.attackPower;
             playerController.speed = 7.0f;
-            //playerController.inputActions = inputActions;
             playerController.player = player;
             playerController.PossessionEnemyName = currentPossession.enemyName;
             player = null;  
@@ -412,12 +398,14 @@ public class PlayerController : MonoBehaviour
             currentPossession = null;
 
             //PlayerのHPsliderを憑依体のHPに設定
-            PlayerHpSlider playerHpSlider = GameObject.Find("HP").GetComponent<PlayerHpSlider>();
-            if (playerHpSlider != null)
-            {
-                playerHpSlider.SetPlayerHp(playerController);
-                playerHpSlider.hpSlider.fillRect.GetComponent<Image>().color = new Color(0.8030842f, 0.4134211f, 0.9245283f, 1.0f);
-            }
+            //PlayerHpSlider playerHpSlider = GameObject.Find("HP").GetComponent<PlayerHpSlider>();
+            //if (playerHpSlider != null)
+            //{
+            //    playerHpSlider.SetPlayerHp(playerController);
+            //    playerHpSlider.hpSlider.fillRect.GetComponent<Image>().color = new Color(0.8030842f, 0.4134211f, 0.9245283f, 1.0f);
+            //}
+            Color setColor = new Color(0.8030842f, 0.4134211f, 0.9245283f, 1.0f);
+            _hpSlider.SetPlayerHp(playerController,setColor);
 
         }
 
@@ -439,6 +427,12 @@ public class PlayerController : MonoBehaviour
         //タグをPlayerに変更
         targetObj.tag = "Player";
         targetObj.layer = gameObject.layer;
+        
+        //憑依体の名前に"(Player)"を追加
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.Append(targetObj.name);
+        stringBuilder.Append("(Player)");
+        targetObj.name = stringBuilder.ToString();
 
         //憑依した敵のHPバーを削除
         Canvas canvas=targetObj?.GetComponentInChildren<Canvas>();
@@ -494,13 +488,8 @@ public class PlayerController : MonoBehaviour
             //"Player"(人間)を表示する
             player.SetActive(true);
 
-            //PlayerのHPsliderを元に戻す
-            PlayerHpSlider playerHpSlider = GameObject.Find("HP").GetComponent<PlayerHpSlider>();
-            if (playerHpSlider != null)
-            {
-                playerHpSlider.SetPlayerHp(player.GetComponent<PlayerController>());
-                playerHpSlider.hpSlider.fillRect.GetComponent<Image>().color = new Color(0.6705883f, 1.0f, 0.5803922f, 1.0f);
-            }
+            Color setColor = new Color(0.6705883f, 1.0f, 0.5803922f, 1.0f);
+            _hpSlider.SetPlayerHp(player.GetComponent<PlayerController>(), setColor);
 
             //カメラのターゲットを"Player"(人間)に戻す
             GameObject camera = GameObject.Find("MainCamera");
