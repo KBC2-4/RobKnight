@@ -12,25 +12,33 @@ public class PlayerHpSlider : MonoBehaviour
     {
         hpSlider.maxValue = playerController.GetPlayerMaxHp();
         hpSlider.value = hpSlider.maxValue;
+        Debug.Log("sliderValue:" + hpSlider.maxValue);
     }
     
     // Update is called once per frame
     void Update()
     {
+       
+    }
+
+    //HPÇÃçXêV
+    public void UpdateHPSlider()
+    {
         hpSlider.value = playerController.GetPlayerHp();
-      
-        if (playerController.isPossession)
-        {
-            // hpSlider.colors=new Color(200,200,200);
-        }
     }
 
     /// <summary>
     /// HPsliderÇ…îCà”ÇÃHPÇê›íËÇ∑ÇÈ
     /// </summary>
-    public void SetPlayerHp(PlayerController player)
+    public void SetPlayerHp(PlayerController player,Color setColor)
     {
         playerController = player;
         hpSlider.maxValue = player.GetPlayerMaxHp();
+        hpSlider.value = player.GetPlayerHp();
+
+        if (setColor != null)
+        {
+            hpSlider.fillRect.GetComponent<Image>().color = setColor;
+        }
     }
 }
