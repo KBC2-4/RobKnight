@@ -12,15 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa08958e6a864cb49ac00649f48382f1, type: 3}
   m_Name: BossGoblin
   m_EditorClassIdentifier: 
+  UseAction: 0
   actions:
   - {fileID: 11400000, guid: 6732d8228c598eb44afe7cb103ac6a53, type: 2}
   attackAction: {fileID: 11400000, guid: 6732d8228c598eb44afe7cb103ac6a53, type: 2}
   idleAction: {fileID: 11400000, guid: b9ad5e1a12e88e54886113b51dfbb52f, type: 2}
   wanderAction:
-  - {fileID: 11400000, guid: 53ff4f572cc886e4baf043af5d4ca5e4, type: 2}
+  - {fileID: 11400000, guid: c0982e0ea1c69fd49a3450e6235ce0d5, type: 2}
   - {fileID: 0}
   - {fileID: 0}
-  chaseAction: {fileID: 11400000, guid: 3d845f1aa805a2948a21ee565c8c47ff, type: 2}
+  chaseAction: {fileID: 11400000, guid: a3b05abba221f4a4db344ea837898979, type: 2}
   idleFrequency: 0.002
   idleTime: 3
   attackRange: 1.5

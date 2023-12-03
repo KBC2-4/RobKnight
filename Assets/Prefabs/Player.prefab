@@ -116,8 +116,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.4801309, y: 1.5372869, z: 0.28265902}
-  m_Center: {x: -0.0071639637, y: 0.5319745, z: -0.0039902297}
+  m_Size: {x: 0.63617325, y: 1.6332783, z: 0.71205324}
+  m_Center: {x: -0.085185856, y: 0.57996964, z: -0.0039901664}
 --- !u!1 &421038044817722746
 GameObject:
   m_ObjectHideFlags: 0
@@ -2094,7 +2094,7 @@ GameObject:
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 5721338939258241955, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -2154,15 +2154,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 1
   sensitivity: 30
-  inputActions: {fileID: -944628639613478452, guid: 4e1ec3c0ceba72c45b04f5da851592d5,
-    type: 3}
   smoothTime: 0.1
-  hp: 100
-  maxHp: 100
-  mp: 100
   attackPower: 10
   particleSystem: {fileID: 5666295093653095364, guid: 9a2654c0a2682dd4a9691972cbdc7174,
     type: 3}
+  _hpSlider: {fileID: 0}
   isPossession: 0
   PossessionEnemyName: 
 --- !u!143 &5602321591389791289
