@@ -15,8 +15,8 @@ public class SettingsManager : MonoBehaviour
     public AudioSource seAudioSource;
     public AudioSource bgmAudioSource;
 
-    public Slider cameraRotationSpeedSlider;
-    public PlayerController playerMovement;
+    // public Slider cameraRotationSpeedSlider;
+    // public PlayerController playerMovement;
 
     // Start is called before the first frame update
     void Start()
@@ -28,8 +28,8 @@ public class SettingsManager : MonoBehaviour
         AdjustSEVolume(seVolumeSlider.value);
         AdjustBGMVolume(bgmVolumeSlider.value);
 
-        cameraRotationSpeedSlider.value = PlayerPrefs.GetFloat("CameraRotationSpeed", 1.0f);
-        AdjustCameraRotationSpeed(cameraRotationSpeedSlider.value);
+        // cameraRotationSpeedSlider.value = PlayerPrefs.GetFloat("CameraRotationSpeed", 1.0f);
+        // AdjustCameraRotationSpeed(cameraRotationSpeedSlider.value);
     }
 
     // Update is called once per frame
@@ -38,7 +38,7 @@ public class SettingsManager : MonoBehaviour
         
     }
 
-    public void LoadSettings(out int width, out int height, out int windowMode, out float seVolume, out float bgmVolume, out float cameraRotationSpeed)
+    public void LoadSettings(out int width, out int height, out int windowMode, out float seVolume, out float bgmVolume/*, out float cameraRotationSpeed*/)
     {
         // 解像度の読み込み
         width = PlayerPrefs.GetInt("ResolutionWidth", 1920); // デフォルト値を1920とする
@@ -52,7 +52,7 @@ public class SettingsManager : MonoBehaviour
         bgmVolume = PlayerPrefs.GetFloat("BGMVolume", 1.0f); // デフォルト値を1.0とする
 
         // カメラの回転速度の読み込み
-        cameraRotationSpeed = PlayerPrefs.GetFloat("CameraRotationSpeed", 1.0f); // デフォルト値を1.0とする
+        // cameraRotationSpeed = PlayerPrefs.GetFloat("CameraRotationSpeed", 1.0f); // デフォルト値を1.0とする
     }
 
     public void SaveSettings(int width, int height, int windowMode, float seVolume, float bgmVolume, float cameraRotationSpeed)
@@ -104,22 +104,35 @@ public class SettingsManager : MonoBehaviour
         PlayerPrefs.SetFloat("BGMVolume", volume);
     }
 
-    public void AdjustCameraRotationSpeed(float speed)
+    /*
+    <summary>
+        クオリティ(品質)を変更する   
+    </summary>
+    <param name="qualityIndex">クオリティのインデックス</param>
+    */
+        public void ChangeQuality(int qualityIndex)
     {
-        if (SceneManager.GetActiveScene().name != "GameMainScene")
-        {
-            // ゲームメインシーンではない場合、メソッドの処理をスキップ
-            return;
-        }
-
-        // playerMovementが設定されていない場合
-        if (playerMovement == null)
-        {
-            // メソッドの処理をスキップ
-            return;
-        }
-
-        playerMovement.sensitivity = speed;
-        PlayerPrefs.SetFloat("CameraRotationSpeed", speed);
+        QualitySettings.SetQualityLevel(qualityIndex, true);
+        // 確認のためにログを出力
+        Debug.Log("クオリティを" + QualitySettings.names[qualityIndex] + "に変更しました");
     }
+
+    // public void AdjustCameraRotationSpeed(float speed)
+    // {
+    //     if (SceneManager.GetActiveScene().name != "GameMainScene")
+    //     {
+    //         // ゲームメインシーンではない場合、メソッドの処理をスキップ
+    //         return;
+    //     }
+
+    //     // playerMovementが設定されていない場合
+    //     if (playerMovement == null)
+    //     {
+    //         // メソッドの処理をスキップ
+    //         return;
+    //     }
+
+    //     playerMovement.sensitivity = speed;
+    //     PlayerPrefs.SetFloat("CameraRotationSpeed", speed);
+    // }
 }
