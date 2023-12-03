@@ -27,6 +27,7 @@ public class Stone_Statue_Move : MonoBehaviour
         if (during_rotation == true)
         {
             transform.Rotate(0f, 0f, 10 * Time.deltaTime); //‰ñ“]
+            during_rotation = false;
         }
         transform.position = (new Vector3(Mathf.Clamp(transform.position.x, 347, 372), transform.position.y, Mathf.Clamp(transform.position.z, 707, 729)));
     }
