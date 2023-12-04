@@ -107,7 +107,7 @@ public class EnemyController : MonoBehaviour
         if (behavior != null)
         {
             behavior.Cleanup(this);
-        } ;
+        };
     }
     
     public void Finded()
@@ -162,9 +162,12 @@ public class EnemyController : MonoBehaviour
 
         gameObject.GetComponent<Rigidbody>().isKinematic = true;
         gameObject.GetComponent<CapsuleCollider>().isTrigger = true;
+        bool isPossession = player.gameObject.GetComponent<PlayerController>().isPossession;
 
-        if (enemyData.enemyName != "BossGoblin")
+        // ボスゴブリンまたはプレイヤーが憑依しているエネルギー以外は10秒後にオブジェクトを破棄する
+        if (enemyData.enemyName != "BossGoblin" && isPossession)
         {
+            
             // 10秒後にオブジェクトを破棄する。
             Destroy(gameObject, 10.0f);
         }
