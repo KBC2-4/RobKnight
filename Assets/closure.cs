@@ -31,7 +31,6 @@ public class closure : MonoBehaviour
             CreateInverseCollider();
         }
     }
-
     private void CreateInverseCollider()
     {
         // Cylinderの生成
@@ -54,5 +53,8 @@ public class closure : MonoBehaviour
         var mesh = colliderObject.GetComponent<MeshFilter>().mesh;
         mesh.triangles = mesh.triangles.Reverse().ToArray();
         colliderObject.AddComponent<MeshCollider>();
+
+        //子オブジェクトを有効化する
+        transform.GetChild(0).gameObject.SetActive(true);
     }
 }
