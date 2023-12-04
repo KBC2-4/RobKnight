@@ -12,7 +12,6 @@ public class PlayerHpSlider : MonoBehaviour
     {
         hpSlider.maxValue = playerController.GetPlayerMaxHp();
         hpSlider.value = hpSlider.maxValue;
-        Debug.Log("sliderValue:" + hpSlider.maxValue);
     }
     
     // Update is called once per frame
