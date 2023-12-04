@@ -6,58 +6,73 @@ using UnityEngine.EventSystems;
 public class TutorialNav : MonoBehaviour
 {
     //最初にフォーカスするゲームオブジェクト
-    [SerializeField] private GameObject NextP2;
-    [SerializeField] private GameObject NextP1;
+    [SerializeField] private GameObject _nextButton;
+    [SerializeField] private GameObject _previousButton;
 
-    public GameObject p1;
-    public GameObject p2;
-    public GameObject playercanvas;
+    [SerializeField] GameObject _page1Panel;
+    [SerializeField] GameObject _page2Panel;
+    [SerializeField] GameObject _playerCanvas;
 
-    private PlayerController player;
+    private PlayerController _player;
+
+    [SerializeField] IntroCamera _introCamera; // イントロカメラ
+
+    void OnEnable()
+    {
+        if (_introCamera != null)
+        {
+            _introCamera.OnIntroAnimationComplete += HandleIntroAnimationComplete;
+        }
+    }
 
     private void Awake()
     {
         GameObject playerObject = GameObject.Find("Player");
         if (playerObject != null)
         {
-            player = playerObject.GetComponent<PlayerController>();
+            _player = playerObject.GetComponent<PlayerController>();
         }
+    }
+
+    void Start()
+    {
+        _page1Panel.SetActive(false);
+        _page2Panel.SetActive(false);
+        _player?.SetInputAction(false);
+        _playerCanvas.SetActive(false);
+        
+    }
+
+        void OnDisable()
+    {
+        if (_introCamera != null)
+        {
+            _introCamera.OnIntroAnimationComplete -= HandleIntroAnimationComplete;
+        }
+    }
+
+        private void HandleIntroAnimationComplete()
+    {
+        OnPushButtonP1();
     }
 
     public void OnPushButtonP1()
     {
-        EventSystem.current.SetSelectedGameObject(NextP2);
-        p1.SetActive(true);
-        p2.SetActive(false);
-        playercanvas.SetActive(false);
+        EventSystem.current.SetSelectedGameObject(_nextButton);
+        _page1Panel.SetActive(true);
+        _page2Panel.SetActive(false);
     }
     public void OnPushButtonP2()
     {
-        p1.SetActive(false);
-        p2.SetActive(true);
-        playercanvas.SetActive(false);
-        EventSystem.current.SetSelectedGameObject(NextP1);
+        _page1Panel.SetActive(false);
+        _page2Panel.SetActive(true);
+        EventSystem.current.SetSelectedGameObject(_previousButton);
     }
     public void OnPushButtonFin()
     {
-        p1.SetActive(false);
-        p2.SetActive(false);
-        playercanvas.SetActive(true);
-        player?.SetInputAction(true);
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        OnPushButtonP1();
-
-        player?.SetInputAction(false);
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
+        _page1Panel.SetActive(false);
+        _page2Panel.SetActive(false);
+        _playerCanvas.SetActive(true);
+        _player?.SetInputAction(true);
     }
 }
