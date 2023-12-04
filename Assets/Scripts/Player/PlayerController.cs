@@ -47,7 +47,7 @@ public class PlayerController : MonoBehaviour
     private int maxHp = 250;
     public int attackPower = 10;
     private bool isAttacking = false;
-    public ParticleSystem particleSystem;
+    public ParticleSystem slashEffect;
     private PlayerHpSlider _hpSlider;
 
     public static GameOverController Instance { get; private set; }
@@ -69,6 +69,8 @@ public class PlayerController : MonoBehaviour
 
 
         _hpSlider = GameObject.Find("HP").GetComponent<PlayerHpSlider>();
+
+        
     }
 
     // Start is called before the first frame update
@@ -78,12 +80,12 @@ public class PlayerController : MonoBehaviour
         controller = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
         animator.Play("Idle");
-        particleSystem = GetComponentInChildren<ParticleSystem>();
-        if (particleSystem != null)
+        slashEffect = GetComponentInChildren<ParticleSystem>();
+        if(slashEffect != null) 
         {
-            particleSystem.Stop();
+            slashEffect.Stop();
         }
-
+        
         //particleSystem.Stop();
         if (animator == null)
         {
@@ -161,22 +163,28 @@ public class PlayerController : MonoBehaviour
                 animator.Play("Attack");
                 //animator.SetTrigger("AttackTrigger");
             }
-            if (particleSystem != null && particleSystem.isStopped)
-            {
-                particleSystem.Play();
-            }
         }
     }
 
     // アニメーションイベントから呼び出される関数
     public void PerformAttack()
     {
+        //slashEffect?.Clear();
+        slashEffect?.Play();
         isAttacking = true;
     }
     public void EndAttack()
     {
         isAttacking = false;
         _hitEnemyList.Clear();
+        slashEffect?.Clear();
+        slashEffect?.Stop();
+    }
+
+    public void StopSlashEffect()
+    {
+        slashEffect?.Clear();
+        slashEffect?.Stop();
     }
 
     private void OnTriggerStay(Collider other)
