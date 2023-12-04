@@ -39,6 +39,15 @@ public class IntroCamera : MonoBehaviour
             OnIntroAnimationComplete?.Invoke();
             CameraManager.Instance.SwitchToMainCamera();
         }
+
+
+        // デバッグ用
+#if UNITY_EDITOR
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Jump"))
+        {
+            _introAnimator.speed++;
+        }
+#endif
     }
 
     IEnumerator ShowStageIntro()
