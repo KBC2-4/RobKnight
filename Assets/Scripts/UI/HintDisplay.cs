@@ -3,6 +3,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
+using System.Collections;
 
 public class HintManager : MonoBehaviour
 {
@@ -13,6 +14,9 @@ public class HintManager : MonoBehaviour
     // public TMP_FontAsset font; // フォントアセット
     [SerializeField, Range(0f, 100f)]
     private float range = 5.0f; // ヒントを表示する距離
+    [SerializeField] float typingSpeed = 0.05f; // テキストの表示速度
+    private bool isTyping = false; // テキストの表示中
+    private int characterIndex = 0; // 表示した文字のインデックス
     // public List<string> hints; // ヒントのリスト
     private GameObject player; // プレイヤーオブジェクト
     private TextMeshProUGUI _hintText;   // ヒントのテキストオブジェクト
@@ -139,13 +143,39 @@ public class HintManager : MonoBehaviour
     // ヒントを表示する
     public void ShowHint(string message)
     {
-        _hintText.text = message;
+        // _hintText.text = message;
+        if(!isTyping){
+            isTyping = true;
+            characterIndex = 0;
+            _hintText.text = "";
+            StartCoroutine(TypeText());
+        }
+        // _hintText.text = "";
+        // StartCoroutine(TypeText());
         _hintInstance.SetActive(true);
         if (_animator != null)
         {
             _animator.SetBool("isVisible", true);
         }
 
+    }
+
+    IEnumerator TypeText(){
+        // foreach (char character in hintMessage.toCharArray())
+        // {
+        //     _hintText.text += character;
+        //     yield return new WaitForSeconds(typingSpeed);
+        // }
+        foreach (char character in hintMessage)
+        {
+            _hintText.text += character;
+            yield return new WaitForSeconds(typingSpeed);
+        }
+        //while (characterIndex < _hintText.text.Length){
+        //    _hintText.text += _hintText.text[characterIndex++];
+        //}
+        //isTyping = false;
+        //yield return new WaitForSeconds(typingSpeed);
     }
 
     // ヒントを表示する(複数対応)
@@ -165,6 +195,7 @@ public class HintManager : MonoBehaviour
             _animator.SetBool("isVisible", false);
             // _hintInstance.SetActive(false);
         }
+        isTyping = false;
     }
 
     // アニメーションイベントから呼ばれるメソッド
