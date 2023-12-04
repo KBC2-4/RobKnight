@@ -58,7 +58,7 @@ public class TutorialNav : MonoBehaviour
 
     public void OnPushButtonP1()
     {
-        EventSystem.current.SetSelectedGameObject(_previousButton);
+        EventSystem.current.SetSelectedGameObject(_nextButton);
         _page1Panel.SetActive(true);
         _page2Panel.SetActive(false);
     }
