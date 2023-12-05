@@ -167,12 +167,18 @@ public class PlayerController : MonoBehaviour
     }
 
     // アニメーションイベントから呼び出される関数
+    /// <summary>
+    /// 攻撃開始
+    /// </summary>
     public void PerformAttack()
     {
         //slashEffect?.Clear();
         slashEffect?.Play();
         isAttacking = true;
     }
+    /// <summary>
+    /// 攻撃終了
+    /// </summary>
     public void EndAttack()
     {
         isAttacking = false;
@@ -180,11 +186,22 @@ public class PlayerController : MonoBehaviour
         slashEffect?.Clear();
         slashEffect?.Stop();
     }
-
+    /// <summary>
+    /// 攻撃エフェクト再生停止
+    /// </summary>
     public void StopSlashEffect()
     {
         slashEffect?.Clear();
         slashEffect?.Stop();
+    }
+
+    /// <summary>
+    /// 足音SE再生
+    /// </summary>
+    public void PlayFootsteps()
+    {
+        Debug.Log("walk");
+        AudioManager.Instance.PlaySE("PlayerFootsteps");
     }
 
     private void OnTriggerStay(Collider other)
