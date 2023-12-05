@@ -421,7 +421,7 @@ public class PlayerController : MonoBehaviour
         if(enemyController != null) 
         {
             //敵のアニメーターステータスを変更
-            enemyController.animator.SetBool("IsPossession", true);
+            //enemyController.animator.SetBool("IsPossession", true);
 
             //ライトエフェクトを削除
             enemyController.lightEffect.SetActive(false);
