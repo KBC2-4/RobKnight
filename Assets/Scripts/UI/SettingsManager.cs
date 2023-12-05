@@ -10,25 +10,28 @@ using UnityEngine.Audio;
 public class SettingsManager : MonoBehaviour
 {
 
-    public TMP_Dropdown windowModeDropdown;
-    public Slider seVolumeSlider;
-    public Slider bgmVolumeSlider;
-    public AudioSource seAudioSource;
-    public AudioSource bgmAudioSource;
-    public AudioMixer mixer;
-
+    [SerializeField, Header("ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒ¢ãƒ¼ãƒ‰è¨­å®šç”¨ã®ãƒ‰ãƒ­ãƒƒãƒ—ãƒ€ã‚¦ãƒ³")] TMP_Dropdown _windowModeDropdown;
+    [SerializeField, Header("å“è³ªè¨­å®šç”¨ã®ãƒ‰ãƒ­ãƒƒãƒ—ãƒ€ã‚¦ãƒ³")] TMP_Dropdown _qualityDropdown; // å“è³ªè¨­å®šç”¨ã®ãƒ‰ãƒ­ãƒƒãƒ—ãƒ€ã‚¦ãƒ³
+    [SerializeField, Header("SEç”¨ã®ã‚¹ãƒ©ã‚¤ãƒ‰ãƒãƒ¼")] Slider _seVolumeSlider;
+    [SerializeField, Header("BGMç”¨ã®ã‚¹ãƒ©ã‚¤ãƒ‰ãƒãƒ¼")] Slider _bgmVolumeSlider;
+    [SerializeField, Header("SEç”¨ã®ã‚ªãƒ¼ãƒ‡ã‚£ã‚ªã‚½ãƒ¼ã‚¹")] AudioSource _seAudioSource;
+    [SerializeField, Header("BGMç”¨ã®ã‚ªãƒ¼ãƒ‡ã‚£ã‚ªã‚½ãƒ¼ã‚¹")] AudioSource _bgmAudioSource;
+    [SerializeField, Header("ã‚ªãƒ¼ãƒ‡ã‚£ã‚ªãƒŸã‚­ã‚µãƒ¼")] AudioMixer _mixer;
+    
     // public Slider cameraRotationSpeedSlider;
     // public PlayerController playerMovement;
 
     // Start is called before the first frame update
     void Start()
     {
-        windowModeDropdown.value = PlayerPrefs.GetInt("WindowMode", 0);
+        _windowModeDropdown.value = PlayerPrefs.GetInt("WindowMode", 0);
 
-        seVolumeSlider.value = PlayerPrefs.GetFloat("SEVolume", 1.0f);
-        bgmVolumeSlider.value = PlayerPrefs.GetFloat("BGMVolume", 1.0f);
-        AdjustSEVolume(seVolumeSlider.value);
-        AdjustBGMVolume(bgmVolumeSlider.value);
+        _seVolumeSlider.value = PlayerPrefs.GetFloat("SEVolume", 1.0f);
+        _bgmVolumeSlider.value = PlayerPrefs.GetFloat("BGMVolume", 1.0f);
+        AdjustSEVolume(_seVolumeSlider.value);
+        AdjustBGMVolume(_bgmVolumeSlider.value);
+        _qualityDropdown.value = QualitySettings.GetQualityLevel();
+        // Debug.Log("" + QualitySettings.GetQualityLevel());
 
         // cameraRotationSpeedSlider.value = PlayerPrefs.GetFloat("CameraRotationSpeed", 1.0f);
         // AdjustCameraRotationSpeed(cameraRotationSpeedSlider.value);
@@ -42,38 +45,40 @@ public class SettingsManager : MonoBehaviour
 
     public void LoadSettings(out int width, out int height, out int windowMode, out float seVolume, out float bgmVolume/*, out float cameraRotationSpeed*/)
     {
-        // ‰ğ‘œ“x‚Ì“Ç‚İ‚İ
-        width = PlayerPrefs.GetInt("ResolutionWidth", 1920); // ƒfƒtƒHƒ‹ƒg’l‚ğ1920‚Æ‚·‚é
-        height = PlayerPrefs.GetInt("ResolutionHeight", 1080); // ƒfƒtƒHƒ‹ƒg’l‚ğ1080‚Æ‚·‚é
+        // è§£åƒåº¦ã®èª­ã¿è¾¼ã¿
+        width = PlayerPrefs.GetInt("ResolutionWidth", 1920); // ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆå€¤ã‚’1920ã¨ã™ã‚‹
+        height = PlayerPrefs.GetInt("ResolutionHeight", 1080); // ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆå€¤ã‚’1080ã¨ã™ã‚‹
 
-        // ƒEƒBƒ“ƒhƒEƒ‚[ƒh‚Ì“Ç‚İ‚İ
-        windowMode = PlayerPrefs.GetInt("WindowMode", 0); // ƒfƒtƒHƒ‹ƒg’l‚ğ0 (ƒEƒBƒ“ƒhƒEƒ‚[ƒh)‚Æ‚·‚é
+        // ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒ¢ãƒ¼ãƒ‰ã®èª­ã¿è¾¼ã¿
+        windowMode = PlayerPrefs.GetInt("WindowMode", 0); // ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆå€¤ã‚’0 (ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒ¢ãƒ¼ãƒ‰)ã¨ã™ã‚‹
 
-        // SEEBGM‰¹—Ê‚Ì“Ç‚İ‚İ
-        seVolume = PlayerPrefs.GetFloat("SEVolume", 1.0f); // ƒfƒtƒHƒ‹ƒg’l‚ğ1.0‚Æ‚·‚é
-        bgmVolume = PlayerPrefs.GetFloat("BGMVolume", 1.0f); // ƒfƒtƒHƒ‹ƒg’l‚ğ1.0‚Æ‚·‚é
 
-        // ƒJƒƒ‰‚Ì‰ñ“]‘¬“x‚Ì“Ç‚İ‚İ
-        // cameraRotationSpeed = PlayerPrefs.GetFloat("CameraRotationSpeed", 1.0f); // ƒfƒtƒHƒ‹ƒg’l‚ğ1.0‚Æ‚·‚é
+
+        // SEãƒ»BGMéŸ³é‡ã®èª­ã¿è¾¼ã¿
+        seVolume = PlayerPrefs.GetFloat("SEVolume", 1.0f); // ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆå€¤ã‚’1.0ã¨ã™ã‚‹
+        bgmVolume = PlayerPrefs.GetFloat("BGMVolume", 1.0f); // ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆå€¤ã‚’1.0ã¨ã™ã‚‹
+        // ã‚ãªãŸã¯
+        // ã‚«ãƒ¡ãƒ©ã®å›è»¢é€Ÿåº¦ã®èª­ã¿è¾¼ã¿
+        // cameraRotationSpeed = PlayerPrefs.GetFloat("CameraRotationSpeed", 1.0f); // ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆå€¤ã‚’1.0ã¨ã™ã‚‹
     }
 
     public void SaveSettings(int width, int height, int windowMode, float seVolume, float bgmVolume, float cameraRotationSpeed)
     {
-        // ‰ğ‘œ“x‚Ì•Û‘¶
+        // è§£åƒåº¦ã®ä¿å­˜
         PlayerPrefs.SetInt("ResolutionWidth", width);
         PlayerPrefs.SetInt("ResolutionHeight", height);
 
-        // ƒEƒBƒ“ƒhƒEƒ‚[ƒh‚Ì•Û‘¶ (0: ƒEƒBƒ“ƒhƒE, 1: ‹^—ƒtƒ‹ƒXƒNƒŠ[ƒ“, 2: ƒtƒ‹ƒXƒNƒŠ[ƒ“)
+        // ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒ¢ãƒ¼ãƒ‰ã®ä¿å­˜ (0: ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦, 1: ç–‘ä¼¼ãƒ•ãƒ«ã‚¹ã‚¯ãƒªãƒ¼ãƒ³, 2: ãƒ•ãƒ«ã‚¹ã‚¯ãƒªãƒ¼ãƒ³)
         PlayerPrefs.SetInt("WindowMode", windowMode);
 
-        // SEEBGM‰¹—Ê‚Ì•Û‘¶
+        // SEãƒ»BGMéŸ³é‡ã®ä¿å­˜
         PlayerPrefs.SetFloat("SEVolume", seVolume);
         PlayerPrefs.SetFloat("BGMVolume", bgmVolume);
 
-        // ƒJƒƒ‰‚Ì‰ñ“]‘¬“x‚Ì•Û‘¶
+        // ã‚«ãƒ¡ãƒ©ã®å›è»¢é€Ÿåº¦ã®ä¿å­˜
         PlayerPrefs.SetFloat("CameraRotationSpeed", cameraRotationSpeed);
 
-        // ÀÛ‚ÉƒfƒBƒXƒN‚É‘‚«‚Ş
+        // å®Ÿéš›ã«ãƒ‡ã‚£ã‚¹ã‚¯ã«æ›¸ãè¾¼ã‚€
         PlayerPrefs.Save();
     }
 
@@ -96,42 +101,42 @@ public class SettingsManager : MonoBehaviour
 
     public void AdjustSEVolume(float volume)
     {
-        seAudioSource.volume = volume;
+        _seAudioSource.volume = volume;
         PlayerPrefs.SetFloat("SEVolume", volume);
-        mixer.SetFloat("SEVolume", volume);
+        _mixer.SetFloat("SEVolume", volume);
     }
 
     public void AdjustBGMVolume(float volume)
     {
-        bgmAudioSource.volume = volume;
+        _bgmAudioSource.volume = volume;
         PlayerPrefs.SetFloat("BGMVolume", volume);
     }
 
     /*
     <summary>
-        ƒNƒIƒŠƒeƒB(•i¿)‚ğ•ÏX‚·‚é   
+        ã‚¯ã‚ªãƒªãƒ†ã‚£(å“è³ª)ã‚’å¤‰æ›´ã™ã‚‹
     </summary>
-    <param name="qualityIndex">ƒNƒIƒŠƒeƒB‚ÌƒCƒ“ƒfƒbƒNƒX</param>
+    <param name="qualityIndex">ã‚¯ã‚ªãƒªãƒ†ã‚£ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹</param>
     */
         public void ChangeQuality(int qualityIndex)
     {
         QualitySettings.SetQualityLevel(qualityIndex, true);
-        // Šm”F‚Ì‚½‚ß‚ÉƒƒO‚ğo—Í
-        Debug.Log("ƒNƒIƒŠƒeƒB‚ğ" + QualitySettings.names[qualityIndex] + "‚É•ÏX‚µ‚Ü‚µ‚½");
+        // ç¢ºèªã®ãŸã‚ã«ãƒ­ã‚°ã‚’å‡ºåŠ›
+        // Debug.Log("ã‚¯ã‚ªãƒªãƒ†ã‚£ã‚’" + QualitySettings.names[qualityIndex] + "ã«å¤‰æ›´ã—ã¾ã—ãŸ");
     }
 
     // public void AdjustCameraRotationSpeed(float speed)
     // {
     //     if (SceneManager.GetActiveScene().name != "GameMainScene")
     //     {
-    //         // ƒQ[ƒ€ƒƒCƒ“ƒV[ƒ“‚Å‚Í‚È‚¢ê‡Aƒƒ\ƒbƒh‚Ìˆ—‚ğƒXƒLƒbƒv
+    //         // ã‚²ãƒ¼ãƒ ãƒ¡ã‚¤ãƒ³ã‚·ãƒ¼ãƒ³ã§ã¯ãªã„å ´åˆã€ãƒ¡ã‚½ãƒƒãƒ‰ã®å‡¦ç†ã‚’ã‚¹ã‚­ãƒƒãƒ—
     //         return;
     //     }
 
-    //     // playerMovement‚ªİ’è‚³‚ê‚Ä‚¢‚È‚¢ê‡
+    //     // playerMovementãŒè¨­å®šã•ã‚Œã¦ã„ãªã„å ´åˆ
     //     if (playerMovement == null)
     //     {
-    //         // ƒƒ\ƒbƒh‚Ìˆ—‚ğƒXƒLƒbƒv
+    //         // ãƒ¡ã‚½ãƒƒãƒ‰ã®å‡¦ç†ã‚’ã‚¹ã‚­ãƒƒãƒ—
     //         return;
     //     }
 
