@@ -16,12 +16,15 @@ AudioMixerController:
   m_EnableSuspend: 1
   m_UpdateMode: 0
   m_ExposedParameters:
+  - guid: a35a8b47e1442004aa5be299d36aff97
+    name: BGMVolume
   - guid: 199f513d21df67c4bace5c381a36a44d
     name: SEVolume
   m_AudioMixerGroupViews:
   - guids:
     - 1732ee84105a8e7429d65d42aec5a446
     - d95f16cc67cf1024bb1388c8264c6093
+    - e5b546d4ea4df0c4f9611225a6ea6fbe
     name: View
   m_CurrentViewIndex: 0
   m_TargetSnapshot: {fileID: 24500006}
@@ -36,6 +39,7 @@ AudioMixerGroupController:
   m_GroupID: 1732ee84105a8e7429d65d42aec5a446
   m_Children:
   - {fileID: 8245380197680418714}
+  - {fileID: 6276753930714421629}
   m_Volume: a92322169e0e3994b8e04829392faeca
   m_Pitch: 716c5446e4e327645aab3a44c426476a
   m_Send: 00000000000000000000000000000000
@@ -68,8 +72,42 @@ AudioMixerSnapshotController:
   m_Name: Snapshot
   m_AudioMixer: {fileID: 24100000}
   m_SnapshotID: 4d9641dde002999458dc2010ca83e0d6
-  m_FloatValues: {}
+  m_FloatValues:
+    199f513d21df67c4bace5c381a36a44d: 0
   m_TransitionOverrides: {}
+--- !u!244 &5417560857692507980
+AudioMixerEffectController:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_EffectID: 1d6275f5e1110ea4bae9a906de2879c5
+  m_EffectName: Attenuation
+  m_MixLevel: e1798ac4259543447aa05176ecd750b0
+  m_Parameters: []
+  m_SendTarget: {fileID: 0}
+  m_EnableWetMix: 0
+  m_Bypass: 0
+--- !u!243 &6276753930714421629
+AudioMixerGroupController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: BGM
+  m_AudioMixer: {fileID: 24100000}
+  m_GroupID: e5b546d4ea4df0c4f9611225a6ea6fbe
+  m_Children: []
+  m_Volume: a35a8b47e1442004aa5be299d36aff97
+  m_Pitch: 117f758caf1844a46a60339bb411fe27
+  m_Send: 00000000000000000000000000000000
+  m_Effects:
+  - {fileID: 5417560857692507980}
+  m_UserColorIndex: 0
+  m_Mute: 0
+  m_Solo: 0
+  m_BypassEffects: 0
 --- !u!244 &6698934783030141287
 AudioMixerEffectController:
   m_ObjectHideFlags: 3
@@ -90,7 +128,7 @@ AudioMixerGroupController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: SEGroup
+  m_Name: SE
   m_AudioMixer: {fileID: 24100000}
   m_GroupID: d95f16cc67cf1024bb1388c8264c6093
   m_Children: []

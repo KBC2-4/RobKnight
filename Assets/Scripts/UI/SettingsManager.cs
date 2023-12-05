@@ -1,10 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using TMPro.Examples;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.SceneManagement;
 using UnityEngine.Audio;
 
 public class SettingsManager : MonoBehaviour
@@ -17,6 +15,7 @@ public class SettingsManager : MonoBehaviour
     [SerializeField, Header("SE用のオーディオソース")] AudioSource _seAudioSource;
     [SerializeField, Header("BGM用のオーディオソース")] AudioSource _bgmAudioSource;
     [SerializeField, Header("オーディオミキサー")] AudioMixer _mixer;
+    private InputControls controls; // インプットコントローラー
     
     // public Slider cameraRotationSpeedSlider;
     // public PlayerController playerMovement;
@@ -29,6 +28,7 @@ public class SettingsManager : MonoBehaviour
         _seVolumeSlider.value = PlayerPrefs.GetFloat("SEVolume", 1.0f);
         _bgmVolumeSlider.value = PlayerPrefs.GetFloat("BGMVolume", 1.0f);
         AdjustSEVolume(_seVolumeSlider.value);
+        _mixer.SetFloat("SEVolume", _seVolumeSlider.value);
         AdjustBGMVolume(_bgmVolumeSlider.value);
         _qualityDropdown.value = QualitySettings.GetQualityLevel();
         // Debug.Log("" + QualitySettings.GetQualityLevel());
@@ -57,7 +57,7 @@ public class SettingsManager : MonoBehaviour
         // SE・BGM音量の読み込み
         seVolume = PlayerPrefs.GetFloat("SEVolume", 1.0f); // デフォルト値を1.0とする
         bgmVolume = PlayerPrefs.GetFloat("BGMVolume", 1.0f); // デフォルト値を1.0とする
-        // あなたは
+        
         // カメラの回転速度の読み込み
         // cameraRotationSpeed = PlayerPrefs.GetFloat("CameraRotationSpeed", 1.0f); // デフォルト値を1.0とする
     }
@@ -101,15 +101,20 @@ public class SettingsManager : MonoBehaviour
 
     public void AdjustSEVolume(float volume)
     {
-        _seAudioSource.volume = volume;
+        // _seAudioSource.volume = volume;
+
         PlayerPrefs.SetFloat("SEVolume", volume);
         _mixer.SetFloat("SEVolume", volume);
+        // デバック表示
+        // Debug.Log("SEVolume: " + volume);
     }
 
     public void AdjustBGMVolume(float volume)
     {
         _bgmAudioSource.volume = volume;
         PlayerPrefs.SetFloat("BGMVolume", volume);
+        // デバック表示
+        // Debug.Log("BGMVolume: " + volume);
     }
 
     /*

@@ -201,7 +201,7 @@ public class PlayerController : MonoBehaviour
     public void PlayFootsteps()
     {
         Debug.Log("walk");
-        AudioManager.Instance.PlaySE("PlayerFootsteps");
+        AudioManager.Instance.PlaySE("player_Footsteps");
     }
 
     private void OnTriggerStay(Collider other)
