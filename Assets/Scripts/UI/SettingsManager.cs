@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
+using UnityEngine.Audio;
 
 public class SettingsManager : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class SettingsManager : MonoBehaviour
     public Slider bgmVolumeSlider;
     public AudioSource seAudioSource;
     public AudioSource bgmAudioSource;
+    public AudioMixer mixer;
 
     // public Slider cameraRotationSpeedSlider;
     // public PlayerController playerMovement;
@@ -96,6 +98,7 @@ public class SettingsManager : MonoBehaviour
     {
         seAudioSource.volume = volume;
         PlayerPrefs.SetFloat("SEVolume", volume);
+        mixer.SetFloat("SEVolume", volume);
     }
 
     public void AdjustBGMVolume(float volume)
