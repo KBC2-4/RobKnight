@@ -1,11 +1,6 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Drawing;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using static UnityEngine.Rendering.VirtualTexturing.Debugging;
-using static UnityEngine.UI.Image;
 using Color = System.Drawing.Color;
 
 public class EnemyController : MonoBehaviour
