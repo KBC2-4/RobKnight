@@ -31,7 +31,7 @@ public class SettingsManager : MonoBehaviour
         AdjustSEVolume(_seVolumeSlider.value);
         AdjustBGMVolume(_bgmVolumeSlider.value);
         _qualityDropdown.value = QualitySettings.GetQualityLevel();
-        Debug.Log("" + QualitySettings.GetQualityLevel());
+        // Debug.Log("" + QualitySettings.GetQualityLevel());
 
         // cameraRotationSpeedSlider.value = PlayerPrefs.GetFloat("CameraRotationSpeed", 1.0f);
         // AdjustCameraRotationSpeed(cameraRotationSpeedSlider.value);
@@ -122,7 +122,7 @@ public class SettingsManager : MonoBehaviour
     {
         QualitySettings.SetQualityLevel(qualityIndex, true);
         // 確認のためにログを出力
-        Debug.Log("クオリティを" + QualitySettings.names[qualityIndex] + "に変更しました");
+        // Debug.Log("クオリティを" + QualitySettings.names[qualityIndex] + "に変更しました");
     }
 
     // public void AdjustCameraRotationSpeed(float speed)
