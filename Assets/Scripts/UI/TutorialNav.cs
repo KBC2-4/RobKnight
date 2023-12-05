@@ -16,7 +16,9 @@ public class TutorialNav : MonoBehaviour
     private PlayerController _player;
 
     [SerializeField] IntroCamera _introCamera; // イントロカメラ
-
+    private Animator _page1PanelAnimator; // 1ページ目のアニメーター
+    private Animator _page2PanelAnimator; // 2ページ目のアニメーター
+    
     void OnEnable()
     {
         if (_introCamera != null)
@@ -32,6 +34,9 @@ public class TutorialNav : MonoBehaviour
         {
             _player = playerObject.GetComponent<PlayerController>();
         }
+
+        _page1PanelAnimator = _page1Panel.GetComponent<Animator>();
+        _page2PanelAnimator = _page2Panel.GetComponent<Animator>();
     }
 
     void Start()
@@ -54,6 +59,7 @@ public class TutorialNav : MonoBehaviour
         private void HandleIntroAnimationComplete()
     {
         OnPushButtonP1();
+        _page1PanelAnimator.SetTrigger("OpenTrigger");
     }
 
     public void OnPushButtonP1()
@@ -68,11 +74,34 @@ public class TutorialNav : MonoBehaviour
         _page2Panel.SetActive(true);
         EventSystem.current.SetSelectedGameObject(_previousButton);
     }
+    
+    private IEnumerator ClosePanelAfterAnimation(Animator animator, GameObject panel)
+    {
+        // アニメーターの現在のステートの長さを取得
+        float animationLength = animator.GetCurrentAnimatorStateInfo(0).length;
+    
+        // アニメーションの長さだけ待機
+        yield return new WaitForSeconds(animationLength);
+
+        // アニメーションが終わったらパネルを非アクティブにする
+        panel.SetActive(false);
+        // プレイヤーキャンバスをアクティブにする
+        _playerCanvas.SetActive(true);
+    }
+
     public void OnPushButtonFin()
     {
+        if (_player != null)
+        {
+            // プレイヤーが入力を受け付けるようにする
+            _player.SetInputAction(true);
+        }
+        else
+        {
+            Debug.LogError("Player is null!");
+        }
+        _page2PanelAnimator.SetTrigger("CloseTrigger");
+        StartCoroutine(ClosePanelAfterAnimation(_page2PanelAnimator, _page2Panel));
         _page1Panel.SetActive(false);
-        _page2Panel.SetActive(false);
-        _playerCanvas.SetActive(true);
-        _player?.SetInputAction(true);
     }
 }
