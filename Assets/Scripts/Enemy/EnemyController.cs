@@ -138,6 +138,11 @@ public class EnemyController : MonoBehaviour
         animator.ResetTrigger("AttackTrigger");
         animator.ResetTrigger("RushTrigger");
         animator.ResetTrigger("CallTrigger");
+
+        animator.SetBool("IsPossession", true);
+
+        EndAttack();
+        DisableHit();
         //Animation lightEffectAnimation = lightEffect.GetComponent<Animation>();
         //if (lightEffectAnimation != null)
         //{
@@ -157,12 +162,12 @@ public class EnemyController : MonoBehaviour
 
         gameObject.GetComponent<Rigidbody>().isKinematic = true;
         gameObject.GetComponent<CapsuleCollider>().isTrigger = true;
+        gameObject.GetComponent<BoxCollider>().isTrigger = true;
         bool isPossession = player.gameObject.GetComponent<PlayerController>().isPossession;
 
         // ボスゴブリンまたはプレイヤーが憑依しているエネルギー以外は10秒後にオブジェクトを破棄する
         if (enemyData.enemyName != "BossGoblin" && isPossession)
         {
-            
             // 10秒後にオブジェクトを破棄する。
             Destroy(gameObject, 10.0f);
         }
