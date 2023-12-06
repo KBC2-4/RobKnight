@@ -3,18 +3,28 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
+using System.Collections;
 
 public class HintManager : MonoBehaviour
 {
-    public string hintMessage;   // ヒントのテキスト
-    public Color textColor = Color.magenta; // テキスト色
-    [SerializeField, Range(0f, 30f)]
+    [SerializeField, TextAreaAttribute(2, 5), Header("テキスト")] string hintMessage;   // ヒントのテキスト
+    [SerializeField, Header("テキストの色")] Color textColor = Color.magenta; // テキスト色
+    [SerializeField, Range(0f, 30f), Header("フォントサイズ")]
     private float fontSize = 20; // 初期フォントサイズを36に設定
     // public TMP_FontAsset font; // フォントアセット
-    [SerializeField, Range(0f, 100f)]
+    [SerializeField, Range(0f, 100f), Header("表示する距離")]
     private float range = 5.0f; // ヒントを表示する距離
+    [SerializeField, Range(0f, 10f), Header("テキストの表示速度の間隔時間")] float _typingSpeed = 0.05f; // テキストの表示速度
+    // テキストが表示し終わるまでプレイヤー操作を無効化するかのフラグ
+    [SerializeField, Header("テキストが表示し終わるまでプレイヤー操作を無効化する")] private bool _disablePlayerInput = false;
+    [SerializeField, Range(0f, 30f), Header("テキスト表示後のプレイヤーの待機時間（秒）")] private float _postDisplayWaitTime = 0f; // テキスト表示後のプレイヤーの待機時間（秒）
+    [SerializeField, Header("1回のみ表示する")] private bool _displayOnceOnly = false; // 1回のみ表示するかのフラグ
+    private bool _hasDisplayedText = false; // テキストが表示されたかどうかのフラグ
+    private bool _isTyping = false; // テキストの表示中
+    private int characterIndex = 0; // 表示した文字のインデックス
     // public List<string> hints; // ヒントのリスト
-    private GameObject player; // プレイヤーオブジェクト
+    private GameObject _player; // プレイヤーオブジェクト
+    private PlayerController _playerController; // プレイヤーコントローラ
     private TextMeshProUGUI _hintText;   // ヒントのテキストオブジェクト
     private GameObject _hintInstance; // ヒントのインスタンス
     // private Material highlightMaterial;   // ハイライト用のマテリアル
@@ -30,7 +40,8 @@ public class HintManager : MonoBehaviour
 
     void Start()
     {
-        player = GameObject.FindWithTag("Player"); // プレイヤーの取得
+        _player = GameObject.FindWithTag("Player"); // プレイヤーの取得
+        _playerController = _player.GetComponent<PlayerController>(); // プレイヤーコントローラの取得
 
         // ヒントUIのインスタンスを作成
         //_hintInstance = Instantiate(hintPrefab, transform);
@@ -114,7 +125,13 @@ public class HintManager : MonoBehaviour
 
     void Update()
     {
-        float distance = Vector3.Distance(player.transform.position, transform.position);
+        // Debug.Log(_hasDisplayedText);
+        if (_displayOnceOnly && _hasDisplayedText)
+        {
+            return; // 1回のみ表示が有効で、テキストが既に表示されていたら、何もせずに戻る
+        }
+
+        float distance = Vector3.Distance(_player.transform.position, transform.position);
 
         if (distance <= range)
         {
@@ -139,13 +156,65 @@ public class HintManager : MonoBehaviour
     // ヒントを表示する
     public void ShowHint(string message)
     {
-        _hintText.text = message;
+
+        // _hintText.text = message;
+        if (!_isTyping){
+            _isTyping = true;
+            characterIndex = 0;
+            _hintText.text = "";
+            StartCoroutine(TypeText());
+        }
+        // _hintText.text = "";
+        // StartCoroutine(TypeText());
         _hintInstance.SetActive(true);
         if (_animator != null)
         {
             _animator.SetBool("isVisible", true);
         }
 
+        // 1回のみ表示が有効の場合
+        if (_displayOnceOnly)
+        {
+            // テキストが表示されたとマーク
+            _hasDisplayedText = true;
+        }
+    }
+
+    IEnumerator TypeText(){
+        // foreach (char character in hintMessage.toCharArray())
+        // {
+        //     _hintText.text += character;
+        //     yield return new WaitForSeconds(typingSpeed);
+        // }
+
+        if (_postDisplayWaitTime > 0)
+        {
+            _playerController.SetInputAction(false); // プレイヤー操作を無効化
+            StartCoroutine(Stay(_postDisplayWaitTime));
+        }
+
+        if (_disablePlayerInput)
+        {
+            _playerController.SetInputAction(false); // プレイヤー操作を無効化
+        }
+
+
+        foreach (char character in hintMessage)
+        {
+            _hintText.text += character;
+            yield return new WaitForSeconds(_typingSpeed);
+        }
+
+        if (_disablePlayerInput)
+        {
+            _playerController.SetInputAction(true); // プレイヤー操作を有効化
+        }
+
+        //while (characterIndex < _hintText.text.Length){
+        //    _hintText.text += _hintText.text[characterIndex++];
+        //}
+        //isTyping = false;
+        //yield return new WaitForSeconds(typingSpeed);
     }
 
     // ヒントを表示する(複数対応)
@@ -157,6 +226,12 @@ public class HintManager : MonoBehaviour
     //    }
     //}
 
+    IEnumerator Stay(float time)
+    {
+        yield return new WaitForSeconds(time);
+        _playerController.SetInputAction(true); // プレイヤー操作を有効化
+    }
+
     // ヒントを非表示にする
     public void HideHint()
     {
@@ -165,6 +240,7 @@ public class HintManager : MonoBehaviour
             _animator.SetBool("isVisible", false);
             // _hintInstance.SetActive(false);
         }
+        _isTyping = false;
     }
 
     // アニメーションイベントから呼ばれるメソッド

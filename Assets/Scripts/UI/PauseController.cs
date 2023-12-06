@@ -1,11 +1,13 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
 public class PauseController : MonoBehaviour
 {
     private bool isPaused = false;
-    public GameObject pauseMenu; // ポーズメニューのUIをアタッチします
+    [SerializeField] private GameObject pauseMenu; // ポーズメニューのUIをアタッチします
+    [SerializeField] private GameObject defaultButton;
     [SerializeField] private Volume postProcessVolume;
     private DepthOfField _depthOfField;
 
@@ -41,6 +43,8 @@ public class PauseController : MonoBehaviour
             Time.timeScale = 0f;
             // ポーズメニューのUIを表示
             pauseMenu.SetActive(true);
+            // デフォルトのボタンにを選択する
+            EventSystem.current.SetSelectedGameObject(defaultButton);
             
             if (_depthOfField != null)
             {

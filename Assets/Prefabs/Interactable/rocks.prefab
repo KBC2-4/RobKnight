@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1497721519549448117}
   - component: {fileID: 1693825087042735877}
   - component: {fileID: 1370906725963463653}
-  - component: {fileID: 9205979513668204173}
+  - component: {fileID: 8730960226073973406}
   m_Layer: 8
   m_Name: rocks
   m_TagString: Untagged
@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 2763823620003619936}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 302.52664, y: 4.14, z: 686.3}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -75,8 +75,8 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 1.5
   m_Center: {x: 5, y: -2.7, z: 1}
---- !u!135 &9205979513668204173
-SphereCollider:
+--- !u!65 &8730960226073973406
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -94,8 +94,8 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 1
-  m_Center: {x: 5, y: -2.7, z: 1}
+  m_Size: {x: 2, y: 2, z: 1.5}
+  m_Center: {x: 5, y: -2.7, z: 0.9}
 --- !u!1 &3444407252954873770
 GameObject:
   m_ObjectHideFlags: 0

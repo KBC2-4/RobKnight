@@ -31,12 +31,15 @@ public class Stone : MonoBehaviour
 
         if (stonestatueno1.end && stonestatueno2.end && stonestatueno3.end && stonestatueno4.end)
         {
-            end = true;
-            foreach (Transform child in transform)
+            if (end == false)
             {
-                child.gameObject.SetActive(true);
-            }
+                end = true;
+                foreach (Transform child in transform)
+                {
+                    child.gameObject.SetActive(true);
+                }
 
+            }
         }
 
     }
