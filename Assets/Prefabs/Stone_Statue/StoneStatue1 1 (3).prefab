@@ -183,11 +183,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 675f27ca924482f4ebc0ae7832a178d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hintMessage: "\u3053\u3093\u68D2XXXXXX"
+  hintMessage: "\u3053\u3093\u68D2XXXXXXX"
   textColor: {r: 0, g: 0, b: 0, a: 1}
   fontSize: 30
   range: 5
-  typingSpeed: 0.05
+  _typingSpeed: 0.05
+  _disablePlayerInput: 0
+  _postDisplayWaitTime: 0
+  _displayOnceOnly: 0
 --- !u!1 &8329847909773917190
 GameObject:
   m_ObjectHideFlags: 0
