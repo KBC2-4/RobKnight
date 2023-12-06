@@ -195,13 +195,17 @@ public class PlayerController : MonoBehaviour
         slashEffect?.Stop();
     }
 
+    public void PlayAttackSE()
+    {
+        AudioManager.Instance?.PlaySE("player_Attack");
+    }
+
     /// <summary>
     /// ë´âπSEçƒê∂
     /// </summary>
     public void PlayFootsteps()
     {
-        Debug.Log("walk");
-        AudioManager.Instance.PlaySE("player_Footsteps");
+        AudioManager.Instance?.PlaySE("player_Footsteps");
     }
 
     private void OnTriggerStay(Collider other)
