@@ -418,6 +418,7 @@ public class PlayerController : MonoBehaviour
             playerController.speed = 7.0f;
             playerController.player = player;
             playerController.PossessionEnemyName = currentPossession.enemyName;
+            playerController.isPossession = true;
             player = null;  
             playerController.currentPossession = currentPossession;
             currentPossession = null;
