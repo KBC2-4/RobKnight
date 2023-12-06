@@ -13,6 +13,7 @@ public class button : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        push_flg = false;
         event_flg = false;
         start_pds_y = transform.position.y;
     }
@@ -31,11 +32,13 @@ public class button : MonoBehaviour
         }
     }
 
-    void OnCollisionEnter(Collision collision)
+    void OnTriggerStay(Collider other)
     {
-        if (collision.gameObject.CompareTag("Stone_Statue_area1"))
+        // 衝突したオブジェクトがプレイヤーの場合
+        if (other.gameObject.CompareTag("StoneStatue_area1"))
         {
             push_flg = true;
         }
+        
     }
 }
