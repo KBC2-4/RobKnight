@@ -8,12 +8,13 @@ public class Stone_Statue_Move : MonoBehaviour
     public bool push_flg;
     public bool isAttacked = false; //UŒ‚‚ğH‚ç‚Á‚½‚Ì‚©
     public bool during_rotation = false; //‰ñ“]’†‚È‚Ì‚©
-
+    int count; //‰Ÿ‚³‚ê‚Ä‚¢‚éŠÔ{‚³‚ê‚Ä‚¢‚­
 
     // Start is called before the first frame update
     void Start()
     {
         push_flg = false;
+        count = 0;
     }
 
     // Update is called once per frame
@@ -23,10 +24,11 @@ public class Stone_Statue_Move : MonoBehaviour
         {
             transform.position += -transform.up * Time.deltaTime;
             push_flg = false;
+            count = 0;
         }
         if (during_rotation == true)
         {
-            transform.Rotate(0f, 0f, 10 * Time.deltaTime); //‰ñ“]
+            transform.Rotate(0f, 0f, 90 * Time.deltaTime); //‰ñ“]
             during_rotation = false;
         }
         transform.position = (new Vector3(Mathf.Clamp(transform.position.x, 347, 372), transform.position.y, Mathf.Clamp(transform.position.z, 707, 729)));
@@ -44,14 +46,18 @@ public class Stone_Statue_Move : MonoBehaviour
             {
                 if (playerController.PossessionEnemyName == "Gobrin")
                 {
-                    push_flg = true;
+                    count++;
                     if (playerController.IsAttacking == true )
                     {
                         during_rotation = true;
                         isAttacked = false;
+                        count = 0;
                     }
 
-
+                    if (count >= 5)
+                    {
+                        push_flg = true;
+                    }
                 }
             }
         }
