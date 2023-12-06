@@ -398,7 +398,7 @@ public class PlayerController : MonoBehaviour
             characterController.height = capsuleCollider.height;
             characterController.center = capsuleCollider.center;
             characterController.radius = capsuleCollider.radius;
-            //Destroy(targetObj.GetComponent<CapsuleCollider>());
+            capsuleCollider.enabled = true;
         }
         targetObj.gameObject.AddComponent<PlayerController>();
 
