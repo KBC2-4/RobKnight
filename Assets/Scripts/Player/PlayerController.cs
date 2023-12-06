@@ -175,6 +175,7 @@ public class PlayerController : MonoBehaviour
         //slashEffect?.Clear();
         slashEffect?.Play();
         isAttacking = true;
+        AudioManager.Instance.PlaySE("player_Attack");
     }
     /// <summary>
     /// çUåÇèIóπ
@@ -200,7 +201,6 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public void PlayFootsteps()
     {
-        Debug.Log("walk");
         AudioManager.Instance.PlaySE("player_Footsteps");
     }
 
