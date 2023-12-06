@@ -377,7 +377,10 @@ MonoBehaviour:
   textColor: {r: 0, g: 0, b: 0, a: 1}
   fontSize: 30
   range: 5
-  typingSpeed: 0.05
+  _typingSpeed: 0.05
+  _disablePlayerInput: 0
+  _postDisplayWaitTime: 0
+  _displayOnceOnly: 0
 --- !u!1001 &3685289345120983187
 PrefabInstance:
   m_ObjectHideFlags: 0
