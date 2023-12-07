@@ -5,7 +5,9 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "EnemyActions/AttackAction")]
 public class AttackAction : EnemyAction
 {
-    public float attackRange = 2f;
+    public float attackRange = 2f;  //攻撃範囲
+    public float attackCool = 0;    //攻撃間隔
+    private float nowCool;
 
     public override void Act(EnemyController controller)
     {
@@ -24,7 +26,7 @@ public class AttackAction : EnemyAction
 
             //プレイヤー間の距離を取る
             float distanceToPlayer = Vector3.Distance(controller.transform.position, controller.player.position);
-            if (distanceToPlayer <= attackRange)
+            if (distanceToPlayer <= attackRange && nowCool <= 0)
             {
                 // 攻撃アニメーションが再生中でないかつAttackRange内にプレイヤーがいる場合のみ、トリガーをセット
                 controller.animator.SetTrigger("AttackTrigger");
@@ -35,7 +37,13 @@ public class AttackAction : EnemyAction
                 IsComplete = true;
             }
         }
+        else 
+        {
+            nowCool = attackCool;
+        }
 
+        nowCool -= Time.deltaTime;
+        if (nowCool < 0) nowCool = 0;
     }
 }
 
