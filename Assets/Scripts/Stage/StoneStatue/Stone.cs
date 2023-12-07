@@ -11,6 +11,8 @@ public class Stone : MonoBehaviour
     public StoneStatueNo3 stonestatueno3;
     public StoneStatueNo4 stonestatueno4;
 
+    private AudioSource _audioSorce; // çƒê∂Ç∑ÇÈSE
+
     public bool end;
 
 
@@ -23,6 +25,8 @@ public class Stone : MonoBehaviour
 
         }
         end = false;
+
+        _audioSorce = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -33,6 +37,7 @@ public class Stone : MonoBehaviour
         {
             if (end == false)
             {
+                _audioSorce.Play();
                 end = true;
                 foreach (Transform child in transform)
                 {

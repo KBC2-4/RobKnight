@@ -13,6 +13,15 @@ public class PlayerController : MonoBehaviour
     public float speed = 5f;
     public float sensitivity = 30.0f;
 
+    //プレイヤーの攻撃力
+    private int attackPower2 = 1;
+
+    // 攻撃力を増加させるメソッド
+    public void IncreaseAttackPower()
+    {
+        attackPower += 1;
+    }
+
 
     /// <summary>
     /// 入力用
