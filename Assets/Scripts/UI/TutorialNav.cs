@@ -18,7 +18,11 @@ public class TutorialNav : MonoBehaviour
     [SerializeField] IntroCamera _introCamera; // イントロカメラ
     private Animator _page1PanelAnimator; // 1ページ目のアニメーター
     private Animator _page2PanelAnimator; // 2ページ目のアニメーター
-    
+    [SerializeField] private AudioSource _seAudioSource; // ループさせない為SE再生に使用する一概念の無いオーディオソース
+    [SerializeField] private AudioClip _seOpen; // UIを開くSE
+    [SerializeField] private AudioClip _seClose; // UIを閉じるSE
+
+
     void OnEnable()
     {
         if (_introCamera != null)
@@ -58,6 +62,8 @@ public class TutorialNav : MonoBehaviour
 
         private void HandleIntroAnimationComplete()
     {
+        // SE再生
+        _seAudioSource.PlayOneShot(_seOpen);
         OnPushButtonP1();
         _page1PanelAnimator.SetTrigger("OpenTrigger");
     }
@@ -100,6 +106,8 @@ public class TutorialNav : MonoBehaviour
         {
             Debug.LogError("Player is null!");
         }
+        // SE再生
+        _seAudioSource.PlayOneShot(_seClose);
         _page2PanelAnimator.SetTrigger("CloseTrigger");
         StartCoroutine(ClosePanelAfterAnimation(_page2PanelAnimator, _page2Panel));
         _page1Panel.SetActive(false);
