@@ -132,6 +132,7 @@ public class EnemyController : MonoBehaviour
     {
         animator.SetTrigger("DieTrigger");
         StartCoroutine(DestroyAfterAnimation("Die01", 0));
+        transform.rotation = Quaternion.identity;
         lightEffect.SetActive(true);
         // Animator animator = lightEffect.GetComponent<Animator>();
         animator.SetBool("IsWalking", false);
