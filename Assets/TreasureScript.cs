@@ -38,7 +38,7 @@ public class TreasureScript : MonoBehaviour
 
 
             // ƒvƒŒƒCƒ„[‚ÌUŒ‚—Í‚ğ‘‰Á‚³‚¹‚é
-            collider.gameObject.GetComponent<PlayerController>().IncreaseAttackPower();
+            collider.gameObject.GetComponent<PlayerController>().GetTreasure(10, 10);
 
 
             isOnes = true;
