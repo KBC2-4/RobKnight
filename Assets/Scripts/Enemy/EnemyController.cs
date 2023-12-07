@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using Color = System.Drawing.Color;
 
@@ -32,11 +34,18 @@ public class EnemyController : MonoBehaviour
     // 攻撃受けた場合のイベント
     public event Action OnDamage;
 
+    //効果音リスト
+    public List<AudioClip> SE;
+    AudioSource audioSource;
+
     // Start is called before the first frame update
     void Awake()
     {
         animator = GetComponent<Animator>();
-        
+
+        //AudioSourceComponentを取得
+        audioSource = GetComponent<AudioSource>();
+
         // プレイヤーが見つからない場合、再度検索する
         if (player == null)
         {
@@ -46,6 +55,8 @@ public class EnemyController : MonoBehaviour
 
     void Start()
     {
+        animator = GetComponent<Animator>();
+
         if (enemyBaseData == null)
         {
             Debug.LogError("EnemyBaseDataがセットされていません。");
@@ -103,6 +114,12 @@ public class EnemyController : MonoBehaviour
         {
             behavior.Cleanup(this);
         };
+    }
+
+    public void PlaySE(int num)
+    {
+        //音を鳴らす
+        audioSource.PlayOneShot(SE[num]);
     }
     
     public void Finded()
