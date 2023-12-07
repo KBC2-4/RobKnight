@@ -26,7 +26,6 @@ public class Stone_Statue_Move : MonoBehaviour
     {
         if (push_flg == true)
         {
-            Debug.Log($"UPDATE");
             transform.position += -transform.up * Time.deltaTime;
             push_flg = false;
             //count = 0;
