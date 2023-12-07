@@ -13,7 +13,7 @@ public class MiniMapIconTracker : MonoBehaviour
 
     void Update()
     {
-        UpdateIcons(GameObject.FindGameObjectsWithTag("Enemy"), enemyIcons, enemyIconPrefab);
+        // UpdateIcons(GameObject.FindGameObjectsWithTag("Enemy"), enemyIcons, enemyIconPrefab);
         UpdateIcons(GameObject.FindGameObjectsWithTag("Interactable"), interactiveIcons, interactiveIconPrefab);
     }
 

@@ -5,7 +5,7 @@ public class MinimapZoomToggle : MonoBehaviour
 {
     public Camera minimapCamera;
     public float zoomLevel1 = 50f;
-    public float zoomLevel2 = 150f;
+    public float zoomLevel2 = 130f;
     private bool isZoomedIn = false;
     
     public InputActionAsset inputActions;
