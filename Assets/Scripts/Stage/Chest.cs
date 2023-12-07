@@ -1,56 +1,105 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using TMPro;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
+
+
 
 
 public class Chest : MonoBehaviour
 {
     private Animator animator;
-    public GameObject itemPrefab; // アイテムのプレハブ
-    public Text messageText;      // UIテキスト
+    public GameObject hintPrefab; // ヒント用のプレファブ
+    public string hintMessage;   // ヒントのテキスト
+    public List<string> hints; // ヒントのリスト
+    private TextMeshProUGUI _hintText;   // ヒントのテキストオブジェクト
+    private GameObject _hintInstance; // ヒントのインスタンス
 
-    private bool isOpen = false;   // 宝箱が開かれたかどうかのフラグ
+    private Renderer renderer;
+    // private Animator _animator;
+    private AsyncOperationHandle<GameObject> _handle;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        animator = gameObject.GetComponent<Animator>();
+
+
+        // ヒントUIのインスタンスを作成
+        _hintInstance = Instantiate(hintPrefab, transform);
+        // 非表示にする
+        _hintInstance.SetActive(false);
+        _hintText = _hintInstance.GetComponentInChildren<TextMeshProUGUI>();
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+        
+    }
 
     private void OnTriggerEnter(Collider other)
     {
-        // 他のオブジェクトがトリガーコライダーに接触した時の処理
-        if (other.CompareTag("Player") && !isOpen)
+        //衝突したオブジェクトがプレイヤーの場合
+        if (other.gameObject.CompareTag("Player"))
         {
-            OpenBox();
+            animator.Play("Open");
+           
         }
-    }
 
-    // 宝箱が開かれたときに呼ばれるメソッド
-    private void OpenBox()
-    {
-        StartCoroutine(SpawnItem());
-        DisplayMessage("宝箱が開かれました！");
-        isOpen = true; // 宝箱が開かれたことをフラグで示す
+
     }
 
 
-    // アイテムを生成するコルーチン
-    private IEnumerator SpawnItem()
+
+    void OnTriggerEnter1(Collider other)
     {
-        // ランダムな位置にアイテムを生成
-        Vector3 spawnPosition = transform.position + new Vector3(Random.Range(-1f, 1f), 2f, Random.Range(-1f, 1f));
-        GameObject newItem = Instantiate(itemPrefab, spawnPosition, Quaternion.identity);
-
-
-        // 3秒後にアイテムを削除（適宜調整）
-        yield return new WaitForSeconds(3f);
-
-        Destroy(newItem);
-    }
-
-    // メッセージを表示するメソッド
-    private void DisplayMessage(string message)
-    {
-        if (messageText != null)
+        // プレイヤーが近づいたら
+        if (other.tag == "Player")
         {
-            messageText.text = message;
+            // UIを表示
+            ShowHint(hintMessage);
         }
+
+      
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        // プレイヤーが離れたら
+        if (other.tag == "Player")
+        {
+            // UIを非表示
+            HideHint();
+        }
+
+     
+        // _animator.SetTrigger("isHide");
+    }
+
+    // ヒントを表示する
+    public void ShowHint(string message)
+    {
+        _hintText.text = message;
+        _hintInstance.SetActive(true);
+    }
+
+
+
+    // ヒントを非表示にする
+    public void HideHint()
+    {
+        _hintInstance.SetActive(false);
+    }
+
+    private void OnDestroy()
+    {
+        // 解放
+        Addressables.Release(_handle);
     }
 }
  

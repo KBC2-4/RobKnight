@@ -15,7 +15,31 @@ public class SettingsAnimatorController : MonoBehaviour
     // ReturnButtonを押した時にフォーカスするゲームオブジェクト
     [SerializeField]
     public GameObject returnSelect;
+    private InputControls controls; // インプットコントローラー
 
+    private void Awake()
+    {
+        controls = new InputControls();
+
+        controls.UI.Cancel.performed += ctx => OnReturnButton();
+    }
+    
+    private void OnEnable()
+    {
+        controls.UI.Enable();
+    }
+
+    private void OnDisable()
+    {
+        controls.UI.Disable();
+    }
+
+    private void OnReturnButton()
+    {
+        // デフォルトのボタンにを選択する
+        EventSystem.current.SetSelectedGameObject(firstSelect);
+    }
+    
     private void Start()
     {
         animator = GetComponent<Animator>();

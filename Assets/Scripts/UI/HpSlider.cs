@@ -66,7 +66,7 @@ public class HpSlider : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("Main Cameraがありません。\nMain Cameraタグを設定してください");
+            // Debug.LogWarning("Main Cameraがありません。\nMain Cameraタグを設定してください");
         }
     }
 

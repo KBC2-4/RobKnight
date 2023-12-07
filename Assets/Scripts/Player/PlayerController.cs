@@ -176,12 +176,18 @@ public class PlayerController : MonoBehaviour
     }
 
     // アニメーションイベントから呼び出される関数
+    /// <summary>
+    /// 攻撃開始
+    /// </summary>
     public void PerformAttack()
     {
         //slashEffect?.Clear();
         slashEffect?.Play();
         isAttacking = true;
     }
+    /// <summary>
+    /// 攻撃終了
+    /// </summary>
     public void EndAttack()
     {
         isAttacking = false;
@@ -189,11 +195,26 @@ public class PlayerController : MonoBehaviour
         slashEffect?.Clear();
         slashEffect?.Stop();
     }
-
+    /// <summary>
+    /// 攻撃エフェクト再生停止
+    /// </summary>
     public void StopSlashEffect()
     {
         slashEffect?.Clear();
         slashEffect?.Stop();
+    }
+
+    public void PlayAttackSE()
+    {
+        AudioManager.Instance?.PlaySE("player_Attack");
+    }
+
+    /// <summary>
+    /// 足音SE再生
+    /// </summary>
+    public void PlayFootsteps()
+    {
+        AudioManager.Instance?.PlaySE("player_Footsteps");
     }
 
     private void OnTriggerStay(Collider other)
@@ -390,7 +411,7 @@ public class PlayerController : MonoBehaviour
             characterController.height = capsuleCollider.height;
             characterController.center = capsuleCollider.center;
             characterController.radius = capsuleCollider.radius;
-            //Destroy(targetObj.GetComponent<CapsuleCollider>());
+            capsuleCollider.enabled = true;
         }
         targetObj.gameObject.AddComponent<PlayerController>();
 
@@ -410,6 +431,7 @@ public class PlayerController : MonoBehaviour
             playerController.speed = 7.0f;
             playerController.player = player;
             playerController.PossessionEnemyName = currentPossession.enemyName;
+            playerController.isPossession = true;
             player = null;  
             playerController.currentPossession = currentPossession;
             currentPossession = null;

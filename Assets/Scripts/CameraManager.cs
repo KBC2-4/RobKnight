@@ -4,6 +4,7 @@ public class CameraManager : MonoBehaviour
 {
     private GameObject _currentActiveCamera; // 現在アクティブなカメラ
     private GameObject _mainCamera; // メインカメラ
+    private GameObject _miniMapCamera; // ミニマップカメラ
 
     public static CameraManager Instance;   // インスタンス
 
@@ -16,6 +17,8 @@ public class CameraManager : MonoBehaviour
     {
         // 初期カメラを設定（メインカメラ）
         _currentActiveCamera = GameObject.FindWithTag("MainCamera");
+        // 初期カメラを設定（ミニマップカメラ）
+        _miniMapCamera = GameObject.FindWithTag("MiniMapCamera");        
         // メインカメラを格納
         _mainCamera = _currentActiveCamera;
     }
@@ -40,10 +43,13 @@ public class CameraManager : MonoBehaviour
         // すべてのカメラを検索
         Camera[] cameras = FindObjectsOfType<Camera>();
 
-        // すべてのカメラを無効化
+        // すべてのカメラを無効化(ミニマップカメラは例外)
         foreach (var cam in cameras)
         {
-            cam.gameObject.SetActive(false);
+            if (!cam.gameObject.CompareTag("MiniMapCamera"))
+            {
+                cam.gameObject.SetActive(false);
+            }
         }
 
         // メインカメラをアクティブ化
