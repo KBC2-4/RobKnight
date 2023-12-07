@@ -1,6 +1,6 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI; // 追加
+using UnityEngine.UI;
 using TMPro;
 
 public class TreasureScript : MonoBehaviour
@@ -9,38 +9,42 @@ public class TreasureScript : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI _testText;
     [SerializeField] private GameObject _canvas;
-    [SerializeField] private Image _backgroundPanel; // Imageコンポーネントを使用するための変数
+    [SerializeField] private Image _backgroundPanel;
     private bool isOnes;
+    private AudioSource _audioSorce;
+    [SerializeField] private AudioClip _getItem;
+
+    public void PlayGetItem()
+    {
+        _audioSorce.PlayOneShot(_getItem);
+    }
 
     [SerializeField, Range(0f, 30f), Header("テキストを表示させる秒数")]
-    private float textDisplayTime; // テキストを表示させる秒数
+    private float textDisplayTime;
 
     void Start()
     {
         animator = GetComponent<Animator>();
+        _audioSorce = GetComponent<AudioSource>();
+
         _canvas.SetActive(false);
         isOnes = false;
     }
 
-    // Colliderに触れた時に呼ばれるメゾット
     public void OnTriggerEnter(Collider collider)
     {
-        // プレイヤーに接触
         if (collider.gameObject.tag == "Player" && !isOnes)
         {
             animator.Play("Open");
-
+            _audioSorce.Play();
             _canvas.SetActive(true);
             _testText.text = "攻撃力が少し上がった!!";
-
-            // 背景パネルの色を変更
-            _backgroundPanel.color = new Color(0.0f, 0.0f, 0.0f, 0.5f); // RGBAで指定
-
+            _backgroundPanel.color = new Color(0.0f, 0.0f, 0.0f, 0.5f);
 
             // プレイヤーの攻撃力を増加させる
-            collider.gameObject.GetComponent<PlayerController>().IncreaseAttackPower();
+            collider.gameObject.GetComponent<PlayerController>().GetTreasure(10, 10);
 
-
+            //テキスト
             isOnes = true;
             StartCoroutine(TextDisplayRoutine(textDisplayTime));
         }
@@ -49,8 +53,14 @@ public class TreasureScript : MonoBehaviour
     IEnumerator TextDisplayRoutine(float displayTime)
     {
         yield return new WaitForSeconds(displayTime);
+
+        // 2回目のSEを再生
+        _audioSorce.clip = _getItem;
+        _audioSorce.Play();
+
+        //表示されたテキストを消す
         _canvas.SetActive(false);
-        _testText.text = ""; // テキストをクリアする（任意）
-        _backgroundPanel.color = new Color(0.0f, 0.0f, 0.0f, 0.0f); // パネルの透明度を元に戻す
+        _testText.text = "";
+        _backgroundPanel.color = new Color(0.0f, 0.0f, 0.0f, 0.0f);
     }
 }
