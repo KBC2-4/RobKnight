@@ -520,6 +520,7 @@ public class PlayerController : MonoBehaviour
         {
             //"Player"(êlä‘)Çï\é¶Ç∑ÇÈ
             player.SetActive(true);
+            player.GetComponent<PlayerController>().GetTreasure(_increaseAttackValue, defencePower);
 
             Color setColor = new Color(0.6705883f, 1.0f, 0.5803922f, 1.0f);
             _hpSlider.SetPlayerHp(player.GetComponent<PlayerController>(), setColor);
@@ -588,6 +589,10 @@ public class PlayerController : MonoBehaviour
         IncreaseAttackPower(addAttack);
         IncreaseDefencePower(addDefence);
         hp = maxHp;
+        if (player != null)
+        {
+            player.GetComponent<PlayerController>().hp = maxHp;
+        }
         _hpSlider.UpdateHPSlider();
     }
 
