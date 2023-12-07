@@ -15,4 +15,5 @@ public class SoundData
     //audioClip‚ÌGetter
     public AudioClip AudioClip => audioClip;
     [SerializeField, Range(0, 1)] private float volume = 1.0f;   //‰¹—Ê
+    public float Volume => volume;
 }
