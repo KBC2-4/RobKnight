@@ -4,14 +4,15 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class GameClearController : MonoBehaviour
 {
-    EnemyController Boss;
+    [SerializeField]  private EnemyController Boss;
     //クリア画面表示時間
     private float count;
-
+    [SerializeField] GameObject canvas;
     // Start is called before the first frame update
     void Start()
     {
         count = 0;
+        canvas.SetActive(false);
     }
 
     // Update is called once per frame
@@ -19,6 +20,7 @@ public class GameClearController : MonoBehaviour
     {
         if (Boss.isDeath)
         {
+            canvas.SetActive(true);
             // 経過時間をカウント
             count += Time.deltaTime;
 
