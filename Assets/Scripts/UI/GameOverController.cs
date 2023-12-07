@@ -28,7 +28,7 @@ public class GameOverController : MonoBehaviour
         EventSystem.current.SetSelectedGameObject(firstSelect);
         // âπó Çè¨Ç≥Ç≠Ç∑ÇÈ
         bgmAudioSource.volume = 0.5f;
-        seAudioSource.volume = 0.7f;
+        seAudioSource.volume = 0.5f;
         // SEçƒê∂
         seAudioSource.PlayOneShot(bgm);
     }
