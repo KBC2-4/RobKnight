@@ -92,7 +92,7 @@ public class BGMChanger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Triggered by: " + other.gameObject.name);
+        // Debug.Log("Triggered by: " + other.gameObject.name);
         if (other.gameObject.tag == "Player" && !isFadingIn) // プレイヤーがトリガーに入ったか確認
         {
             // FadeOut();
