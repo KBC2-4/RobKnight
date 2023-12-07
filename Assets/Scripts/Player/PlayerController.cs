@@ -195,13 +195,17 @@ public class PlayerController : MonoBehaviour
         slashEffect?.Stop();
     }
 
+    public void PlayAttackSE()
+    {
+        AudioManager.Instance?.PlaySE("player_Attack");
+    }
+
     /// <summary>
     /// ë´âπSEçƒê∂
     /// </summary>
     public void PlayFootsteps()
     {
-        Debug.Log("walk");
-        AudioManager.Instance.PlaySE("player_Footsteps");
+        AudioManager.Instance?.PlaySE("player_Footsteps");
     }
 
     private void OnTriggerStay(Collider other)
@@ -398,7 +402,7 @@ public class PlayerController : MonoBehaviour
             characterController.height = capsuleCollider.height;
             characterController.center = capsuleCollider.center;
             characterController.radius = capsuleCollider.radius;
-            //Destroy(targetObj.GetComponent<CapsuleCollider>());
+            capsuleCollider.enabled = true;
         }
         targetObj.gameObject.AddComponent<PlayerController>();
 
@@ -418,6 +422,7 @@ public class PlayerController : MonoBehaviour
             playerController.speed = 7.0f;
             playerController.player = player;
             playerController.PossessionEnemyName = currentPossession.enemyName;
+            playerController.isPossession = true;
             player = null;  
             playerController.currentPossession = currentPossession;
             currentPossession = null;
