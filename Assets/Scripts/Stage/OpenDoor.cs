@@ -24,7 +24,7 @@ public class OpenDoor : MonoBehaviour
         if (transform.position.y <= initialPosition.y - 6.0f) isOpen = false;
         if(!stone.end) isOpen = false;
         if(!Button1.push_flg) isOpen = false;
-        if (!Button2.push_flg) isOpen = false;
+        if(!Button2.push_flg) isOpen = false;
 
         if (isOpen)
         {
