@@ -16,13 +16,6 @@ public class PlayerController : MonoBehaviour
     //プレイヤーの攻撃力
     private int attackPower2 = 1;
 
-    // 攻撃力を増加させるメソッド
-    public void IncreaseAttackPower()
-    {
-        attackPower += 1;
-    }
-
-
     /// <summary>
     /// 入力用
     /// </summary>
@@ -54,7 +47,9 @@ public class PlayerController : MonoBehaviour
 
     private int hp = 250;
     private int maxHp = 250;
-    public int attackPower = 10;
+    [SerializeField] private int defencePower = 0;      //防御力
+    [SerializeField]private int attackPower = 10;       //攻撃力
+    private int _increaseAttackValue;               //攻撃力の増加値
     private bool isAttacking = false;
     public ParticleSystem slashEffect;
     private PlayerHpSlider _hpSlider;
@@ -85,6 +80,7 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        _increaseAttackValue = 0;
         startPos = transform.position;
         controller = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
@@ -164,9 +160,6 @@ public class PlayerController : MonoBehaviour
     {
         if (context.performed == true && Time.timeScale != 0)
         {
-            // 現在再生中のアニメーションの状態を取得
-            //AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-
             if (animator != null && !isAttacking)
             {
                 animator.Play("Attack");
@@ -247,7 +240,7 @@ public class PlayerController : MonoBehaviour
 
     public void Damage(int damage)
     {
-        hp -= damage;
+        hp -= damage - defencePower;
         _hpSlider.UpdateHPSlider();
        
         if (hp <= 0)
@@ -427,7 +420,8 @@ public class PlayerController : MonoBehaviour
             playerController.maxHp = currentPossession.maxHp;
             playerController.hp = playerController.maxHp;
             playerController._hpSlider = _hpSlider;
-            playerController.attackPower = currentPossession.attackPower;
+            playerController.attackPower = currentPossession.attackPower + _increaseAttackValue;
+            playerController.defencePower = defencePower;
             playerController.speed = 7.0f;
             playerController.player = player;
             playerController.PossessionEnemyName = currentPossession.enemyName;
@@ -526,7 +520,7 @@ public class PlayerController : MonoBehaviour
         {
             //"Player"(人間)を表示する
             player.SetActive(true);
-
+           
             Color setColor = new Color(0.6705883f, 1.0f, 0.5803922f, 1.0f);
             _hpSlider.SetPlayerHp(player.GetComponent<PlayerController>(), setColor);
 
@@ -584,4 +578,33 @@ public class PlayerController : MonoBehaviour
     {
     }
 
+    /// <summary>
+    /// 宝箱取得関数
+    /// </summary>
+    /// <param name="addAttack">攻撃力増加値</param>
+    /// <param name="addDefence">防御力増加値</param>
+    public void GetTreasure(int addAttack,int addDefence)
+    {
+        IncreaseAttackPower(addAttack);
+        IncreaseDefencePower(addDefence);
+        hp = maxHp;
+        if (player != null)
+        {
+            player.GetComponent<PlayerController>().hp = maxHp;
+        }
+        _hpSlider.UpdateHPSlider();
+    }
+
+    // 攻撃力を増加させるメソッド
+    public void IncreaseAttackPower(int addValue)
+    {
+        attackPower += addValue;
+        _increaseAttackValue = addValue;
+    }
+
+    //防御力を増加させるメソッド
+    public void IncreaseDefencePower(int addValue)
+    {
+        defencePower += addValue;
+    }
 }
