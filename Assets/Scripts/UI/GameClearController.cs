@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
-public class GameClearNav : MonoBehaviour
+public class GameClearController : MonoBehaviour
 {
+    EnemyController Boss;
     //クリア画面表示時間
     private float count;
 
@@ -17,13 +17,16 @@ public class GameClearNav : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // 経過時間をカウント
-        count += Time.deltaTime;
-
-        // 3秒後に画面遷移（タイトルへ移動）
-        if (count >= 3.0f)
+        if (Boss.isDeath)
         {
-            SceneManager.LoadScene("Title");
+            // 経過時間をカウント
+            count += Time.deltaTime;
+
+            // 3秒後に画面遷移（タイトルへ移動）
+            if (count >= 3.0f)
+            {
+                SceneManager.LoadScene("Title");
+            }
         }
     }
 }
