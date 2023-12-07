@@ -13,6 +13,15 @@ public class PlayerController : MonoBehaviour
     public float speed = 5f;
     public float sensitivity = 30.0f;
 
+    //プレイヤーの攻撃力
+    private int attackPower2 = 1;
+
+    // 攻撃力を増加させるメソッド
+    public void IncreaseAttackPower()
+    {
+        attackPower += 1;
+    }
+
 
     /// <summary>
     /// 入力用
@@ -195,13 +204,17 @@ public class PlayerController : MonoBehaviour
         slashEffect?.Stop();
     }
 
+    public void PlayAttackSE()
+    {
+        AudioManager.Instance?.PlaySE("player_Attack");
+    }
+
     /// <summary>
     /// 足音SE再生
     /// </summary>
     public void PlayFootsteps()
     {
-        Debug.Log("walk");
-        AudioManager.Instance.PlaySE("player_Footsteps");
+        AudioManager.Instance?.PlaySE("player_Footsteps");
     }
 
     private void OnTriggerStay(Collider other)
@@ -398,7 +411,7 @@ public class PlayerController : MonoBehaviour
             characterController.height = capsuleCollider.height;
             characterController.center = capsuleCollider.center;
             characterController.radius = capsuleCollider.radius;
-            //Destroy(targetObj.GetComponent<CapsuleCollider>());
+            capsuleCollider.enabled = true;
         }
         targetObj.gameObject.AddComponent<PlayerController>();
 
@@ -418,6 +431,7 @@ public class PlayerController : MonoBehaviour
             playerController.speed = 7.0f;
             playerController.player = player;
             playerController.PossessionEnemyName = currentPossession.enemyName;
+            playerController.isPossession = true;
             player = null;  
             playerController.currentPossession = currentPossession;
             currentPossession = null;

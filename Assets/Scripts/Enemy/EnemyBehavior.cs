@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -8,7 +9,7 @@ public class EnemyBehavior : ScriptableObject
 {
 
     public bool UseAction = false;  //アクション配列に基づいて行動する? 
-    private int ActionNum = 0;      //現在の行動配列番号(Action配列を使う場合のみ使用)
+    private int ActionNum;      //現在の行動配列番号(Action配列を使う場合のみ使用)
     private EnemyAction NowAction;  //現在の行動        (Action配列を使う場合のみ使用)
 
     public List<EnemyAction> actions;
@@ -25,7 +26,7 @@ public class EnemyBehavior : ScriptableObject
     private EnemyAction _selectedAction;
     private event Action _onDamageHandler;  // 攻撃受けたときに発生するイベントの経由イベント
 
-    private void OnEnable()
+    void OnEnable()
     {
         //行動の初期化
         ActionNum = 0;
@@ -35,11 +36,20 @@ public class EnemyBehavior : ScriptableObject
             actions[ActionNum].IsComplete = false;
         }
     }
-    
+
+    //ビヘイビアの初期化
     public void Initialize(EnemyController controller)
     {
         _onDamageHandler = () => TriggerCounterAttack(controller);
         controller.OnDamage += _onDamageHandler;
+        
+        //行動の初期化
+        ActionNum = 0;
+        for (int i = 0; i < actions.Count; i++)
+        {
+            actions[ActionNum].ActionTime = 0;
+            actions[ActionNum].IsComplete = false;
+        }
     }
     
     public void Cleanup(EnemyController controller)
@@ -86,8 +96,6 @@ public class EnemyBehavior : ScriptableObject
             //アクション配列に基づいて行動する
             actions[ActionNum].Act(controller);
             actions[ActionNum].ActionTime += Time.fixedDeltaTime;
-
-            //Debug.Log($"State:{Time.fixedDeltaTime}");
 
             //行動終了時、新たな行動をセットする
             if (actions[ActionNum].IsComplete)
