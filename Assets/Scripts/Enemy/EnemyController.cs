@@ -170,7 +170,7 @@ public class EnemyController : MonoBehaviour
         if (enemyData.enemyName != "BossGoblin" && isPossession)
         {
             // 10秒後にオブジェクトを破棄する。
-            Destroy(gameObject, 10.0f);
+            //Destroy(gameObject, 10.0f);
         }
     }
 
