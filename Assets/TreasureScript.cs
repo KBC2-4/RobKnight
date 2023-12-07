@@ -9,7 +9,7 @@ public class TreasureScript : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI _testText;
     [SerializeField] private GameObject _canvas;
-    [SerializeField] private Image _backgroundPanel;
+    [SerializeField] private Image _backGroundImage;
     private bool isOnes;
     private AudioSource _audioSorce;
     [SerializeField] private AudioClip _getItem;
@@ -39,7 +39,7 @@ public class TreasureScript : MonoBehaviour
             _audioSorce.Play();
             _canvas.SetActive(true);
             _testText.text = "攻撃力が少し上がった!!";
-            _backgroundPanel.color = new Color(0.0f, 0.0f, 0.0f, 0.5f);
+            _backGroundImage.color = new Color(0.0f, 0.0f, 0.0f, 0.5f);
 
             // プレイヤーの攻撃力を増加させる
             collider.gameObject.GetComponent<PlayerController>().GetTreasure(10, 10);
@@ -59,8 +59,8 @@ public class TreasureScript : MonoBehaviour
         _audioSorce.Play();
 
         //表示されたテキストを消す
-        _canvas.SetActive(false);
         _testText.text = "";
-        _backgroundPanel.color = new Color(0.0f, 0.0f, 0.0f, 0.0f);
+        _backGroundImage.color = new Color(0.0f, 0.0f, 0.0f, 0.0f);
+        _canvas.SetActive(false);
     }
 }
