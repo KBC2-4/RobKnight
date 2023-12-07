@@ -12,6 +12,8 @@ public class StoneStatueNo1 : MonoBehaviour
 
     private float _fixation = 130; //指定した角度になったら回転を停止
 
+    private AudioSource _audioSorce; // 再生するSE
+
     public bool end = false; //オブジェクト終了
 
     public GameObject obj;
@@ -24,7 +26,7 @@ public class StoneStatueNo1 : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        _audioSorce = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -32,7 +34,6 @@ public class StoneStatueNo1 : MonoBehaviour
 
         if (_fixation > transform.localEulerAngles.y)
         {
-
 
             if (during_rotation)
             {
@@ -80,6 +81,7 @@ public class StoneStatueNo1 : MonoBehaviour
                     {
                         _old_rotaey = transform.localEulerAngles.y;
                         during_rotation = true;
+                        _audioSorce.Play();
                         isAttacked = false;
                     }
                 }
