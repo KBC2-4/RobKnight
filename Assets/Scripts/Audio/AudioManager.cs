@@ -50,15 +50,14 @@ public class AudioManager : MonoBehaviour
     /// <summary>
     /// SE再生関数
     /// </summary>
-    /// <param name="fileName">再生するSEの種類</param>
+    /// <param name="soundType">再生するSEの種類</param>
     public void PlaySE(string fileName)
     {
         if (_seDictionary.TryGetValue(fileName, out var clip))
         {
             _seAudioSource.outputAudioMixerGroup = seMixerGroup; // オーディオミキサーグループを適用
-            //SE個々のボリュームに適応
-            _seAudioSource.volume = _seSoundData.Find(data => data.FileName == fileName).Volume;
             _seAudioSource.PlayOneShot(clip);
+            // Debug.Log(fileName);
         }
         else
         {

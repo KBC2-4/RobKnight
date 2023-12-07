@@ -67,11 +67,27 @@ public class RushAttack : EnemyAction
                 //プレイヤーの距離が一定以下なら突進ダメージを与える
                 if (distanceToPlayer <= RushRange && NowCool <= 0)
                 {
+                    Debug.Log("げきとつ");
                     controller.player.GetComponent<PlayerController>().Damage(RushPower);
+
+                    Debug.Log("つきとばし");
+                    //Vector3 PlayerPos = controller.player.transform.position;
+                    //Vector3 MyPos = controller.transform.position;
+
+                    //PlayerPos.y = 0;
+                    //MyPos.y = 0;
+
+                    //var diff = MyPos - PlayerPos;
+                    //var angle = Mathf.Atan2(diff.z, diff.x);
+                    //diff.x = Mathf.Sin(angle);
+                    //diff.z = Mathf.Cos(angle);
+
+                    //Debug.Log($"State:{diff}");
 
                     Rigidbody playerbody = controller.player.GetComponent<Rigidbody>();
                     controller.player.GetComponent<PlayerController>().KnockBack(Rushforce, 0.2f, controller.transform.position);
 
+                    Debug.Log("くーるたいむ");
                     NowCool = HitCool;
                 }
             }
