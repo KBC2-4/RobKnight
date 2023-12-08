@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static DeviceTypeDetector;
 
 public class TutorialManager : MonoBehaviour
 {

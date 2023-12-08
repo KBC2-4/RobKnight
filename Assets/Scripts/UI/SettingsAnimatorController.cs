@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,6 +17,7 @@ public class SettingsAnimatorController : MonoBehaviour
     [SerializeField]
     public GameObject returnSelect;
     private InputControls controls; // インプットコントローラー
+    private event Action _onCloseHandler;  // ポーズ画面を閉じたに発生するイベント
 
     private void Awake()
     {
@@ -32,10 +34,13 @@ public class SettingsAnimatorController : MonoBehaviour
     private void OnDisable()
     {
         controls.UI.Disable();
+        // HideSettings();
     }
 
     private void OnReturnButton()
     {
+        // SEが再生されないようにする
+        UISoundManager.Instance.SetProgrammaticSelect();
         // デフォルトのボタンにを選択する
         EventSystem.current.SetSelectedGameObject(firstSelect);
     }
@@ -61,7 +66,8 @@ public class SettingsAnimatorController : MonoBehaviour
         {
             animator.SetBool("isSettingsOpen", true);
             EnableDepthOfFieldEffect();
-
+            // SEが再生されないようにする
+            UISoundManager.Instance.SetProgrammaticSelect();
             EventSystem.current.SetSelectedGameObject(firstSelect);
         }
     }
@@ -72,7 +78,8 @@ public class SettingsAnimatorController : MonoBehaviour
         {
             animator.SetBool("isSettingsOpen", false);
             DisableDepthOfFieldEffect() ;
-
+            // SEが再生されないようにする
+            UISoundManager.Instance.SetProgrammaticSelect();
             EventSystem.current.SetSelectedGameObject(returnSelect);
             
         }

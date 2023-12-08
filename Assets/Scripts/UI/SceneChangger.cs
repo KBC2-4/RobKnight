@@ -40,4 +40,18 @@ public class SceneChangger : MonoBehaviour
         yield return new WaitForSeconds(delay);
         SceneManager.LoadScene("GameMainScene");
     }
+
+    public void GoToGameMainScene()
+    {
+        // ボタンの状態を無効にする
+        button.interactable = false;
+        SceneManager.LoadScene("GameMainScene");
+    }
+
+    public void GoToTitle()
+    {
+        // ボタンの状態を無効にする
+        button.interactable = false;
+        SceneManager.LoadScene("Title");
+    }
 }

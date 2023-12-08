@@ -590,7 +590,8 @@ public class PlayerController : MonoBehaviour
         hp = maxHp;
         if (player != null)
         {
-            player.GetComponent<PlayerController>().hp = maxHp;
+            PlayerController playerController = player.GetComponent<PlayerController>();
+            playerController.hp = playerController.maxHp;
         }
         _hpSlider.UpdateHPSlider();
     }
