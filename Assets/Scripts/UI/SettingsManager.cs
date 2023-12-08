@@ -25,8 +25,8 @@ public class SettingsManager : MonoBehaviour
     {
         _windowModeDropdown.value = PlayerPrefs.GetInt("WindowMode", 0);
 
-        _seVolumeSlider.value = PlayerPrefs.GetFloat("SEVolume", 1.0f);
-        _bgmVolumeSlider.value = PlayerPrefs.GetFloat("BGMVolume", 1.0f);
+        _seVolumeSlider.value = PlayerPrefs.GetFloat("SEVolume", -20.0f);
+        _bgmVolumeSlider.value = PlayerPrefs.GetFloat("BGMVolume", 2.0f);
         AdjustSEVolume(_seVolumeSlider.value);
         _mixer.SetFloat("SEVolume", _seVolumeSlider.value);
         AdjustBGMVolume(_bgmVolumeSlider.value);

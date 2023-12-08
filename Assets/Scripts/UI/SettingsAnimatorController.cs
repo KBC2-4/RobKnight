@@ -36,6 +36,8 @@ public class SettingsAnimatorController : MonoBehaviour
 
     private void OnReturnButton()
     {
+        // SEが再生されないようにする
+        UISoundManager.Instance.SetProgrammaticSelect();
         // デフォルトのボタンにを選択する
         EventSystem.current.SetSelectedGameObject(firstSelect);
     }
@@ -61,7 +63,8 @@ public class SettingsAnimatorController : MonoBehaviour
         {
             animator.SetBool("isSettingsOpen", true);
             EnableDepthOfFieldEffect();
-
+            // SEが再生されないようにする
+            UISoundManager.Instance.SetProgrammaticSelect();
             EventSystem.current.SetSelectedGameObject(firstSelect);
         }
     }
@@ -72,7 +75,8 @@ public class SettingsAnimatorController : MonoBehaviour
         {
             animator.SetBool("isSettingsOpen", false);
             DisableDepthOfFieldEffect() ;
-
+            // SEが再生されないようにする
+            UISoundManager.Instance.SetProgrammaticSelect();
             EventSystem.current.SetSelectedGameObject(returnSelect);
             
         }
