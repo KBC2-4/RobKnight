@@ -7,7 +7,7 @@ public class TutorialNav : MonoBehaviour
 {
     //最初にフォーカスするゲームオブジェクト
     [SerializeField] private GameObject _nextButton;
-    [SerializeField] private GameObject _previousButton;
+    [SerializeField] private GameObject _finButton;
 
     [SerializeField] GameObject _page1Panel;
     [SerializeField] GameObject _page2Panel;
@@ -78,7 +78,7 @@ public class TutorialNav : MonoBehaviour
     {
         _page1Panel.SetActive(false);
         _page2Panel.SetActive(true);
-        EventSystem.current.SetSelectedGameObject(_previousButton);
+        EventSystem.current.SetSelectedGameObject(_finButton);
     }
     
     private IEnumerator ClosePanelAfterAnimation(Animator animator, GameObject panel)
