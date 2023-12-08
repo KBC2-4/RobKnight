@@ -21,6 +21,8 @@ public class RushAttack : EnemyAction
     private float StartTime;  //突進の開始時間
     private float NowCool;    //現在のクールタイム
 
+    public AudioClip AttackSE;
+
     public override void Act(EnemyController controller)
     {
         // 現在再生中のアニメーションの状態を取得
@@ -67,8 +69,14 @@ public class RushAttack : EnemyAction
                 //プレイヤーの距離が一定以下なら突進ダメージを与える
                 if (distanceToPlayer <= RushRange && NowCool <= 0)
                 {
-                    controller.player.GetComponent<PlayerController>().Damage(RushPower);
+                    AudioSource audioSource = controller.GetComponent<AudioSource>();
 
+                    controller.player.GetComponent<PlayerController>().Damage(RushPower);
+                    
+                    //音を鳴らす
+                    audioSource.PlayOneShot(AttackSE);
+
+                    //プレイヤーにノックバックを与える
                     Rigidbody playerbody = controller.player.GetComponent<Rigidbody>();
                     controller.player.GetComponent<PlayerController>().KnockBack(Rushforce, 0.2f, controller.transform.position);
 
