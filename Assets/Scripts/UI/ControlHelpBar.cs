@@ -64,7 +64,7 @@ public class ControlHelpBar : MonoBehaviour
         // イントロアニメーション完了後にUIを表示
         _isDisplay = true;
         gameObject.SetActive(true);
-        // gamepadUI.SetActive(true);
+        gamepadUI.SetActive(true);
         SetUIVisibility();
     }
 
