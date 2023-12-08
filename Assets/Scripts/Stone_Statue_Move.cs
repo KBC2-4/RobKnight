@@ -24,14 +24,8 @@ public class Stone_Statue_Move : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (push_flg == true)
-        {
-            transform.position += -transform.up * Time.deltaTime;
-            push_flg = false;
-            //count = 0;
-        }
 
-        if(!Button.push_flg) transform.position += force;
+        if(!push_flg) transform.position += force;
 
         //押し出す時間と力を減らす
         forcetime -= Time.fixedDeltaTime;
@@ -60,7 +54,7 @@ public class Stone_Statue_Move : MonoBehaviour
             // プレイヤーが憑依している状態か確認します。
             if (playerController != null)
             {
-                if (playerController.PossessionEnemyName == "Gobrin")
+                if (playerController.PossessionEnemyName == "BigGoblin")
                 {
                     //count++;
                     if (playerController.IsAttacking == true)

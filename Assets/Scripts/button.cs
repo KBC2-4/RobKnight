@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class button : MonoBehaviour
@@ -31,12 +32,20 @@ public class button : MonoBehaviour
 
     void OnTriggerStay(Collider other)
     {
-        Debug.Log("押されてるよ");
         // 衝突したオブジェクトがプレイヤーの場合
-        if (other.gameObject.CompareTag("StoneStatue"))
+        if (other.gameObject.CompareTag("StoneStatue") && !push_flg)
         {
-            Debug.Log("ONよ");
             push_flg = true;
+
+            //スイッチを押した石像を無効化する
+            if (other.GetComponent<Stone_Statue_Move>() != null)
+            {
+                other.GetComponent<Stone_Statue_Move>().push_flg = true;
+            }
+            else
+            {
+                other.GetComponent<Stone_Statue_Move_2>().push_flg = true;
+            }
         }
     }
 }

@@ -23,13 +23,12 @@ public class Stone_Statue_Move_2 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!Button.push_flg)
+        if (!push_flg)
         {
 
             if (0 < forcetime)
             {
                 transform.position += -transform.up * Time.deltaTime * forcetime * power;
-                push_flg = false;
             }
             else
             {

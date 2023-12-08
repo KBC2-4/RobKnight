@@ -6,8 +6,14 @@ using UnityEngine;
 public class EnemyData : ScriptableObject
 {
     public string enemyName;
+
+    //“G‚Æ‚µ‚Ä‚Ì‘Ì—Í
     public int hp;
     public int maxHp;
+
+    //ƒvƒŒƒCƒ„[‚Ì‘Ì—Í
+    public int Poshp;
+
     public int attackPower;
     public GameObject modelPrefab;
     // ‹Z

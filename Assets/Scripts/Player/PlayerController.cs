@@ -417,7 +417,7 @@ public class PlayerController : MonoBehaviour
 
             //憑依キャラのパラメータを設定
             currentPossession = targetObj?.GetComponent<EnemyController>().enemyData;
-            playerController.maxHp = currentPossession.maxHp;
+            playerController.maxHp = currentPossession.Poshp;
             playerController.hp = playerController.maxHp;
             playerController._hpSlider = _hpSlider;
             playerController.attackPower = currentPossession.attackPower + _increaseAttackValue;
