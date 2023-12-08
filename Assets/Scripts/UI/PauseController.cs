@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Rendering;
@@ -10,6 +11,8 @@ public class PauseController : MonoBehaviour
     [SerializeField] private GameObject defaultButton;
     [SerializeField] private Volume postProcessVolume;
     private DepthOfField _depthOfField;
+    public event Action OnClose; // ポーズ画面を閉じた場合のイベント
+
 
     void Start()
     {
@@ -57,7 +60,7 @@ public class PauseController : MonoBehaviour
             Time.timeScale = 1f;
             // ポーズメニューのUIを非表示
             pauseMenu.SetActive(false);
-            
+            OnClose?.Invoke();
             if (_depthOfField != null)
             {
                 _depthOfField.active = false;

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,6 +17,7 @@ public class SettingsAnimatorController : MonoBehaviour
     [SerializeField]
     public GameObject returnSelect;
     private InputControls controls; // インプットコントローラー
+    private event Action _onCloseHandler;  // ポーズ画面を閉じたに発生するイベント
 
     private void Awake()
     {
