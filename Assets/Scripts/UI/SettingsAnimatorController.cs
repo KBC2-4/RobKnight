@@ -34,6 +34,7 @@ public class SettingsAnimatorController : MonoBehaviour
     private void OnDisable()
     {
         controls.UI.Disable();
+        // HideSettings();
     }
 
     private void OnReturnButton()

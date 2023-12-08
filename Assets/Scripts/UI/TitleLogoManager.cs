@@ -4,8 +4,8 @@ public class TitleLogoManager : MonoBehaviour
 {
     public static TitleLogoManager Instance;
 
-    public Animator titleLogoAnimator; // タイトルロゴのAnimator
-    private bool hasAnimatedOnce = false;
+    [SerializeField] private Animator _titleLogoAnimator; // タイトルロゴのAnimator
+    private bool _hasAnimatedOnce = false;
 
     void Awake()
     {
@@ -24,15 +24,17 @@ public class TitleLogoManager : MonoBehaviour
 
     void Start()
     {
-        if (!hasAnimatedOnce)
+        Debug.Log(_hasAnimatedOnce);
+        if (!_hasAnimatedOnce)
         {
-            titleLogoAnimator.Play("TitleLogoAnimation");
-            hasAnimatedOnce = true;
+            //titleLogoAnimator.Play("TitleLogoAnimation");
+            _hasAnimatedOnce = true;
         }
         else
         {
             // アニメーションがない、ロゴの固定位置を示すステート
-            titleLogoAnimator.Play("TitleLogoStatic");
+            //titleLogoAnimator.Play("TitleLogoStatic");
+            _titleLogoAnimator.SetTrigger("StaticTrigger");
         }
     }
 }

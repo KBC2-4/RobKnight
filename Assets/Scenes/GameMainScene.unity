@@ -1247,6 +1247,51 @@ Material:
     - _Color: {r: 0, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
+--- !u!1 &631507449
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 631507450}
+  - component: {fileID: 631507451}
+  m_Layer: 0
+  m_Name: TitleLogoManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &631507450
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 631507449}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 522, y: 290.75, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 894012724}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &631507451
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 631507449}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa02ebbcd568d194fbb18a9b41ddcfa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  titleLogoAnimator: {fileID: 0}
 --- !u!82 &668095553 stripped
 AudioSource:
   m_CorrespondingSourceObject: {fileID: 4229190118186385886, guid: d38a1e7b7ba447b41b1e3858bd5b2d26,
@@ -1459,6 +1504,12 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 4249940517257288955}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &894012724 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6613405549012868856, guid: d38a1e7b7ba447b41b1e3858bd5b2d26,
+    type: 3}
+  m_PrefabInstance: {fileID: 2904607560465631780}
+  m_PrefabAsset: {fileID: 0}
 --- !u!82 &902766399 stripped
 AudioSource:
   m_CorrespondingSourceObject: {fileID: 3485360213901562616, guid: d38a1e7b7ba447b41b1e3858bd5b2d26,
@@ -1541,7 +1592,7 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _DetailColor: {r: 0.51186275, g: 0.51186275, b: 0.51186275, a: 0}
     - _DetailData: {r: 0.5, g: -0.5, b: 0.01904762, a: 1}
-    - _DetailWindDirection: {r: -0.060796294, g: 0, b: 0, a: 0}
+    - _DetailWindDirection: {r: -1.0687886, g: 0, b: 0, a: 0}
     - _DistanceData: {r: 0, g: 5, b: 1, a: 1}
     - _FogOfWarCenter: {r: 0, g: 0, b: 0, a: 1}
     - _FogOfWarCenterAdjusted: {r: 0, g: 0, b: 0, a: 1}
@@ -1552,7 +1603,7 @@ Material:
     - _ShadowData: {r: 0.57, g: 0, b: 62500, a: 0}
     - _SpecularColor: {r: 0.5, g: 0.5, b: 0.5, a: 0}
     - _SunDir: {r: 0.3213938, g: 0.76604444, b: -0.5566705, a: 0}
-    - _WindDirection: {r: -0.060796294, g: 0, b: 0, a: 0}
+    - _WindDirection: {r: -1.0687886, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &1096944055 stripped
 MonoBehaviour:
@@ -4804,7 +4855,11 @@ PrefabInstance:
       objectReference: {fileID: 2111871308}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 6613405549012868856, guid: d38a1e7b7ba447b41b1e3858bd5b2d26,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 631507450}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d38a1e7b7ba447b41b1e3858bd5b2d26, type: 3}
 --- !u!1001 &3200095675281868386

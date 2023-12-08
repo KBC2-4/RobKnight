@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Rendering;
@@ -65,6 +66,22 @@ public class PauseController : MonoBehaviour
             {
                 _depthOfField.active = false;
             }
+        }
+    }
+
+    void OnDisable()
+    {
+        isPaused = false;
+        // ゲームの時間を再開
+        Time.timeScale = 1f;
+        // ポーズメニューのUIを非表示
+        if (pauseMenu != null)
+        {
+            pauseMenu.SetActive(false);
+        }
+        if (_depthOfField != null)
+        {
+            _depthOfField.active = false;
         }
     }
 }
