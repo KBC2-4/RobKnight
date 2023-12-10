@@ -36,6 +36,8 @@ public class EnemyController : MonoBehaviour
 
     //Œø‰Ê‰¹ƒŠƒXƒg
     public List<AudioClip> SE;
+    public AudioClip AttackSE;
+
     AudioSource audioSource;
 
     // Start is called before the first frame update
@@ -257,6 +259,8 @@ public class EnemyController : MonoBehaviour
         if (_isHit && other.CompareTag("Player"))
         {
             other.GetComponent<PlayerController>().Damage(enemyData.attackPower);
+            //‰¹‚ð–Â‚ç‚·
+            audioSource.PlayOneShot(AttackSE);
             //playerFound = true;
             _isHit = false;
         }
