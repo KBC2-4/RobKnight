@@ -199,7 +199,7 @@ public class PlayerController : MonoBehaviour
 
     public void PlayAttackSE()
     {
-        AudioManager.Instance?.PlaySE("player_Attack");
+        AudioManager.Instance?.PlaySE("player_Slash");
     }
 
     /// <summary>
@@ -219,11 +219,15 @@ public class PlayerController : MonoBehaviour
             if (enemy != null)
             {
                 //çUåÇ
-                if (isAttacking == true && 0 < enemy.enemyData.hp
-                    && _hitEnemyList.Contains(enemy.GetInstanceID()) == false)
+                if (isAttacking == true && 0 < enemy.enemyData.hp)
                 {
-                    enemy.Damage(attackPower);
-                    _hitEnemyList.Add(enemy.GetInstanceID());
+                    if (_hitEnemyList.Contains(enemy.GetInstanceID()) == false)
+                    {
+                        enemy.Damage(attackPower);
+                        _hitEnemyList.Add(enemy.GetInstanceID());
+                        AudioManager.Instance?.PlaySE("player_HitSlash");
+                        
+                    }
                 }
 
                 if (enemy.enemyData.hp <= 0)
