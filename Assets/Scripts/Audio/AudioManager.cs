@@ -4,11 +4,13 @@ using UnityEngine.Audio;
 
 public class AudioManager : MonoBehaviour
 {
-    [SerializeField] private AudioSource _bgmAudioSource;   //BGM AudioSource
-    [SerializeField] private AudioSource _seAudioSource;    //SE AudioSource
+    //[SerializeField] private AudioSource _bgmAudioSource;   //BGM AudioSource
+    //[SerializeField] private AudioSource _seAudioSource;    //SE AudioSource
+    [SerializeField] private AudioSource _audioSource;    //SE AudioSource
 
-    [SerializeField]private List<SoundData> _bgmSoundData;   //BGMのリスト
-    [SerializeField]private List<SoundData> _seSoundData;   //SEのリスト
+    //[SerializeField]private List<SoundData> _bgmSoundData;   //BGMのリスト
+    //[SerializeField]private List<SoundData> _seSoundData;   //SEのリスト
+    [SerializeField]private List<SoundData> _soundData;   //SEのリスト
     private Dictionary<string, AudioClip> _seDictionary; //SEの辞書
 
     [SerializeField]private float _masterVolume =1.0f;
@@ -37,7 +39,7 @@ public class AudioManager : MonoBehaviour
         _seDictionary = new Dictionary<string, AudioClip>();
 
         // ここで、_seSoundDataからデータを辞書に追加します
-        foreach (var soundData in _seSoundData) {
+        foreach (var soundData in _soundData) {
             _seDictionary[soundData.FileName] = soundData.AudioClip;
         }
     }
@@ -55,10 +57,10 @@ public class AudioManager : MonoBehaviour
     {
         if (_seDictionary.TryGetValue(fileName, out var clip))
         {
-            _seAudioSource.outputAudioMixerGroup = seMixerGroup; // オーディオミキサーグループを適用
+            _audioSource.outputAudioMixerGroup = seMixerGroup; // オーディオミキサーグループを適用
             //SE個々のボリュームに適応
-            _seAudioSource.volume = _seSoundData.Find(data => data.FileName == fileName).Volume;
-            _seAudioSource.PlayOneShot(clip);
+            _audioSource.volume = _soundData.Find(data => data.FileName == fileName).Volume;
+            _audioSource.PlayOneShot(clip);
         }
         else
         {
@@ -70,18 +72,18 @@ public class AudioManager : MonoBehaviour
         // _seAudioSource.PlayOneShot(data.AudioClip);
     }
 
-    public void PlayAudio()
-    {
-        _bgmAudioSource.Play();
-    }
+    //public void PlayAudio()
+    //{
+    //    _bgmAudioSource.Play();
+    //}
 
-    public void StopAudio()
-    {
-        _bgmAudioSource.Stop();
-    }
+    //public void StopAudio()
+    //{
+    //    _bgmAudioSource.Stop();
+    //}
 
-    public void PauseAudio()
-    {
-        _bgmAudioSource.Pause();
-    }
+    //public void PauseAudio()
+    //{
+    //    _bgmAudioSource.Pause();
+    //}
 }
