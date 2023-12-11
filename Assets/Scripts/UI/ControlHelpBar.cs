@@ -20,7 +20,7 @@ public class ControlHelpBar : MonoBehaviour
     [SerializeField] private InputActionAsset _inputActions; // Input Action Assetへの参照
 
     private float _noInputTimer = 0f;
-    private const float noInputThreshold = 3f; // 入力がないと判断する時間
+    private const float noInputThreshold = 1f; // 入力がないと判断する時間
 
     public static ControlHelpBar Instance { get; private set; }
 
@@ -43,25 +43,12 @@ public class ControlHelpBar : MonoBehaviour
         // ボタンガイドの初期化
         InitializeGuides();
 
-        _guideCanvas.GetComponent<Animator>();
-
 
         // UIを非表示にする
         _guideCanvas.SetActive(false);
 
         // Animatorを取得する
         _animator = _guideCanvas.GetComponent<Animator>();
-
-        // 一時
-        //keyboardMouseUI.SetActive(false);
-        //gamepadUI.SetActive(false);
-        //touchUI.SetActive(false);
-
-        // UIを表示にする
-        _guideCanvas.SetActive(true);
-        keyboardMouseUI.SetActive(true);
-        gamepadUI.SetActive(true);
-        touchUI.SetActive(true);
 
         // シーン名を取得
         string sceneName = SceneManager.GetActiveScene().name;
@@ -71,7 +58,7 @@ public class ControlHelpBar : MonoBehaviour
         {
             _isDisplay = true;
             _guideCanvas.SetActive(true);
-            gamepadUI.SetActive(true);
+            // gamepadUI.SetActive(true);
             // SetUIVisibility();
         }
     }
@@ -123,7 +110,6 @@ public class ControlHelpBar : MonoBehaviour
         // イントロアニメーション完了後にUIを表示
         _isDisplay = true;
         _guideCanvas.SetActive(true);
-        // gamepadUI.SetActive(true);
         // SetUIVisibility();
     }
 
@@ -153,65 +139,27 @@ public class ControlHelpBar : MonoBehaviour
 
     private void UpdateUI(InputDevice device)
     {
-        // デバイスタイプに基づいてUIを初期設定
-        //keyboardMouseUI.SetActive(device is Keyboard || device is Mouse);
-        //gamepadUI.SetActive(device is Gamepad);
-        //touchUI.SetActive(device is Touchscreen);
 
-        // デバイスタイプに基づいてUIを表示・非表示
-        if (Keyboard.current != null || Mouse.current != null)
+        if (device is Keyboard || device is Mouse)
         {
-            keyboardMouseUI.SetActive(_isDisplay);
+            // キーボードとマウス用のUIに切り替え
+            // keyboardMouseUI.SetActive(_isDisplay);
+            SetActivePanel(keyboardMouseUI);
         }
-        else if (Gamepad.current != null)
+        else if (device is Gamepad)
         {
-            gamepadUI.SetActive(_isDisplay);
+            // ゲームパッド用のUIに切り替え
+            // gamepadUI.SetActive(_isDisplay);
+            SetActivePanel(gamepadUI);
         }
-        else if (Touchscreen.current != null)
+        else if (device is Touchscreen)
         {
-            touchUI.SetActive(_isDisplay);
+            // タッチスクリーン用のUIに切り替え
+            // touchUI.SetActive(_isDisplay);
+            SetActivePanel(touchUI);
         }
-
-
-        //bool isKeyboardMouse = device is Keyboard || device is Mouse;
-        //bool isGamepad = device is Gamepad;
-        //bool isTouchscreen = device is Touchscreen;
-
-        //if (_keyboardMouseUIAnimator != null)
-        //{
-        //    _keyboardMouseUIAnimator.SetBool("IsDisplay", isKeyboardMouse && _isDisplay);
-        //}
-
-        //if (_gamepadUIAnimator != null)
-        //{
-        //    _gamepadUIAnimator.SetBool("IsDisplay", isGamepad && _isDisplay);
-        //}
-
-        //if (_touchUIAnimator != null)
-        //{
-        //    _touchUIAnimator.SetBool("IsDisplay", isTouchscreen && _isDisplay);
-        //}
     }
 
-    //void OnTriggerEnter(Collider other)
-    //{
-    //    // プレイヤーが近づいたら
-    //    if (other.tag == "Player")
-    //    {
-    //        // UIを表示
-    //        // _isDisplay = true;
-    //    }
-    //}
-
-    //void OnTriggerExit(Collider other)
-    //{
-    //    // プレイヤーが離れたら
-    //    if (other.tag == "Player")
-    //    {
-    //        // UIを非表示
-    //        // _isDisplay = false;
-    //    }
-    //}
 
     private void Update()
     {

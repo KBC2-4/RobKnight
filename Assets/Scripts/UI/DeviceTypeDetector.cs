@@ -54,17 +54,17 @@ public class DeviceTypeDetector : MonoBehaviour
     
         if (device is Keyboard || device is Mouse)
         {
-            // Debug.Log("Keyboard & Mouse input detected");
+            Debug.Log("Keyboard & Mouse input detected");
             NotifyDeviceTypeChanged(device);
         }
         else if (device is Gamepad)
         {
-            // Debug.Log("Gamepad input detected");
+            Debug.Log("Gamepad input detected");
             NotifyDeviceTypeChanged(device);
         }
         else if (device is Touchscreen)
         {
-            // Debug.Log("Touch input detected");
+            Debug.Log("Touch input detected");
             NotifyDeviceTypeChanged(device);
         }
     }
