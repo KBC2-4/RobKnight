@@ -1,8 +1,16 @@
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Rock : MonoBehaviour
 {
+    private AudioSource _audioSorce;
+    [SerializeField] private AudioClip _audioClip;
+
+    void Start()
+    {
+        _audioSorce = GetComponent<AudioSource>();
+    }
 
     void OnTriggerStay(Collider other)
     {
@@ -30,6 +38,14 @@ public class Rock : MonoBehaviour
 
     public void DestroyObject()
     {
+
+        if (_audioSorce != null && _audioClip != null)
+        {
+            // SEçƒê∂
+            _audioSorce.PlayOneShot(_audioClip);
+        }
+        
+
         var random = new System.Random();
         var min = -3;
         var max = 3;
