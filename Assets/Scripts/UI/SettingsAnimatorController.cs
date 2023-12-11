@@ -25,24 +25,32 @@ public class SettingsAnimatorController : MonoBehaviour
 
         controls.UI.Cancel.performed += ctx => OnReturnButton();
     }
-    
+
     private void OnEnable()
     {
         controls.UI.Enable();
+        ShowSettings();
     }
 
     private void OnDisable()
     {
         controls.UI.Disable();
-        // HideSettings();
+        HideSettings();
     }
 
+    // <summary>
+    /// 戻るボタンが押されたときに呼び出される
+    /// </summary>
     private void OnReturnButton()
     {
-        // SEが再生されないようにする
-        UISoundManager.Instance.SetProgrammaticSelect();
-        // デフォルトのボタンにを選択する
-        EventSystem.current.SetSelectedGameObject(firstSelect);
+        Debug.Log(UIManager.Instance.GetCurrentState());
+        if (UIManager.Instance.GetCurrentState() == UIManager.UIState.SettingsMenu)
+        {
+            // SEが再生されないようにする
+            UISoundManager.Instance.SetProgrammaticSelect();
+            // デフォルトのボタンにを選択する
+            EventSystem.current.SetSelectedGameObject(firstSelect);
+        }
     }
     
     private void Start()
@@ -64,6 +72,8 @@ public class SettingsAnimatorController : MonoBehaviour
     {
         if (animator)
         {
+            // ステートを変更
+            UIManager.Instance.ChangeState(UIManager.UIState.SettingsMenu);
             animator.SetBool("isSettingsOpen", true);
             EnableDepthOfFieldEffect();
             // SEが再生されないようにする
@@ -76,12 +86,18 @@ public class SettingsAnimatorController : MonoBehaviour
     {
         if (animator)
         {
+            // 前回のステートに戻す
+            UIManager.Instance.ReturnToPreviousState();
             animator.SetBool("isSettingsOpen", false);
             DisableDepthOfFieldEffect() ;
             // SEが再生されないようにする
             UISoundManager.Instance.SetProgrammaticSelect();
-            EventSystem.current.SetSelectedGameObject(returnSelect);
-            
+
+            if (returnSelect != null)
+            {
+                EventSystem.current.SetSelectedGameObject(returnSelect);
+            }
+
         }
     }
 
