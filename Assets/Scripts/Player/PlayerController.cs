@@ -229,7 +229,6 @@ public class PlayerController : MonoBehaviour
                         enemy.Damage(attackPower);
                         _hitEnemyList.Add(enemy.GetInstanceID());
                         PlaySE("player_HitSlash");
-                        
                     }
                 }
 
@@ -621,5 +620,6 @@ public class PlayerController : MonoBehaviour
         SoundData se = _seData.Find(data => data.FileName == seFileName);
         _audioSource.volume = se.Volume;
         _audioSource.PlayOneShot(se.AudioClip);
+        Debug.Log($"{se.FileName}");
     }
 }

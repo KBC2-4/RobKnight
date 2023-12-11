@@ -9,13 +9,15 @@ public class Stone_Statue_Move : MonoBehaviour
 
     public bool push_flg;
     public bool isAttacked = false; //UŒ‚‚ğH‚ç‚Á‚½‚Ì‚©
+
+    private AudioSource _audioSorce; // Ä¶‚·‚éSE
     //int count; //‰Ÿ‚³‚ê‚Ä‚¢‚éŠÔ{‚³‚ê‚Ä‚¢‚­
 
     // Start is called before the first frame update
     void Start()
     {
         push_flg = false;
-        //count = 0;
+        _audioSorce = GetComponent<AudioSource>();
     }
 
     private Vector3 force = new Vector3(0, 0, 0);   //‰Ÿ‚µo‚·—Í
@@ -25,7 +27,8 @@ public class Stone_Statue_Move : MonoBehaviour
     void Update()
     {
 
-        if(!push_flg) transform.position += force;
+        if (!push_flg) transform.position += force;
+        else _audioSorce.Stop();
 
         //‰Ÿ‚µo‚·ŠÔ‚Æ—Í‚ğŒ¸‚ç‚·
         forcetime -= Time.fixedDeltaTime;
@@ -34,6 +37,7 @@ public class Stone_Statue_Move : MonoBehaviour
             force = Vector3.zero;
             forcedecay = Vector3.zero;
             forcetime = 0;
+            _audioSorce.Stop();
         }
         else
         {
@@ -76,7 +80,7 @@ public class Stone_Statue_Move : MonoBehaviour
                         forcetime = 1;
 
                         isAttacked = false;
-
+                        _audioSorce.Play();
 
 
 
