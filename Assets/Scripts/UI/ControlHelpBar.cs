@@ -48,6 +48,10 @@ public class ControlHelpBar : MonoBehaviour
 
         // UIを非表示にする
         _guideCanvas.SetActive(false);
+
+        // Animatorを取得する
+        _animator = _guideCanvas.GetComponent<Animator>();
+
         // 一時
         //keyboardMouseUI.SetActive(false);
         //gamepadUI.SetActive(false);
@@ -88,6 +92,8 @@ public class ControlHelpBar : MonoBehaviour
 
     private void OnEnable()
     {
+        _animator.SetBool("IsDisplay", _isDisplay);
+
         _inputActions.Enable();
 
         DeviceTypeDetector.OnDeviceTypeChanged += UpdateUI;
@@ -100,6 +106,8 @@ public class ControlHelpBar : MonoBehaviour
 
     private void OnDisable()
     {
+        _animator.SetBool("IsDisplay", _isDisplay);
+
         _inputActions.Disable();
 
         DeviceTypeDetector.OnDeviceTypeChanged -= UpdateUI;
@@ -214,6 +222,7 @@ public class ControlHelpBar : MonoBehaviour
             // 何か入力があったとき
             _noInputTimer = 0f;
             _guideCanvas.SetActive(false);
+            _isDisplay = false;
         }
         else
         {
@@ -224,6 +233,7 @@ public class ControlHelpBar : MonoBehaviour
             {
                 // 指定時間以上入力がない場合、UIを表示
                 _guideCanvas.SetActive(true);
+                _isDisplay = true;
             }
         }
     }
