@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Tracing;
 using System.Text;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -57,6 +58,8 @@ public class PlayerController : MonoBehaviour
     public static GameOverController Instance { get; private set; }
     public bool IsAttacking { get => isAttacking; set => isAttacking = value; }
 
+    List<Transform> _children;
+
     // 憑依しているか
     public bool isPossession = false;
     private bool canPossesion = false;
@@ -78,6 +81,15 @@ public class PlayerController : MonoBehaviour
 
 
         _hpSlider = GameObject.Find("HP").GetComponent<PlayerHpSlider>();
+
+        //子オブジェクトを取得する
+        _children= new List<Transform>();
+        int childCount = transform.childCount;
+        
+        for (int i = 0; i < childCount; i++)
+        {
+            _children.Add(transform.GetChild(i));
+        }   
     }
 
     // Start is called before the first frame update
@@ -124,11 +136,14 @@ public class PlayerController : MonoBehaviour
         inputActions.Player.Return.performed += ReturnAction;
 
         isPossession = false;
+
+        Debug.Log("enable");
     }
 
     private void OnDisable()
     {
         inputActions.Disable();
+        Debug.Log("disable");
     }
 
     private void OnDestroy()
@@ -390,17 +405,14 @@ public class PlayerController : MonoBehaviour
     /// <param name="targetObj">憑依するキャラクター</param>
     private void Possession(GameObject targetObj)
     {
-        //"Player"(人間)であれば非表示にする
-        if (name == "Player")
-        {
-            player = gameObject;
-            gameObject.SetActive(false);
-        }//憑依体であれば破棄する
-        else
-        {
-           
-            Destroy(gameObject);
-        }
+        player = gameObject;
+        //タグをPlayerに変更
+        targetObj.tag = "Player";
+        targetObj.layer = gameObject.layer;
+
+        SetPlayerActive(false);
+        animator.SetFloat("Speed", 0);
+
         //対象にプレイヤーコントローラーを追加
         targetObj.gameObject.AddComponent<CharacterController>();
         CharacterController characterController = targetObj?.gameObject.GetComponent<CharacterController>();
@@ -464,10 +476,6 @@ public class PlayerController : MonoBehaviour
             ActionStateManager.Instance.RecordEnemyPossession(playerController.PossessionEnemyName);
         }
 
-        //タグをPlayerに変更
-        targetObj.tag = "Player";
-        targetObj.layer = gameObject.layer;
-        
         //憑依体の名前に"(Player)"を追加
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.Append(targetObj.name);
@@ -526,10 +534,11 @@ public class PlayerController : MonoBehaviour
         if (player != null)
         {
             //"Player"(人間)を表示する
-            player.SetActive(true);
+            PlayerController playerController = player.GetComponent<PlayerController>();
+            playerController.SetPlayerActive(true);
            
             Color setColor = new Color(0.6705883f, 1.0f, 0.5803922f, 1.0f);
-            _hpSlider.SetPlayerHp(player.GetComponent<PlayerController>(), setColor);
+            _hpSlider.SetPlayerHp(playerController, setColor);
 
             //カメラのターゲットを"Player"(人間)に戻す
             GameObject camera = GameObject.Find("MainCamera");
@@ -542,6 +551,32 @@ public class PlayerController : MonoBehaviour
             player = null;
             Destroy(gameObject);
         }
+    }
+
+    /// <summary>
+    /// プレイヤーの表示設定関数
+    /// </summary>
+    /// <param name="isActive">true=表示 false=非表示</param>
+    public void SetPlayerActive(bool isActive)
+    {
+        //プレイヤー表示設定
+        foreach (var child in _children)
+        {
+            child.gameObject.SetActive(isActive);
+        }
+        GetComponent<CapsuleCollider>().enabled = isActive;
+        enabled = isActive;
+        if (isActive == true)
+        {
+            tag = "Player";
+            gameObject.layer = 3;
+        }
+        else
+        {
+            tag = "Untagged";
+            gameObject.layer = 0;
+        }
+        
     }
 
     public EnemyData GetPossessionData()
@@ -618,6 +653,10 @@ public class PlayerController : MonoBehaviour
 
     public void PlaySE(string seFileName)
     {
+        if(name!="Player")
+        {
+            return;
+        }
         SoundData se = _seData.Find(data => data.FileName == seFileName);
         _audioSource.volume = se.Volume;
         _audioSource.PlayOneShot(se.AudioClip);
