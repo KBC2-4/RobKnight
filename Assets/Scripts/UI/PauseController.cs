@@ -16,6 +16,10 @@ public class PauseController : MonoBehaviour
     [SerializeField] private GameObject _settingsPanel;
     // [SerializeField] private SettingsAnimatorController _settingsAnimatorController;
 
+    [SerializeField] private AudioSource _audioSource;
+    [SerializeField] private AudioClip _openAudioClip; // 開く時の音
+    [SerializeField] private AudioClip _closeAudioClip; // 閉じる時の音
+
 
     void Start()
     {
@@ -64,6 +68,9 @@ public class PauseController : MonoBehaviour
 
         if (isPaused)
         {
+            // SEを再生
+            _audioSource.PlayOneShot(_openAudioClip);
+
             // ステートを変更
             UIManager.Instance.ChangeState(UIManager.UIState.PauseMenu);
 
@@ -84,6 +91,9 @@ public class PauseController : MonoBehaviour
         }
         else
         {
+            // SEを再生
+            _audioSource.PlayOneShot(_closeAudioClip);
+
             // ステートが設定画面の場合、設定画面を閉じる
             if (UIManager.Instance.GetCurrentState() == UIManager.UIState.SettingsMenu)
             {
