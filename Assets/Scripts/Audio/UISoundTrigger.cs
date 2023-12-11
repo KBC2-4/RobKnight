@@ -21,7 +21,7 @@ public class UISoundTrigger : MonoBehaviour, IPointerEnterHandler, IPointerClick
                 // デフォルトのホバー音を再生
                 UISoundManager.Instance.PlayHoverSound();
             }
-            Debug.Log("OnPointerEnter");
+            // Debug.Log("OnPointerEnter");
         }
     }
 
@@ -37,7 +37,7 @@ public class UISoundTrigger : MonoBehaviour, IPointerEnterHandler, IPointerClick
             // デフォルトのクリック音を再生
             UISoundManager.Instance.PlayClickSound();
         }
-        Debug.Log("OnPointerClick");
+        // Debug.Log("OnPointerClick");
     }
 
     public void OnSelect(BaseEventData eventData)
@@ -60,7 +60,7 @@ public class UISoundTrigger : MonoBehaviour, IPointerEnterHandler, IPointerClick
                 // デフォルトのホバー音を再生
                 UISoundManager.Instance.PlayHoverSound();
             }
-            Debug.Log("OnSelect");
+            // Debug.Log("OnSelect");
         }
         else
         {
@@ -83,7 +83,7 @@ public class UISoundTrigger : MonoBehaviour, IPointerEnterHandler, IPointerClick
             // デフォルトのクリック音を再生
             UISoundManager.Instance.PlayClickSound();
         }
-        Debug.Log("OnSubmit");
+        // Debug.Log("OnSubmit");
         //throw new System.NotImplementedException();
     }
 }

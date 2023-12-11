@@ -88,8 +88,8 @@ public class EnemyController : MonoBehaviour
         {
             if (player != null)
             {
-                // プレイヤーオブジェクトが非アクティブなら、再度検索する
-                if (player.root.gameObject.activeSelf == false)
+                // プレイヤーオブジェクトのタグが変更された場合(憑依したとき)、再度検索する
+                if (player.tag != "Player")
                 {
                     player = GameObject.FindWithTag("Player").transform;
                 }
