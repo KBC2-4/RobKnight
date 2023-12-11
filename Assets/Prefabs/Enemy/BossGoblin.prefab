@@ -209,7 +209,10 @@ MonoBehaviour:
   - {fileID: 8300000, guid: f0ffea38671b32a4aada4c64f969cebc, type: 3}
   - {fileID: 8300000, guid: 5fadb963fc480704da2f523ac79aef5a, type: 3}
   - {fileID: 8300000, guid: 1bd7370d8fad11e4dad6228f9a4b9146, type: 3}
-  AttackSE: {fileID: 8300000, guid: 2416f1684d710b849b93c1c5c6773a7d, type: 3}
+  AttackSE:
+    fileName: EnemyAttack
+    audioClip: {fileID: 8300000, guid: 2416f1684d710b849b93c1c5c6773a7d, type: 3}
+    volume: 0.7
 --- !u!54 &2054109741120014561
 Rigidbody:
   m_ObjectHideFlags: 0

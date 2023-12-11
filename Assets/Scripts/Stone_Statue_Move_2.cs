@@ -11,12 +11,14 @@ public class Stone_Statue_Move_2 : MonoBehaviour
     int count; //‰Ÿ‚³‚ê‚Ä‚¢‚éŠÔ{‚³‚ê‚Ä‚¢‚­
 
     public float power = 1f;  //‰Ÿ‚³‚ê‚½‚Æ‚«‚É‚©‚©‚é—Í
+    private AudioSource _audioSorce; // Ä¶‚·‚éSE
 
     // Start is called before the first frame update
     void Start()
     {
         push_flg = false;
         isAttacked = false;
+        _audioSorce = GetComponent<AudioSource>();
     }
 
     private float forcetime = 0;                      //‰Ÿ‚µo‚·ŠÔ
@@ -35,12 +37,17 @@ public class Stone_Statue_Move_2 : MonoBehaviour
                 transform.Rotate(0f, 0f, 90 * Time.deltaTime); //‰ñ“]
             }
         }
+        else 
+        {
+            _audioSorce.Stop();
+        }
 
         //‰Ÿ‚µo‚·ŠÔ‚ğŒ¸‚ç‚·
         forcetime -= Time.deltaTime;
         if (forcetime < 0)
         {
             forcetime = 0;
+            _audioSorce.Stop();
         }
 
         transform.position = (new Vector3(Mathf.Clamp(transform.position.x, 347, 372), transform.position.y, Mathf.Clamp(transform.position.z, 707, 729)));
@@ -62,6 +69,7 @@ public class Stone_Statue_Move_2 : MonoBehaviour
                     {
                         //‰Ÿ‚³‚ê‚éŠÔ‚ğİ’è‚·‚é
                         forcetime = 1;
+                        _audioSorce.Play();
                     }
                 }
             }

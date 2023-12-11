@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 using Color = System.Drawing.Color;
 
@@ -36,7 +37,7 @@ public class EnemyController : MonoBehaviour
 
     //Œø‰Ê‰¹ƒŠƒXƒg
     public List<AudioClip> SE;
-    public AudioClip AttackSE;
+    public SoundData AttackSE;
 
     AudioSource audioSource;
 
@@ -260,7 +261,7 @@ public class EnemyController : MonoBehaviour
         {
             other.GetComponent<PlayerController>().Damage(enemyData.attackPower);
             //‰¹‚ð–Â‚ç‚·
-            audioSource.PlayOneShot(AttackSE);
+            PlayAttackSE();
             //playerFound = true;
             _isHit = false;
         }
@@ -340,4 +341,10 @@ public class EnemyController : MonoBehaviour
         return enemyData.attackPower;
     }
 
+    public void PlayAttackSE()
+    {
+        SoundData se = AttackSE;
+        audioSource.volume = se.Volume;
+        audioSource.PlayOneShot(se.AudioClip);
+    }
 }
