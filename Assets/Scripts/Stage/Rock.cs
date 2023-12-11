@@ -15,7 +15,7 @@ public class Rock : MonoBehaviour
             // プレイヤーが憑依している状態か確認します。
             if (playerController != null)
             {
-                if (playerController.PossessionEnemyName == "Gobrin")
+                if (playerController.isPossession)
                 {
                     if (playerController.IsAttacking == true)
                     {
