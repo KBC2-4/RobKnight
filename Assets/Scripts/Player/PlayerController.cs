@@ -63,6 +63,11 @@ public class PlayerController : MonoBehaviour
     // 憑依しているエネミーの名前を取得
     public string PossessionEnemyName;
 
+    //オーディオソース
+    [SerializeField]private AudioSource _audioSource;
+    //seリスト
+    [SerializeField] private List<SoundData> _seData;
+
     private void Awake()
     {
         inputActions = new InputControls();
@@ -73,8 +78,6 @@ public class PlayerController : MonoBehaviour
 
 
         _hpSlider = GameObject.Find("HP").GetComponent<PlayerHpSlider>();
-
-        
     }
 
     // Start is called before the first frame update
@@ -199,7 +202,7 @@ public class PlayerController : MonoBehaviour
 
     public void PlayAttackSE()
     {
-        AudioManager.Instance?.PlaySE("player_Slash");
+        PlaySE("player_Slash");
     }
 
     /// <summary>
@@ -207,7 +210,7 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public void PlayFootsteps()
     {
-        AudioManager.Instance?.PlaySE("player_Footsteps");
+        PlaySE("player_Footsteps");
     }
 
     private void OnTriggerStay(Collider other)
@@ -225,7 +228,7 @@ public class PlayerController : MonoBehaviour
                     {
                         enemy.Damage(attackPower);
                         _hitEnemyList.Add(enemy.GetInstanceID());
-                        AudioManager.Instance?.PlaySE("player_HitSlash");
+                        PlaySE("player_HitSlash");
                         
                     }
                 }
@@ -611,5 +614,12 @@ public class PlayerController : MonoBehaviour
     public void IncreaseDefencePower(int addValue)
     {
         defencePower += addValue;
+    }
+
+    public void PlaySE(string seFileName)
+    {
+        SoundData se = _seData.Find(data => data.FileName == seFileName);
+        _audioSource.volume = se.Volume;
+        _audioSource.PlayOneShot(se.AudioClip);
     }
 }
