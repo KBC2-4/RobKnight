@@ -5,6 +5,11 @@ public class BGMChanger : MonoBehaviour
 {
     [SerializeField] AudioSource bgmSource; // 再生に使用するAudioSource
     [SerializeField] AudioClip bgmClip; // 再生するBGM
+    [Header("クロスフェード")]
+    [SerializeField, Tooltip("クロスフェードをするには2つのAudioSourceが必要です。")]
+    bool isCrossFade = false; // クロスフェードをするかのフラグ
+    [SerializeField] AudioSource newBgmSource; // 新しいBGM用のAudioSource
+    [Header("オプション")]
     [SerializeField, Range(0f, 30f)] float fadeTime = 1.0f; // フェードにかかる時間（秒）
     private bool isFadingIn = false; // フェードインされているかのフラグ
 
@@ -20,12 +25,32 @@ public class BGMChanger : MonoBehaviour
 
     public void ChangeBGM(AudioClip newClip)
     {
-        StartCoroutine(FadeOutIn(newClip));
+
+        // 現在再生中のBGMと新しいBGMが同じでない場合のみ、切り替え処理を行う
+        if (bgmSource.clip != newClip)
+        {
+            if (isCrossFade)
+            {
+                if (newBgmSource.clip != newClip)
+                {
+                    StartCoroutine(CrossFade(newClip));
+                }
+            }
+            else
+            {
+                // フェードイン・フェードアウトを行う
+                StartCoroutine(FadeOutIn(newClip));
+            }
+        }
+        else
+        {
+            // Debug.Log("同じBGMが既に再生中です。");
+        }
     }
 
     private IEnumerator FadeMusic(bool fadeIn, AudioClip newClip = null)
     {
-        Debug.Log("フェード" + (fadeIn ? "イン" : "アウト"));
+        // Debug.Log("フェード" + (fadeIn ? "イン" : "アウト"));
 
         isFadingIn = true;
 
@@ -80,7 +105,7 @@ public class BGMChanger : MonoBehaviour
             yield return null;
         }
 
-        // 新しいBGMを設定し、フェードイン
+        // 新しいBGMを設定
         bgmSource.clip = newClip;
         bgmSource.Play();
         for (float time = 0; time < fadeTime; time += Time.deltaTime)
@@ -89,6 +114,39 @@ public class BGMChanger : MonoBehaviour
             yield return null;
         }
     }
+
+    private IEnumerator CrossFade(AudioClip newClip)
+    {
+        float currentTime = 0f;
+        float startVolume = bgmSource.volume;
+
+        // 新しいBGMをフェードイン用のAudioSourceで再生
+        newBgmSource.clip = newClip;
+        newBgmSource.Play();
+        newBgmSource.volume = 0f;
+
+        while (currentTime < fadeTime)
+        {
+            currentTime += Time.deltaTime;
+            // 既存のBGMをフェードアウト
+            bgmSource.volume = (1 - currentTime / fadeTime) * startVolume;
+            // 新しいBGMをフェードイン
+            newBgmSource.volume = (currentTime / fadeTime) * startVolume;
+            yield return null;
+        }
+
+        // 既存のBGMの再生を停止し、新しいBGMに切り替え
+        // bgmSource.Stop();
+        bgmSource.clip = newBgmSource.clip; // 再生クリップを引継ぎ設定
+        bgmSource.time = newBgmSource.time; // 再生位置を引継ぎ設定
+        bgmSource.volume = newBgmSource.volume; // 音量を引継ぎ設定
+        bgmSource.Play();
+
+        // 新しいBGMのAudioSourceを停止
+        newBgmSource.Stop();
+        newBgmSource.clip = null;
+    }
+
 
     private void OnTriggerEnter(Collider other)
     {
