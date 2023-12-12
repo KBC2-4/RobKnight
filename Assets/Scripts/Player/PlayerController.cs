@@ -434,12 +434,19 @@ public class PlayerController : MonoBehaviour
             playerController.enabled = true;
 
             //憑依キャラのパラメータを設定
-            currentPossession = targetObj?.GetComponent<EnemyController>().enemyData;
+            EnemyController enemy = targetObj?.GetComponent<EnemyController>();
+            //currentPossession = targetObj?.GetComponent<EnemyController>().enemyData;
+            currentPossession = enemy.enemyData;
             playerController.maxHp = currentPossession.Poshp;
             playerController.hp = playerController.maxHp;
             playerController._hpSlider = _hpSlider;
             playerController.attackPower = currentPossession.attackPower + _increaseAttackValue;
             playerController.defencePower = defencePower;
+            playerController._audioSource= enemy.GetComponent<AudioSource>();
+
+            playerController._seData = new List<SoundData>();
+            playerController._seData = _seData;
+
             playerController.speed = 7.0f;
             playerController.player = player;
             playerController.PossessionEnemyName = currentPossession.enemyName;
@@ -652,10 +659,6 @@ public class PlayerController : MonoBehaviour
 
     public void PlaySE(string seFileName)
     {
-        if(name!="Player")
-        {
-            return;
-        }
         SoundData se = _seData.Find(data => data.FileName == seFileName);
         _audioSource.volume = se.Volume;
         _audioSource.PlayOneShot(se.AudioClip);
