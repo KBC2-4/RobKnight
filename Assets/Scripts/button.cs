@@ -38,13 +38,13 @@ public class button : MonoBehaviour
             push_flg = true;
 
             //スイッチを押した石像を無効化する
-            if (other.GetComponent<Stone_Statue_Move>() != null)
+            if (other.GetComponent<StoneStatueMove>() != null)
             {
-                other.GetComponent<Stone_Statue_Move>().push_flg = true;
+                other.GetComponent<StoneStatueMove>().push_flg = true;
             }
             else
             {
-                other.GetComponent<Stone_Statue_Move_2>().push_flg = true;
+                other.GetComponent<SpinStoneStatueMove>().push_flg = true;
             }
         }
     }
