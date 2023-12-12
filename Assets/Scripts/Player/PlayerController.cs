@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Tracing;
@@ -70,6 +71,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField]private AudioSource _audioSource;
     //seリスト
     [SerializeField] private List<SoundData> _seData;
+
+    //無敵状態のフラグ
+    private bool _isInfinity;
+    public bool IsInfinity
+    {
+        get => _isInfinity;
+        set => _isInfinity = value;
+    }
 
     private void Awake()
     {
@@ -230,6 +239,8 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
+        ControlHelpBar.Instance.RemoveGuide("PossessionAction");
+
         if (other.gameObject.CompareTag("Enemy"))
         {
             EnemyController enemy = other.gameObject.GetComponent<EnemyController>();
@@ -261,6 +272,11 @@ public class PlayerController : MonoBehaviour
 
     public void Damage(int damage)
     {
+        if (_isInfinity == true)
+        {
+            return;
+        }
+
         hp -= damage - defencePower;
         _hpSlider.UpdateHPSlider();
        

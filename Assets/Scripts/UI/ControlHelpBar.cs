@@ -40,9 +40,6 @@ public class ControlHelpBar : MonoBehaviour
             Destroy(gameObject);
         }
 
-        // ボタンガイドの初期化
-        InitializeGuides();
-
 
         // UIを非表示にする
         _guideCanvas.SetActive(false);
@@ -65,14 +62,33 @@ public class ControlHelpBar : MonoBehaviour
 
     private void InitializeGuides()
     {
+        string parentName = "";
+
+        GameObject _activePanel = null;
+
+        _activePanel = GameObject.Find("UI/GuideCanvas");
+
+        if (_activePanel.activeSelf)
+        {
+            parentName = "UI/GuideCanvas" + _activePanel.name;
+        }
+
+        //if (keyboardMouseUI.activeSelf)
+        //{
+        //    parentName = keyboardMouseUI.name;
+        //}
+
+        Debug.Log("初期化し");
+
         // 各ボタンガイドと対応するGameObjectをマッピング
-        //_buttonGuides.Add("Attack", attackButtonUI);
-        //_buttonGuides.Add("Jump", jumpButtonUI);
-        //_buttonGuides.Add("Guard", guardButtonUI);
+        _buttonGuides.Add("Attack", GameObject.Find(parentName + "AttackAction"));
+        _buttonGuides.Add("Return", GameObject.Find(parentName + "ReturnAction"));
+        _buttonGuides.Add("Possession", GameObject.Find(parentName + "PossessionAction"));
 
         // 初期状態ではすべてのボタンガイドを非表示にする
         foreach (var guide in _buttonGuides.Values)
         {
+            Debug.Log(guide.name);
             guide.SetActive(false);
         }
     }
@@ -134,6 +150,9 @@ public class ControlHelpBar : MonoBehaviour
         keyboardMouseUI.SetActive(activePanel == keyboardMouseUI);
         gamepadUI.SetActive(activePanel == gamepadUI);
         touchUI.SetActive(activePanel == touchUI);
+
+        // ボタンガイドの初期化
+        InitializeGuides();
     }
 
 
