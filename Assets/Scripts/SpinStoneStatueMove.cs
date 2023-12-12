@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Stone_Statue_Move_2 : MonoBehaviour
+public class SpinStoneStatueMove : MonoBehaviour
 {
     public button Button;
 
@@ -11,7 +11,7 @@ public class Stone_Statue_Move_2 : MonoBehaviour
     int count; //‰Ÿ‚³‚ê‚Ä‚¢‚éŠÔ{‚³‚ê‚Ä‚¢‚­
 
     public float power = 1f;  //‰Ÿ‚³‚ê‚½‚Æ‚«‚É‚©‚©‚é—Í
-    private AudioSource _audioSorce; // Ä¶‚·‚éSE
+    [SerializeField] private AudioSource _audioSorce; // Ä¶‚·‚éSE
 
     // Start is called before the first frame update
     void Start()
@@ -25,7 +25,7 @@ public class Stone_Statue_Move_2 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!push_flg)
+        if (!Button.push_flg)
         {
 
             if (0 < forcetime)
@@ -37,7 +37,7 @@ public class Stone_Statue_Move_2 : MonoBehaviour
                 transform.Rotate(0f, 0f, 90 * Time.deltaTime); //‰ñ“]
             }
         }
-        else 
+        else
         {
             _audioSorce.Stop();
         }
@@ -76,11 +76,3 @@ public class Stone_Statue_Move_2 : MonoBehaviour
         }
     }
 }
-
-
-
-
-
-
-
-

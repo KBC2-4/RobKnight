@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Stone_Statue_Move : MonoBehaviour
+public class StoneStatueMove : MonoBehaviour
 {
     public button Button;
     public float power = 0.5f;
@@ -10,7 +10,7 @@ public class Stone_Statue_Move : MonoBehaviour
     public bool push_flg;
     public bool isAttacked = false; //攻撃を食らったのか
 
-    private AudioSource _audioSorce; // 再生するSE
+    [SerializeField]private AudioSource _audioSorce; // 再生するSE
     //int count; //押されている間＋されていく
 
     // Start is called before the first frame update
@@ -27,7 +27,7 @@ public class Stone_Statue_Move : MonoBehaviour
     void Update()
     {
 
-        if (!push_flg) transform.position += force;
+        if (!Button.push_flg) transform.position += force;
         else _audioSorce.Stop();
 
         //押し出す時間と力を減らす
@@ -70,7 +70,7 @@ public class Stone_Statue_Move : MonoBehaviour
 
                         PlayerPos.y = 0;
                         NowPos.y = 0;
-                        
+
                         //プレイヤーと対象間の角度を取る
                         var diff = (NowPos - PlayerPos).normalized;
                         Vector3 PushAngle = diff * power;
