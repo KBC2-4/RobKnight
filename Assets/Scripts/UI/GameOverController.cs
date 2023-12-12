@@ -8,8 +8,7 @@ public class GameOverController : MonoBehaviour
 {
     public GameObject gameOverPanel;
     //　最初にフォーカスするゲームオブジェクト
-    [SerializeField]
-    public GameObject firstSelect;
+    [SerializeField] private GameObject firstSelect;
     [SerializeField] private AudioSource bgmAudioSource; // 音量を小さくするBGM再生に使用するオーディオソース
     [SerializeField] private AudioSource seAudioSource; // ループさせない為SE再生に使用するオーディオソース
     [SerializeField] private AudioClip bgm; // 再生するBGM
@@ -18,6 +17,7 @@ public class GameOverController : MonoBehaviour
     private void Start()
     {
         gameOverPanel.SetActive(false);
+
     }
 
     public void ShowGameOverScreen()

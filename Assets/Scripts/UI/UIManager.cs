@@ -27,7 +27,10 @@ public class UIManager : MonoBehaviour
     {
         Gameplay,       // ゲームプレイ画面
         PauseMenu,      // ポーズ画面
-        SettingsMenu    // 設定画面
+        SettingsMenu,    // 設定画面
+        GameClear,      // ゲームクリア画面
+        GameOver,        // ゲームオーバー画面
+        Credit,         // クレジット画面
     }
 
     public void ChangeState(UIState newState)
