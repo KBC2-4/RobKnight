@@ -126,6 +126,7 @@ Transform:
   - {fileID: 9181372850071934068}
   - {fileID: 3517619298305110436}
   - {fileID: 1843701358381051382}
+  - {fileID: 8332244127825757485}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &644105430147909288
@@ -175,6 +176,50 @@ MonoBehaviour:
   audioSource: {fileID: 177666823065799817}
   hoverSound: {fileID: 8300000, guid: b79132ab9268f3d4e96b210fce8a4df8, type: 3}
   clickSound: {fileID: 8300000, guid: 73f039f0496905f489648099eca2845e, type: 3}
+--- !u!1 &5385898765906709067
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8332244127825757485}
+  - component: {fileID: 7066408930509419680}
+  m_Layer: 0
+  m_Name: CredittController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8332244127825757485
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5385898765906709067}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1152119553393584036}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7066408930509419680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5385898765906709067}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f2d64b3c8637ef4ab02f4db48d4d164, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6577551959788331553
 GameObject:
   m_ObjectHideFlags: 0

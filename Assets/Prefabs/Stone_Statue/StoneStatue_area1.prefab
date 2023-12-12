@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 5505332027445426011}
   - component: {fileID: 2866551964661088871}
   - component: {fileID: 4808727825169904006}
+  - component: {fileID: 2621004447212285707}
   m_Layer: 0
   m_Name: StoneStatue_area1
   m_TagString: StoneStatue
@@ -33,7 +34,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0.5, y: 0.5, z: 0.5, w: 0.5}
   m_LocalPosition: {x: 368.56796, y: 1.2178543, z: 706.9168}
-  m_LocalScale: {x: 0.03, y: 0.03, z: 0.03}
+  m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -179,7 +180,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8445887109604452225}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 1000
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -196,5 +197,25 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 112
+  m_Constraints: 126
   m_CollisionDetection: 0
+--- !u!114 &2621004447212285707
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8445887109604452225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 675f27ca924482f4ebc0ae7832a178d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hintMessage: "\u308F\u3057\u306F\u5C0F\u3055\u306A\u529B\u3067\u306F\u52D5\u304B\u3093\u305E\uFF01"
+  textColor: {r: 0, g: 0, b: 0, a: 1}
+  fontSize: 20
+  range: 5
+  _typingSpeed: 0.05
+  _disablePlayerInput: 0
+  _postDisplayWaitTime: 0
+  _displayOnceOnly: 0
