@@ -153,7 +153,10 @@ public class EnemyController : MonoBehaviour
         animator.SetTrigger("DieTrigger");
         StartCoroutine(DestroyAfterAnimation("Die01", 0));
         transform.rotation = Quaternion.identity;
-        lightEffect.SetActive(true);
+        if (lightEffect != null)
+        {
+            lightEffect.SetActive(true);
+        }
         // Animator animator = lightEffect.GetComponent<Animator>();
         animator.SetBool("IsWalking", false);
         animator.ResetTrigger("AttackTrigger");
@@ -346,5 +349,13 @@ public class EnemyController : MonoBehaviour
         SoundData se = AttackSE;
         audioSource.volume = se.Volume;
         audioSource.PlayOneShot(se.AudioClip);
+    }
+
+    /// <summary>
+    /// ƒGƒ‰[‰ñ”ğ‚Ìˆ×Aˆê“G‚Éì¬
+    /// </summary>
+    public void PlayFootsteps()
+    {
+
     }
 }

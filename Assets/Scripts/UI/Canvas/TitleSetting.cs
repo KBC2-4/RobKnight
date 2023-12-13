@@ -11,6 +11,9 @@ public class TitleSetting : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // ゲームの時間を初期状態で通常の速度に設定
+        Time.timeScale = 1f;
+
         // 設定画面をアクティブに設定
         _settingsPanel.SetActive(true);
     }

@@ -89,9 +89,10 @@ public class ActionStateManager : MonoBehaviour
         enemyDescriptionText.text = info.description;
 
         enemyPossessionUI.SetActive(true);
-        //_uiAnimator.SetTrigger("Show");
-        _uiAnimator.SetFloat(Animator.StringToHash("speed"), 0.3f);
-        _uiAnimator.Play("Show");
+        _uiAnimator.SetBool("isDisplay", true);
+        //_uiAnimator.SetFloat(Animator.StringToHash("speed"), 0.3f);
+        //_uiAnimator.Play("Show");
+
 
         // コルーチンの起動
         // StartCoroutine(DelayCoroutine());
@@ -104,8 +105,25 @@ public class ActionStateManager : MonoBehaviour
     private void HideUI()
     {
         // アニメーションを逆再生
-        _uiAnimator.SetFloat(Animator.StringToHash("speed"), -1);
-        _uiAnimator.Play("Show", 0, 1f);
+        //_uiAnimator.SetFloat(Animator.StringToHash("speed"), -1);
+        //_uiAnimator.Play("Show", 0, 1f);
+        StartCoroutine(HideUIAfterAnimation());
+        // _uiAnimator.SetBool("isDisplay", false);
+        // enemyPossessionUI.SetActive(false);
+    }
+
+    private IEnumerator HideUIAfterAnimation()
+    {
+        // アニメーションを非表示に設定
+        _uiAnimator.SetBool("isDisplay", false);
+
+        // アニメーションの長さを取得（例えば"Hide"というアニメーションクリップを使用）
+        float animationLength = _uiAnimator.GetCurrentAnimatorStateInfo(0).length;
+
+        // アニメーションの完了を待つ
+        yield return new WaitForSeconds(animationLength);
+
+        // UI要素を非アクティブにする
         enemyPossessionUI.SetActive(false);
     }
 
@@ -136,9 +154,9 @@ public class ActionStateManager : MonoBehaviour
         yield return new WaitForSeconds(5);
 
         // アニメーションを逆再生
-        _uiAnimator.SetFloat(Animator.StringToHash("speed"), -1);
-        _uiAnimator.Play("Show", 0, 1f);
-
+        //_uiAnimator.SetFloat(Animator.StringToHash("speed"), -1);
+        //_uiAnimator.Play("Show", 0, 1f);
+        _uiAnimator.SetBool("isDisplay", false);
         // enemyPossessionUI.SetActive(false);
 
 

@@ -183,7 +183,10 @@ public class GuideBarController : MonoBehaviour
     /// </summary>
     private void OnDisable()
     {
-        _animator.SetBool("IsDisplay", _isDisplay);
+        if (_animator != null)
+        {
+            _animator.SetBool("IsDisplay", _isDisplay);
+        }
 
         _inputActions.Disable();
 
@@ -360,5 +363,18 @@ public class GuideBarController : MonoBehaviour
             }
         }
 
+    }
+
+
+    public void SetUIVisibility(bool _isDisplay)
+    {
+        if (_isDisplay)
+        {
+            _guideCanvas.SetActive(true);
+        }
+        else
+        {
+            _guideCanvas.SetActive(false);
+        }
     }
 }

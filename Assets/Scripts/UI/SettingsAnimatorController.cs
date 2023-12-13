@@ -34,8 +34,8 @@ public class SettingsAnimatorController : MonoBehaviour
 
     private void OnDisable()
     {
-        controls.UI.Disable();
-        HideSettings();
+        //controls.UI.Disable();
+        //HideSettings();
     }
 
     // <summary>
@@ -93,7 +93,7 @@ public class SettingsAnimatorController : MonoBehaviour
             // SEÇ™çƒê∂Ç≥ÇÍÇ»Ç¢ÇÊÇ§Ç…Ç∑ÇÈ
             UISoundManager.Instance.SetProgrammaticSelect();
 
-            if (returnSelect != null)
+            if (!returnSelect.activeSelf)
             {
                 EventSystem.current.SetSelectedGameObject(returnSelect);
             }
