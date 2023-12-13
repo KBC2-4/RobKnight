@@ -11,8 +11,8 @@ public class TitleSetting : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // 設定画面を非アクティブに設定
-        _settingsPanel.SetActive(false);
+        // 設定画面をアクティブに設定
+        _settingsPanel.SetActive(true);
     }
 
     // Update is called once per frame
@@ -26,11 +26,18 @@ public class TitleSetting : MonoBehaviour
     // </summary>
     public void ShowSettingsPanel()
     {
-        // SEが再生されないようにする
-        UISoundManager.Instance.SetProgrammaticSelect();
+        // アクティブの場合は非アクティブにする
+        if (_settingsPanel.activeSelf)
+        {
+            _settingsPanel.SetActive(false);
+        }
         // ポーズ前の選択を保存
         lastSelectedButton = EventSystem.current.currentSelectedGameObject;
         _settingsPanel.SetActive(true);
+        // SEが再生されないようにする
+        UISoundManager.Instance.SetProgrammaticSelect();
+
+        Debug.Log("設定画面を開く");
     }
 
     // <summary>

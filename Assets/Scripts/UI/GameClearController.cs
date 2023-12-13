@@ -15,6 +15,11 @@ public class GameClearController : MonoBehaviour
     private bool hasExecuted = false;   // 1‰ñ‚Ì‚İÀs‚³‚ê‚éƒtƒ‰ƒO
     [SerializeField] private PlayerController _playerController;
 
+    void Awake()
+    {
+
+    }
+
     void Start()
     {
         _canvas.SetActive(false);
