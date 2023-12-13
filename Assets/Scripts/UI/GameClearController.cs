@@ -18,7 +18,7 @@ public class GameClearController : MonoBehaviour
     void Start()
     {
         _canvas.SetActive(false);
-
+        _camera.SetActive(false);
         _cameraController = _camera.GetComponent<CameraController>();
     }
 
@@ -67,5 +67,12 @@ public class GameClearController : MonoBehaviour
                 SceneManager.LoadScene("Title");
             }
         }
+    }
+
+    void OnDestroy()
+    {
+        hasExecuted = false;
+
+
     }
 }

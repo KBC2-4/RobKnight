@@ -26,6 +26,8 @@ public class TitleSetting : MonoBehaviour
     // </summary>
     public void ShowSettingsPanel()
     {
+        // SEが再生されないようにする
+        UISoundManager.Instance.SetProgrammaticSelect();
         // ポーズ前の選択を保存
         lastSelectedButton = EventSystem.current.currentSelectedGameObject;
         _settingsPanel.SetActive(true);
