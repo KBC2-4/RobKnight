@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: UI_Default 7
+  m_Name: mat_GuidBar
   m_Shader: {fileID: 4800000, guid: 1e1334443abf0bd4bb3b3b87a40e6848, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -34,32 +34,25 @@ Material:
     m_Floats:
     - _ColorMask: 15
     - _ColorWeight: 0.025
-    - _ContrastWeight: -0.2
+    - _ContrastWeight: 0.02
     - _DotSize: 0.5
-    - _Dotted: 0
-    - _EdgeLight: 1
-    - _EdgeShining: 1.5
-    - _EdgeWidth: 0.05
+    - _EdgeShining: 5.22
+    - _EdgeWidth: 0.2
     - _GradationMode: 0
     - _IsEdgeShining: 1
-    - _IsSubColor: 0
+    - _IsSubColor: 1
     - _PatternDensity: 0.25
     - _PatternMoveDir: 0
     - _PatternRotate: 0
-    - _PatternSize: 0.25
     - _PatternType: 3
-    - _ShiningSpeed: 0.5
-    - _Squared: 0
+    - _ShiningSpeed: 0.4
     - _Stencil: 0
     - _StencilComp: 8
     - _StencilOp: 0
     - _StencilReadMask: 255
     - _StencilWriteMask: 255
-    - _Stripe: 0
-    - _Striped: 1
     - _UseUIAlphaClip: 0
-    - _Width: 0.1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _SubColor: {r: 0.062745094, g: 1, b: 0.09407092, a: 1}
+    - _SubColor: {r: 0.41509432, g: 0.41509432, b: 0.41509432, a: 1}
   m_BuildTextureStacks: []
