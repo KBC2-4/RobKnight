@@ -254,7 +254,8 @@ public class PlayerController : MonoBehaviour
                     {
                         enemy.Damage(attackPower);
                         _hitEnemyList.Add(enemy.GetInstanceID());
-                        PlaySE("player_HitSlash");
+                        if (!isPossession) PlaySE("player_HitSlash");
+                        else PlaySE("EnemyAttack");
                     }
                 }
 
@@ -462,6 +463,7 @@ public class PlayerController : MonoBehaviour
 
             playerController._seData = new List<SoundData>();
             playerController._seData = _seData;
+            playerController._seData.Add(enemy.AttackSE);
 
             playerController.speed = 7.0f;
             playerController.player = player;
