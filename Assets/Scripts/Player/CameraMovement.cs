@@ -24,7 +24,14 @@ public class CameraMovement : MonoBehaviour
     /// </summary>
     public Vector3 offset;
 
+    
     private Vector3 _centerPosition;
+    public Vector3 CenterPosition
+    {
+        get => _centerPosition;
+        set=> _centerPosition = value;
+    }
+    
     private Vector3 _shakePower;
 
     private State _cameraState;
@@ -49,24 +56,16 @@ public class CameraMovement : MonoBehaviour
         //ゲーム開始時にカメラとターゲットの距離を取得
         offset = gameObject.transform.position - target.transform.position;
         _centerPosition = transform.position;
-        _shakePower.x = 0.5f;
+        _shakePower.Set(0.1f, 0, 0);
     }
 
     private void LateUpdate()
     {
-        switch (_cameraState)
+        if (_cameraState == State.Follow)
         {
-            case State.Follow:
-                //ターゲットの位置にカメラを追従させる
-                gameObject.transform.position = target.transform.position + offset;
-                break;
-            case State.Shake:
-                ShakeCamera();
-                break;
-            default:
-                break;
+            //ターゲットの位置にカメラを追従させる
+            gameObject.transform.position = target.transform.position + offset;
         }
-        
     }
 
     /// <summary>
@@ -87,9 +86,8 @@ public class CameraMovement : MonoBehaviour
         offset = gameObject.transform.position - target.transform.position;
     }
 
-    public void ShakeCamera()
+    public void ShakeCamera(int sign)
     {
-        transform.position = _centerPosition + _shakePower;
-        _shakePower *= -1;
+        transform.position = _centerPosition + _shakePower * sign;
     }
 }

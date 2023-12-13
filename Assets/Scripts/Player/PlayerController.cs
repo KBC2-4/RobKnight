@@ -9,49 +9,48 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
-    Vector3 startPos;   // �X�|�[���n�_
-    CharacterController controller;// �L�����N�^�[�R���g���[���[
+    Vector3 startPos;   // 初期座標
+    CharacterController controller;// キャラクターコントローラー
     private Animator animator;
     public float speed = 5f;
     public float sensitivity = 30.0f;
 
-    //�v���C���[�̍U����
     private int attackPower2 = 1;
 
     /// <summary>
-    /// ���͗p
+    /// 入力コントローラー
     /// </summary>
     private InputControls inputActions;
 
-    private HashSet<int> _hitEnemyList;  //�U���ɐG�ꂽ�G�l�~�[���X�g
+    private HashSet<int> _hitEnemyList;  //攻撃に触れたエネミーリスト
 
     /// <summary>
-    /// �߈ˌ�ɕۑ����邽�߂̕ϐ�
+    /// 憑依時にプレイヤーを保存する変数
     /// </summary>
     private GameObject player = null;
 
     /// <summary>
-    /// �v���C���[�̈ړ���
+    /// 移動入力値
     /// </summary>
     private Vector2 inputMove;
 
     /// <summary>
-    /// �v���C���[�̉�]���x
+    /// 回転速度
     /// </summary>
     private float turnVelocity;
 
     /// <summary>
-    /// �i�s�����Ɍ����̂ɂ����鎞��
+    /// 回転速度
     /// </summary>
     [SerializeField] private float smoothTime = 0.1f;
 
-    private EnemyData currentPossession; // ���ݜ߈˂��Ă���G�l�~�[�̃f�[�^
+    private EnemyData currentPossession; // 憑依キャラクター情報
 
     private int hp = 250;
     private int maxHp = 250;
-    [SerializeField] private int defencePower = 0;      //�h���
-    [SerializeField]private int attackPower = 10;       //�U����
-    private int _increaseAttackValue;               //�U���͂̑����l
+    [SerializeField] private int defencePower = 0;      //防御力
+    [SerializeField]private int attackPower = 10;       //攻撃力
+    private int _increaseAttackValue;               //攻撃増加値
     private bool isAttacking = false;
     public ParticleSystem slashEffect;
     private PlayerHpSlider _hpSlider;
@@ -61,18 +60,18 @@ public class PlayerController : MonoBehaviour
 
     List<Transform> _children;
 
-    // �߈˂��Ă��邩
+    // 憑依状態化のフラグ
     public bool isPossession = false;
     private bool canPossesion = false;
-    // �߈˂��Ă���G�l�~�[�̖��O���擾
+    // 憑依先の名前
     public string PossessionEnemyName;
 
-    //�I�[�f�B�I�\�[�X
+    //オーディオソース
     [SerializeField]private AudioSource _audioSource;
-    //se���X�g
+    //seデータ
     [SerializeField] private List<SoundData> _seData;
 
-    //���G��Ԃ̃t���O
+    //無敵状態化のフラグ
     private bool _isInfinity;
     public bool IsInfinity
     {
@@ -93,7 +92,7 @@ public class PlayerController : MonoBehaviour
 
         _hpSlider = GameObject.Find("HP").GetComponent<PlayerHpSlider>();
 
-        //�q�I�u�W�F�N�g���擾����
+        //子オブジェクト
         _children= new List<Transform>();
         int childCount = transform.childCount;
         
@@ -101,6 +100,7 @@ public class PlayerController : MonoBehaviour
         {
             _children.Add(transform.GetChild(i));
         }   
+
     }
 
     // Start is called before the first frame update
@@ -108,8 +108,6 @@ public class PlayerController : MonoBehaviour
     {
         _increaseAttackValue = 0;
         startPos = transform.position;
-        GameObject cameraObject = GameObject.Find("Main Camera");
-        _mainCamera = cameraObject?.GetComponent<CameraMovement>();
         controller = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
         animator.Play("Idle");
@@ -119,11 +117,7 @@ public class PlayerController : MonoBehaviour
             slashEffect.Stop();
         }
         
-        //particleSystem.Stop();
-        if (animator == null)
-        {
-            Debug.LogError("Animator component is missing on this GameObject!");
-        }
+       
 
         currentPossession = null;
 
@@ -159,7 +153,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnDestroy()
     {
-        //inputActinos�̃R�[���o�b�N�̉���
+        //inputActinosからアクションを削除
         inputActions.Player.Move.performed -= OnMove;
         inputActions.Player.Move.canceled -= OnMove;
         inputActions.Player.Fire.performed -= AttackAnimation;
@@ -167,7 +161,7 @@ public class PlayerController : MonoBehaviour
         inputActions.Player.Possession.canceled -= CanPossesion;
         inputActions.Player.Return.performed -= ReturnAction;
 
-        //���̓R���g���[���[�̍폜
+        //inputAction削除
         inputActions.Dispose();
     }
 
@@ -180,9 +174,6 @@ public class PlayerController : MonoBehaviour
         {
             isAttacking = false;
         }
-
-        //Debug.Log($"State:{transform.position}");
-        //Debug.Log($"State:{GetComponent<Rigidbody>().position}");
     }
 
     void AttackAnimation(InputAction.CallbackContext context)
@@ -192,14 +183,13 @@ public class PlayerController : MonoBehaviour
             if (animator != null && !isAttacking)
             {
                 animator.Play("Attack");
-                //animator.SetTrigger("AttackTrigger");
             }
         }
     }
 
-    // �A�j���[�V�����C�x���g����Ăяo�����֐�
+    // アニメーションイベント
     /// <summary>
-    /// �U���J�n
+    /// 攻撃
     /// </summary>
     public void PerformAttack()
     {
@@ -208,7 +198,7 @@ public class PlayerController : MonoBehaviour
         isAttacking = true;
     }
     /// <summary>
-    /// �U���I��
+    /// 攻撃終了
     /// </summary>
     public void EndAttack()
     {
@@ -216,13 +206,16 @@ public class PlayerController : MonoBehaviour
         _hitEnemyList.Clear();
         slashEffect?.Clear();
         slashEffect?.Stop();
-        //if(_mainCamera.CameraState==CameraMovement.State.Shake)
-        //{
-        //    _mainCamera.CameraState = CameraMovement.State.Follow;
-        //}
+
+        if(_mainCamera.CameraState==CameraMovement.State.Shake)
+        {
+            _mainCamera.CameraState = CameraMovement.State.Follow;
+            _mainCamera.ShakeCamera(-1);
+        }
+
     }
     /// <summary>
-    /// �U���G�t�F�N�g�Đ���~
+    /// 攻撃エフェクト停止
     /// </summary>
     public void StopSlashEffect()
     {
@@ -236,7 +229,7 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// ����SE�Đ�
+    ///足音再生
     /// </summary>
     public void PlayFootsteps()
     {
@@ -252,7 +245,7 @@ public class PlayerController : MonoBehaviour
 
             if (enemy != null)
             {
-                //�U��
+                //攻撃処理
                 if (isAttacking == true && 0 < enemy.enemyData.hp)
                 {
                     if (_hitEnemyList.Contains(enemy.GetInstanceID()) == false)
@@ -261,9 +254,16 @@ public class PlayerController : MonoBehaviour
                         _hitEnemyList.Add(enemy.GetInstanceID());
                         if (!isPossession) PlaySE("player_HitSlash");
                         else PlaySE("EnemyAttack");
+
+                        if (_mainCamera.CameraState != CameraMovement.State.Shake)
+                        {
+                            _mainCamera.CenterPosition = _mainCamera.transform.position;
+                            _mainCamera.CameraState = CameraMovement.State.Shake;
+                            _mainCamera.ShakeCamera(1);
+                        }
                     }
                 }
-                //�߈�
+                //憑依
                 if (enemy.enemyData.hp <= 0)
                 {
                     if (name == "Player")
@@ -297,15 +297,13 @@ public class PlayerController : MonoBehaviour
        
         if (hp <= 0)
         {
-            //�߈ˏ�Ԃł���ΐl�ԑ̂ɖ߂�
+            //憑依状態であれば解除
             if (name != "Player")
             {
-                Debug.Log("Damage:return");
                 Return();
             }
             else
             {
-                Debug.Log("Damage:deth");
                 OnDeath();
             }
         }
@@ -315,7 +313,6 @@ public class PlayerController : MonoBehaviour
     {
         animator.SetTrigger("DieTrigger");
         StartCoroutine(DestroyAfterAnimation("Die01_Stay_SwordAndShield", 0));
-        Debug.Log("�v���C���[�����S�����I");
         GameOverController gameOverController = FindObjectOfType<GameOverController>();
         if (gameOverController != null)
         {
@@ -332,31 +329,29 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(animationLength);
     }
 
-    /// <summary>
-    /// �ړ��p�֐�
-    /// </summary>
-    private Vector3 force = new Vector3(0, 0, 0);   //�����o����
-    private Vector3 forcedecay = new Vector3(0, 0, 0);   //�����o���͂̌���
-    private float forcetime = 0;                      //�����o������
+    
+    private Vector3 force = new Vector3(0, 0, 0);   
+    private Vector3 forcedecay = new Vector3(0, 0, 0);  
+    private float forcetime = 0;                    
     private void PlayerMove()
     {
         float speedX = inputMove.x * speed;
         float speedY = inputMove.y * speed;
 
-        //���͒l����A���ݑ��x���v�Z
+        
         Vector3 moveVelocity = new Vector3(speedX, 0, speedY);
 
-        //���݃t���[���̈ړ��ʂ��ړ����x����v�Z
+        
         Vector3 moveDelta = moveVelocity * Time.deltaTime;
 
 
         if ((inputMove != Vector2.zero || 0 < forcetime)
             && animator.GetCurrentAnimatorStateInfo(0).IsTag("Attack") == false)
         {
-            //�ړ�������
+            //移動
             controller.Move(moveDelta);
 
-            //�����o���͂��ړ��ɉ�����
+            
             if (0 < forcetime) controller.Move(force);
 
             if (player != null)
@@ -365,7 +360,7 @@ public class PlayerController : MonoBehaviour
             }
 
             animator.SetFloat("Speed", 1.0f);
-            //�L�����N�^�[�̉�]
+            //回転
             MoveRotation();
         }
         else
@@ -373,7 +368,7 @@ public class PlayerController : MonoBehaviour
             animator.SetFloat("Speed", 0);
         }
 
-        //�����o�����ԂƗ͂����炷
+        
         forcetime -= Time.fixedDeltaTime;
         if (forcetime < 0)
         {
@@ -388,15 +383,15 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// �ړ����̃L�����N�^�[�̉�]�֐�
+    /// プレイヤーの回転
     /// </summary>
     private void MoveRotation()
     {
-        //���͒l����y������̖ڕW�p�x���v�Z
+        //入力値から回転値を取得
         var targetAngleY = -Mathf.Atan2(inputMove.y, inputMove.x) * Mathf.Rad2Deg + 90;
-        //�ɋ}�����Ȃ��玟�̊p�x���v�Z
+        
         var angleY = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngleY, ref turnVelocity, smoothTime);
-        //��]������
+        
         transform.rotation = Quaternion.Euler(0, angleY, 0);
         if(player != null) 
         {
@@ -404,7 +399,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    //�v���C���[���m�b�N�o�b�N���� force:�����o���� Base:�m�b�N�o�b�N�̔����n�_
+    
     public void KnockBack(float force, float time, Vector3 Base)
     {
         Vector3 PlayerPos = transform.position;
@@ -412,7 +407,7 @@ public class PlayerController : MonoBehaviour
         PlayerPos.y = 0;
         Base.y = 0;
 
-        //�v���C���[�ƑΏۊԂ̊p�x�����
+        
         var diff = (PlayerPos - Base).normalized;
         Vector3 PushAngle = diff * (force * time);
 
@@ -422,7 +417,7 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// �ړ��L�[�̓��͒l���擾����
+    /// 移動入力を受け取る
     /// </summary>
     private void OnMove(InputAction.CallbackContext context)
     {
@@ -430,25 +425,25 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// �߈˃A�N�V����
+    /// 憑依処理
     /// </summary>
-    /// <param name="targetObj">�߈˂���L�����N�^�[</param>
+    /// <param name="targetObj">憑依対象[</param>
     private void Possession(GameObject targetObj)
     {
         GuideBarController.Instance.GuideSet(GuideBarController.GuideName.Pause, GuideBarController.GuideName.Return, GuideBarController.GuideName.Attack, GuideBarController.GuideName.Move);
 
         player = gameObject;
-        //�^�O��Player�ɕύX
+        //憑依先のタグ、レイヤーをプレイヤーにする
         targetObj.tag = "Player";
         targetObj.layer = gameObject.layer;
 
         SetPlayerActive(false);
         animator.SetFloat("Speed", 0);
 
-        //�ΏۂɃv���C���[�R���g���[���[��ǉ�
+        //キャラクターコントローラーの設定
         targetObj.gameObject.AddComponent<CharacterController>();
         CharacterController characterController = targetObj?.gameObject.GetComponent<CharacterController>();
-        // �G�l�~�[��CapsuleCollider����R���W�����̍����E���S����̍��W�E���a�����p���Ńf�X�g���C
+        
         CapsuleCollider capsuleCollider = targetObj?.gameObject.GetComponent<CapsuleCollider>();
         if (capsuleCollider != null)
         {
@@ -463,12 +458,11 @@ public class PlayerController : MonoBehaviour
 
         if (playerController != null)
         {
-            //����Ώۂ�؂�ւ���
             playerController.enabled = true;
 
-            //�߈˃L�����̃p�����[�^��ݒ�
+            //憑依キャラの設定
             EnemyController enemy = targetObj?.GetComponent<EnemyController>();
-            //currentPossession = targetObj?.GetComponent<EnemyController>().enemyData;
+            
             currentPossession = enemy.enemyData;
             playerController.maxHp = currentPossession.Poshp;
             playerController.hp = playerController.maxHp;
@@ -487,15 +481,9 @@ public class PlayerController : MonoBehaviour
             playerController.isPossession = true;
             player = null;  
             playerController.currentPossession = currentPossession;
+            playerController._mainCamera = _mainCamera;
             currentPossession = null;
 
-            //Player��HPslider��߈ˑ̂�HP�ɐݒ�
-            //PlayerHpSlider playerHpSlider = GameObject.Find("HP").GetComponent<PlayerHpSlider>();
-            //if (playerHpSlider != null)
-            //{
-            //    playerHpSlider.SetPlayerHp(playerController);
-            //    playerHpSlider.hpSlider.fillRect.GetComponent<Image>().color = new Color(0.8030842f, 0.4134211f, 0.9245283f, 1.0f);
-            //}
             Color setColor = new Color(0.8030842f, 0.4134211f, 0.9245283f, 1.0f);
             _hpSlider.SetPlayerHp(playerController,setColor);
 
@@ -504,45 +492,38 @@ public class PlayerController : MonoBehaviour
         EnemyController enemyController = targetObj?.GetComponent<EnemyController>();
         if(enemyController != null) 
         {
-            //�G�̃A�j���[�^�[�X�e�[�^�X��ύX
-            //enemyController.animator.SetBool("IsPossession", true);
-
-            //���C�g�G�t�F�N�g���폜
+            //エネミーの死亡時エフェクト削除
             enemyController.lightEffect.SetActive(false);
             enemyController.enemyData.hp = playerController.maxHp;
             Destroy(enemyController);
 
-            // UI�\��
+            // 憑依UI設定
             ActionStateManager.Instance.RecordEnemyPossession(playerController.PossessionEnemyName);
         }
 
-        //�߈ˑ̖̂��O��"(Player)"��ǉ�
+        //憑依先に名前追加
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.Append(targetObj.name);
         stringBuilder.Append("(Player)");
         targetObj.name = stringBuilder.ToString();
 
-        //�߈˂����G��HP�o�[���폜
+        //憑依先のキャンバス削除
         Canvas canvas=targetObj?.GetComponentInChildren<Canvas>();
         if(canvas != null) 
         {
             canvas.enabled = false;
         }
         
-        //�J�����̃^�[�Q�b�g��߈˃L�����ɐ؂�ւ���
-        GameObject camera = GameObject.Find("Main Camera");
-        if (camera != null)
-        {
-            camera.GetComponent<CameraMovement>().SetCameraTarget(targetObj);
-        }
+        //カメラのターゲットを憑依先に変更
+        _mainCamera.SetCameraTarget(targetObj);
         isPossession = true;
 
     }
 
     /// <summary>
-    /// �߈ˉ\�ɂ���
+    /// 憑依入力処理
     /// </summary>
-    /// <param name="context">�߈˃{�^��</param>
+    /// <param name="context">入力値</param>
     private void CanPossesion(InputAction.CallbackContext context)
     {
         if (context.performed == true)
@@ -557,7 +538,7 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// �l�Ԃɖ߂�A�N�V����
+    /// 憑依解除入力処理
     /// </summary>
     private void ReturnAction(InputAction.CallbackContext context)
     {
@@ -568,7 +549,7 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// �l�Ԃɖ߂鏈��
+    /// 憑依解除
     /// </summary>
     private void Return()
     {
@@ -576,7 +557,7 @@ public class PlayerController : MonoBehaviour
         {
             GuideBarController.Instance.GuideSet(GuideBarController.GuideName.Pause, GuideBarController.GuideName.Attack, GuideBarController.GuideName.Move);
 
-            //"Player"(�l��)��\������
+            //プレイヤーを有効化
             PlayerController playerController = player.GetComponent<PlayerController>();
             playerController.SetPlayerActive(true);
             playerController.PlaySE("player_Return");
@@ -584,26 +565,21 @@ public class PlayerController : MonoBehaviour
             Color setColor = new Color(0.6705883f, 1.0f, 0.5803922f, 1.0f);
             _hpSlider.SetPlayerHp(playerController, setColor);
 
-            //�J�����̃^�[�Q�b�g��"Player"(�l��)�ɖ߂�
-            GameObject camera = GameObject.Find("Main Camera");
-            if (camera != null)
-            {
-                camera.GetComponent<CameraMovement>().SetCameraTarget(player);
-            }
+            //カメラのターゲットをプレイヤーに戻す
+            _mainCamera.SetCameraTarget(player);
 
-            //�߈ˑ̂��폜
             player = null;
             Destroy(gameObject);
         }
     }
 
     /// <summary>
-    /// �v���C���[�̕\���ݒ�֐�
+    /// プレイヤーの表示設定
     /// </summary>
-    /// <param name="isActive">true=�\�� false=��\��</param>
+    /// <param name="isActive">true=表示 false=非表示</param>
     public void SetPlayerActive(bool isActive)
     {
-        //�v���C���[�\���ݒ�
+        //子オブジェクトを取得
         foreach (var child in _children)
         {
             child.gameObject.SetActive(isActive);
@@ -639,7 +615,7 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// �v���C���[�̓��͑����L���A����������֐�
+    /// プレイヤーの入力操作の有効切り替え
     /// </summary>
     /// <param name="value">true=�L���@false=����</param>
     public void SetInputAction(bool value)
@@ -647,6 +623,10 @@ public class PlayerController : MonoBehaviour
         if(value == true)
         {
             inputActions.Enable();
+            if (_mainCamera == null)
+            {
+                _mainCamera = GameObject.Find("Main Camera").GetComponent<CameraMovement>();
+            }
         }
         else
         {
@@ -654,21 +634,19 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    //�U���̓����蔻���L��������
     public void EnableHit()
     {
     }
 
-    //�U���̓����蔻��𖳌�������
     public void DisableHit()
     {
     }
 
     /// <summary>
-    /// �󔠎擾�֐�
+    /// 宝箱を取ったとき
     /// </summary>
-    /// <param name="addAttack">�U���͑����l</param>
-    /// <param name="addDefence">�h��͑����l</param>
+    /// <param name="addAttack">攻撃力増加量</param>
+    /// <param name="addDefence">防御力増加量</param>
     public void GetTreasure(int addAttack,int addDefence)
     {
         IncreaseAttackPower(addAttack);
@@ -682,14 +660,14 @@ public class PlayerController : MonoBehaviour
         _hpSlider.UpdateHPSlider();
     }
 
-    // �U���͂𑝉������郁�\�b�h
+    // 攻撃力増加処理
     public void IncreaseAttackPower(int addValue)
     {
         attackPower += addValue;
         _increaseAttackValue = addValue;
     }
 
-    //�h��͂𑝉������郁�\�b�h
+    //防御力増加処理
     public void IncreaseDefencePower(int addValue)
     {
         defencePower += addValue;
@@ -700,6 +678,5 @@ public class PlayerController : MonoBehaviour
         SoundData se = _seData.Find(data => data.FileName == seFileName);
         _audioSource.volume = se.Volume;
         _audioSource.PlayOneShot(se.AudioClip);
-        Debug.Log($"{se.FileName}");
     }
 }
