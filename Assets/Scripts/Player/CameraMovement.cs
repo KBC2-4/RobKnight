@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.Design.Serialization;
@@ -5,6 +6,12 @@ using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
 {
+    public enum State
+    {
+        Follow,
+        Shake
+    }
+
     /// <summary>
     /// プレイヤーのTransform
     /// </summary>
@@ -17,10 +24,21 @@ public class CameraMovement : MonoBehaviour
     /// </summary>
     public Vector3 offset;
 
+    private Vector3 _centerPosition;
+    private Vector3 _shakePower;
+
+    private State _cameraState;
+    public State CameraState
+    {
+        get => _cameraState;
+        set=> _cameraState = value;
+    }
 
     // Start is called before the first frame update
     void Start()
     {
+        _cameraState = State.Follow;
+
         //カメラの位置を設定
         Vector3 position = target.transform.position;
         position.z -= 5;
@@ -30,12 +48,25 @@ public class CameraMovement : MonoBehaviour
 
         //ゲーム開始時にカメラとターゲットの距離を取得
         offset = gameObject.transform.position - target.transform.position;
+        _centerPosition = transform.position;
+        _shakePower.x = 0.5f;
     }
 
     private void LateUpdate()
     {
-        //ターゲットの位置にカメラを追従させる
-        gameObject.transform.position = target.transform.position + offset;
+        switch (_cameraState)
+        {
+            case State.Follow:
+                //ターゲットの位置にカメラを追従させる
+                gameObject.transform.position = target.transform.position + offset;
+                break;
+            case State.Shake:
+                ShakeCamera();
+                break;
+            default:
+                break;
+        }
+        
     }
 
     /// <summary>
@@ -54,5 +85,11 @@ public class CameraMovement : MonoBehaviour
 
         //カメラとターゲットの距離を取得
         offset = gameObject.transform.position - target.transform.position;
+    }
+
+    public void ShakeCamera()
+    {
+        transform.position = _centerPosition + _shakePower;
+        _shakePower *= -1;
     }
 }

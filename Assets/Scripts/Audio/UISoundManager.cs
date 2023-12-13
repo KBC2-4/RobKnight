@@ -63,16 +63,22 @@ public class UISoundManager : MonoBehaviour, IPointerEnterHandler, IPointerClick
         if (audioSource != null && clip != null)
         {
             audioSource.PlayOneShot(clip);
+            // 400ƒ~ƒŠ•bi0.4•bj‚ÅU“®
+            //VibrationController.Instance.VibrateForDuration(400, 1.0f);
         }
     }
 
     public void PlayHoverSound()
     {
         audioSource.PlayOneShot(hoverSound);
+        // 200ƒ~ƒŠ•bi0.2•bj‚ÅU“®
+        //VibrationController.Instance.VibrateForDuration(200, 0.1f);
     }
 
     public void PlayClickSound()
     {
         audioSource.PlayOneShot(clickSound);
+        // 400ƒ~ƒŠ•bi0.4•bj‚ÅU“®
+        //VibrationController.Instance.VibrateForDuration(400, 1.0f);
     }
 }

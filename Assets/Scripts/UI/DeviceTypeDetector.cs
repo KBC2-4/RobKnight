@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -14,6 +16,8 @@ public class DeviceTypeDetector : MonoBehaviour
     public InputAction gamepadAction; // ゲームパッドの入力を検出するアクション
     public InputAction touchAction; // タッチパッドの入力を検出するアクション
 
+    private InputDevice _currentDevice; // 現在のアクティブなデバイス
+
     private void Awake()
     {
         // シングルトンの初期化
@@ -26,8 +30,53 @@ public class DeviceTypeDetector : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        // ゲーム開始時にデバイスタイプを判断
+        // コルーチンを開始
+        StartCoroutine(DetectInitialDeviceType());
     }
-    
+
+    // ゲーム開始時に利用可能なデバイスを検出するメソッド
+    // 初期デバイスタイプを検出するコルーチン
+    private IEnumerator DetectInitialDeviceType()
+    {
+        // Input Systemがデバイスを初期化するまで待機
+        yield return new WaitUntil(() => InputSystem.devices.Count > 0);
+
+        var devices = InputSystem.devices;
+        InputDevice initialDevice = null;
+
+        // 最初に検出されたデバイスを検出
+        //if (devices.Any(device => device is Keyboard || device is Mouse))
+        //{
+        //    initialDevice = devices.First(device => device is Keyboard || device is Mouse);
+        //}
+        //else if (devices.Any(device => device is Gamepad))
+        //{
+        //    initialDevice = devices.First(device => device is Gamepad);
+        //}
+
+        // ゲームパッドを優先的に検出
+        // ゲームパッドを最初にチェック
+        if (devices.Any(device => device is Gamepad))
+        {
+            initialDevice = devices.First(device => device is Gamepad);
+        }
+        // キーボード・マウスを次にチェック
+        else if (devices.Any(device => device is Keyboard || device is Mouse))
+        {
+            initialDevice = devices.First(device => device is Keyboard || device is Mouse);
+        }
+
+        // 初期デバイスが検出された場合、イベントをトリガー
+        if (initialDevice != null)
+        {
+            // 現在のデバイスを更新
+            _currentDevice = initialDevice;
+            NotifyDeviceTypeChanged(initialDevice);
+        }
+    }
+
     private void OnEnable()
     {
         // アクションの実行時にデバイスの種類を判別するイベントをそれぞれ登録
@@ -51,7 +100,10 @@ public class DeviceTypeDetector : MonoBehaviour
     {
         // 入力デバイスを取得
         var device = context.control.device;
-    
+
+        // 現在のデバイスを更新
+        _currentDevice = device;
+
         if (device is Keyboard || device is Mouse)
         {
             // Debug.Log("Keyboard & Mouse input detected");
@@ -68,7 +120,16 @@ public class DeviceTypeDetector : MonoBehaviour
             NotifyDeviceTypeChanged(device);
         }
     }
-    
+
+    /// <summary>
+    /// 現在のデバイスを返すメソッド
+    /// </summary>
+    /// <returns></returns>
+    public InputDevice GetCurrentDevice()
+    {
+        return _currentDevice;
+    }
+
     private static void NotifyDeviceTypeChanged(InputDevice device)
     {
         OnDeviceTypeChanged?.Invoke(device);
