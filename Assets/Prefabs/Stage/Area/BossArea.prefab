@@ -346,6 +346,21 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: 0.85620594
       objectReference: {fileID: 0}
+    - target: {fileID: 63218796929961533, guid: 7dcf24e2f364f8d428e7f9e896cf088f,
+        type: 3}
+      propertyPath: m_Colors.m_NormalColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 63218796929961533, guid: 7dcf24e2f364f8d428e7f9e896cf088f,
+        type: 3}
+      propertyPath: m_Colors.m_NormalColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 63218796929961533, guid: 7dcf24e2f364f8d428e7f9e896cf088f,
+        type: 3}
+      propertyPath: m_Colors.m_NormalColor.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 646769272379995238, guid: 7dcf24e2f364f8d428e7f9e896cf088f,
         type: 3}
       propertyPath: m_LocalPosition.y
@@ -972,7 +987,8 @@ PrefabInstance:
       value: 0.44189084
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 8888826943704042538, guid: 7dcf24e2f364f8d428e7f9e896cf088f, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7dcf24e2f364f8d428e7f9e896cf088f, type: 3}
