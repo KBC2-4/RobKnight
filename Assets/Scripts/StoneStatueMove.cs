@@ -27,8 +27,7 @@ public class StoneStatueMove : MonoBehaviour
     void Update()
     {
 
-        if (!Button.push_flg) transform.position += force;
-        else _audioSorce.Stop();
+       transform.position += force;
 
         //‰Ÿ‚µo‚·ŠÔ‚Æ—Í‚ğŒ¸‚ç‚·
         forcetime -= Time.fixedDeltaTime;
