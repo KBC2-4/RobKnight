@@ -79,7 +79,7 @@ public class CredittController : MonoBehaviour
         }
 
         // 文字が画面外に出たらTitleシーンに遷移
-        if (_creditsText.transform.position.y >= 1000) // この値は適宜調整
+        if (_creditsText.transform.position.y >= 2800) // この値は適宜調整
         {
             SceneManager.LoadScene("Title"); // タイトルシーンに遷移
         }
