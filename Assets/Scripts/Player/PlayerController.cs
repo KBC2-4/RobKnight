@@ -145,14 +145,11 @@ public class PlayerController : MonoBehaviour
         inputActions.Player.Return.performed += ReturnAction;
 
         isPossession = false;
-
-        Debug.Log("enable");
     }
 
     private void OnDisable()
     {
         inputActions.Disable();
-        Debug.Log("disable");
     }
 
     private void OnDestroy()
@@ -256,7 +253,7 @@ public class PlayerController : MonoBehaviour
                         PlaySE("player_HitSlash");
                     }
                 }
-
+                //œßˆË
                 if (enemy.enemyData.hp <= 0)
                 {
                     if (isPossession == false && canPossesion == true && name == "Player")
@@ -529,6 +526,7 @@ public class PlayerController : MonoBehaviour
     {
         if (context.performed == true)
         {
+            PlaySE("player_Possesion");
             canPossesion = true;
         }
         else if (context.canceled == true)
@@ -558,6 +556,7 @@ public class PlayerController : MonoBehaviour
             //"Player"(lŠÔ)‚ð•\Ž¦‚·‚é
             PlayerController playerController = player.GetComponent<PlayerController>();
             playerController.SetPlayerActive(true);
+            playerController.PlaySE("player_Return");
            
             Color setColor = new Color(0.6705883f, 1.0f, 0.5803922f, 1.0f);
             _hpSlider.SetPlayerHp(playerController, setColor);
