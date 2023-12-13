@@ -9,49 +9,49 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
-    Vector3 startPos;   // ƒXƒ|[ƒ“’n“_
-    CharacterController controller;@// ƒLƒƒƒ‰ƒNƒ^[ƒRƒ“ƒgƒ[ƒ‰[
+    Vector3 startPos;   // ï¿½Xï¿½|ï¿½[ï¿½ï¿½ï¿½nï¿½_
+    CharacterController controller;// ï¿½Lï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½^ï¿½[ï¿½Rï¿½ï¿½ï¿½gï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½[
     private Animator animator;
     public float speed = 5f;
     public float sensitivity = 30.0f;
 
-    //ƒvƒŒƒCƒ„[‚ÌUŒ‚—Í
+    //ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ÌUï¿½ï¿½ï¿½ï¿½
     private int attackPower2 = 1;
 
     /// <summary>
-    /// “ü—Í—p
+    /// ï¿½ï¿½ï¿½Í—p
     /// </summary>
     private InputControls inputActions;
 
-    private HashSet<int> _hitEnemyList;  //UŒ‚‚ÉG‚ê‚½ƒGƒlƒ~[ƒŠƒXƒg
+    private HashSet<int> _hitEnemyList;  //ï¿½Uï¿½ï¿½ï¿½ÉGï¿½ê‚½ï¿½Gï¿½lï¿½~ï¿½[ï¿½ï¿½ï¿½Xï¿½g
 
     /// <summary>
-    /// œßˆËŒã‚É•Û‘¶‚·‚é‚½‚ß‚Ì•Ï”
+    /// ï¿½ßˆËŒï¿½É•Û‘ï¿½ï¿½ï¿½ï¿½é‚½ï¿½ß‚Ì•Ïï¿½
     /// </summary>
     private GameObject player = null;
 
     /// <summary>
-    /// ƒvƒŒƒCƒ„[‚ÌˆÚ“®—Ê
+    /// ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ÌˆÚ“ï¿½ï¿½ï¿½
     /// </summary>
     private Vector2 inputMove;
 
     /// <summary>
-    /// ƒvƒŒƒCƒ„[‚Ì‰ñ“]‘¬“x
+    /// ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ì‰ï¿½]ï¿½ï¿½ï¿½x
     /// </summary>
     private float turnVelocity;
 
     /// <summary>
-    /// is•ûŒü‚ÉŒü‚­‚Ì‚É‚©‚©‚éŠÔ
+    /// ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ÉŒï¿½ï¿½ï¿½ï¿½Ì‚É‚ï¿½ï¿½ï¿½ï¿½éï¿½ï¿½
     /// </summary>
     [SerializeField] private float smoothTime = 0.1f;
 
-    private EnemyData currentPossession; // Œ»İœßˆË‚µ‚Ä‚¢‚éƒGƒlƒ~[‚Ìƒf[ƒ^
+    private EnemyData currentPossession; // ï¿½ï¿½ï¿½İœßˆË‚ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½Gï¿½lï¿½~ï¿½[ï¿½Ìƒfï¿½[ï¿½^
 
     private int hp = 250;
     private int maxHp = 250;
-    [SerializeField] private int defencePower = 0;      //–hŒä—Í
-    [SerializeField]private int attackPower = 10;       //UŒ‚—Í
-    private int _increaseAttackValue;               //UŒ‚—Í‚Ì‘‰Á’l
+    [SerializeField] private int defencePower = 0;      //ï¿½hï¿½ï¿½ï¿½
+    [SerializeField]private int attackPower = 10;       //ï¿½Uï¿½ï¿½ï¿½ï¿½
+    private int _increaseAttackValue;               //ï¿½Uï¿½ï¿½ï¿½Í‚Ì‘ï¿½ï¿½ï¿½ï¿½l
     private bool isAttacking = false;
     public ParticleSystem slashEffect;
     private PlayerHpSlider _hpSlider;
@@ -61,18 +61,18 @@ public class PlayerController : MonoBehaviour
 
     List<Transform> _children;
 
-    // œßˆË‚µ‚Ä‚¢‚é‚©
+    // ï¿½ßˆË‚ï¿½ï¿½Ä‚ï¿½ï¿½é‚©
     public bool isPossession = false;
     private bool canPossesion = false;
-    // œßˆË‚µ‚Ä‚¢‚éƒGƒlƒ~[‚Ì–¼‘O‚ğæ“¾
+    // ï¿½ßˆË‚ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½Gï¿½lï¿½~ï¿½[ï¿½Ì–ï¿½ï¿½Oï¿½ï¿½ï¿½æ“¾
     public string PossessionEnemyName;
 
-    //ƒI[ƒfƒBƒIƒ\[ƒX
+    //ï¿½Iï¿½[ï¿½fï¿½Bï¿½Iï¿½\ï¿½[ï¿½X
     [SerializeField]private AudioSource _audioSource;
-    //seƒŠƒXƒg
+    //seï¿½ï¿½ï¿½Xï¿½g
     [SerializeField] private List<SoundData> _seData;
 
-    //–³“Gó‘Ô‚Ìƒtƒ‰ƒO
+    //ï¿½ï¿½ï¿½Gï¿½ï¿½Ô‚Ìƒtï¿½ï¿½ï¿½O
     private bool _isInfinity;
     public bool IsInfinity
     {
@@ -93,7 +93,7 @@ public class PlayerController : MonoBehaviour
 
         _hpSlider = GameObject.Find("HP").GetComponent<PlayerHpSlider>();
 
-        //qƒIƒuƒWƒFƒNƒg‚ğæ“¾‚·‚é
+        //ï¿½qï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½æ“¾ï¿½ï¿½ï¿½ï¿½
         _children= new List<Transform>();
         int childCount = transform.childCount;
         
@@ -127,9 +127,9 @@ public class PlayerController : MonoBehaviour
 
         currentPossession = null;
 
-        // ƒ}ƒEƒXƒJ[ƒ\ƒ‹‚ğ”ñ•\¦‚É‚·‚é
+        // ï¿½}ï¿½Eï¿½Xï¿½Jï¿½[ï¿½\ï¿½ï¿½ï¿½ï¿½ï¿½\ï¿½ï¿½ï¿½É‚ï¿½ï¿½ï¿½
         //Cursor.visible = false;
-        //// ƒ}ƒEƒXƒJ[ƒ\ƒ‹‚ğ‰æ–Ê‚Ì’†‰›‚ÉŒÅ’è‚·‚é
+        //// ï¿½}ï¿½Eï¿½Xï¿½Jï¿½[ï¿½\ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê‚Ì’ï¿½ï¿½ï¿½ï¿½ÉŒÅ’è‚·ï¿½ï¿½
         //Cursor.lockState = CursorLockMode.Locked;
 
         if (Application.isEditor)
@@ -159,7 +159,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnDestroy()
     {
-        //inputActinos‚ÌƒR[ƒ‹ƒoƒbƒN‚Ì‰ğœ
+        //inputActinosï¿½ÌƒRï¿½[ï¿½ï¿½ï¿½oï¿½bï¿½Nï¿½Ì‰ï¿½ï¿½ï¿½
         inputActions.Player.Move.performed -= OnMove;
         inputActions.Player.Move.canceled -= OnMove;
         inputActions.Player.Fire.performed -= AttackAnimation;
@@ -167,7 +167,7 @@ public class PlayerController : MonoBehaviour
         inputActions.Player.Possession.canceled -= CanPossesion;
         inputActions.Player.Return.performed -= ReturnAction;
 
-        //“ü—ÍƒRƒ“ƒgƒ[ƒ‰[‚Ìíœ
+        //ï¿½ï¿½ï¿½ÍƒRï¿½ï¿½ï¿½gï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½[ï¿½Ìíœ
         inputActions.Dispose();
     }
 
@@ -197,9 +197,9 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // ƒAƒjƒ[ƒVƒ‡ƒ“ƒCƒxƒ“ƒg‚©‚çŒÄ‚Ño‚³‚ê‚éŠÖ”
+    // ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½Cï¿½xï¿½ï¿½ï¿½gï¿½ï¿½ï¿½ï¿½Ä‚Ñoï¿½ï¿½ï¿½ï¿½ï¿½Öï¿½
     /// <summary>
-    /// UŒ‚ŠJn
+    /// ï¿½Uï¿½ï¿½ï¿½Jï¿½n
     /// </summary>
     public void PerformAttack()
     {
@@ -208,7 +208,7 @@ public class PlayerController : MonoBehaviour
         isAttacking = true;
     }
     /// <summary>
-    /// UŒ‚I—¹
+    /// ï¿½Uï¿½ï¿½ï¿½Iï¿½ï¿½
     /// </summary>
     public void EndAttack()
     {
@@ -222,7 +222,7 @@ public class PlayerController : MonoBehaviour
         //}
     }
     /// <summary>
-    /// UŒ‚ƒGƒtƒFƒNƒgÄ¶’â~
+    /// ï¿½Uï¿½ï¿½ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½Äï¿½ï¿½ï¿½~
     /// </summary>
     public void StopSlashEffect()
     {
@@ -236,7 +236,7 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// ‘«‰¹SEÄ¶
+    /// ï¿½ï¿½ï¿½ï¿½SEï¿½Äï¿½
     /// </summary>
     public void PlayFootsteps()
     {
@@ -252,21 +252,18 @@ public class PlayerController : MonoBehaviour
 
             if (enemy != null)
             {
-                //UŒ‚
+                //ï¿½Uï¿½ï¿½
                 if (isAttacking == true && 0 < enemy.enemyData.hp)
                 {
                     if (_hitEnemyList.Contains(enemy.GetInstanceID()) == false)
                     {
                         enemy.Damage(attackPower);
                         _hitEnemyList.Add(enemy.GetInstanceID());
-                        PlaySE("player_HitSlash");
-                        //if (_mainCamera.CameraState != CameraMovement.State.Shake)
-                        //{
-                        //    _mainCamera.CameraState = CameraMovement.State.Shake;
-                        //}
+                        if (!isPossession) PlaySE("player_HitSlash");
+                        else PlaySE("EnemyAttack");
                     }
                 }
-                //œßˆË
+                //ï¿½ßˆï¿½
                 if (enemy.enemyData.hp <= 0)
                 {
                     if (name == "Player")
@@ -300,7 +297,7 @@ public class PlayerController : MonoBehaviour
        
         if (hp <= 0)
         {
-            //œßˆËó‘Ô‚Å‚ ‚ê‚ÎlŠÔ‘Ì‚É–ß‚·
+            //ï¿½ßˆËï¿½Ô‚Å‚ï¿½ï¿½ï¿½Îlï¿½Ô‘Ì‚É–ß‚ï¿½
             if (name != "Player")
             {
                 Debug.Log("Damage:return");
@@ -318,7 +315,7 @@ public class PlayerController : MonoBehaviour
     {
         animator.SetTrigger("DieTrigger");
         StartCoroutine(DestroyAfterAnimation("Die01_Stay_SwordAndShield", 0));
-        Debug.Log("ƒvƒŒƒCƒ„[‚ª€–S‚µ‚½I");
+        Debug.Log("ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Sï¿½ï¿½ï¿½ï¿½ï¿½I");
         GameOverController gameOverController = FindObjectOfType<GameOverController>();
         if (gameOverController != null)
         {
@@ -328,38 +325,38 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator DestroyAfterAnimation(string animationName, int layerIndex)
     {
-        // ƒAƒjƒ[ƒVƒ‡ƒ“‚Ì’·‚³‚ğæ“¾
+        // ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½Ì’ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½æ“¾
         float animationLength = animator.GetCurrentAnimatorStateInfo(layerIndex).length;
 
-        // ƒAƒjƒ[ƒVƒ‡ƒ“‚ªŠ®—¹‚·‚é‚Ì‚ğ‘Ò‚Â
+        // ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì‚ï¿½Ò‚ï¿½
         yield return new WaitForSeconds(animationLength);
     }
 
     /// <summary>
-    /// ˆÚ“®—pŠÖ”
+    /// ï¿½Ú“ï¿½ï¿½pï¿½Öï¿½
     /// </summary>
-    private Vector3 force = new Vector3(0, 0, 0);   //‰Ÿ‚µo‚·—Í
-    private Vector3 forcedecay = new Vector3(0, 0, 0);   //‰Ÿ‚µo‚·—Í‚ÌŒ¸Š
-    private float forcetime = 0;                      //‰Ÿ‚µo‚·ŠÔ
+    private Vector3 force = new Vector3(0, 0, 0);   //ï¿½ï¿½ï¿½ï¿½ï¿½oï¿½ï¿½ï¿½ï¿½
+    private Vector3 forcedecay = new Vector3(0, 0, 0);   //ï¿½ï¿½ï¿½ï¿½ï¿½oï¿½ï¿½ï¿½Í‚ÌŒï¿½ï¿½ï¿½
+    private float forcetime = 0;                      //ï¿½ï¿½ï¿½ï¿½ï¿½oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     private void PlayerMove()
     {
         float speedX = inputMove.x * speed;
         float speedY = inputMove.y * speed;
 
-        //“ü—Í’l‚©‚çAŒ»İ‘¬“x‚ğŒvZ
+        //ï¿½ï¿½ï¿½Í’lï¿½ï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½İ‘ï¿½ï¿½xï¿½ï¿½ï¿½vï¿½Z
         Vector3 moveVelocity = new Vector3(speedX, 0, speedY);
 
-        //Œ»İƒtƒŒ[ƒ€‚ÌˆÚ“®—Ê‚ğˆÚ“®‘¬“x‚©‚çŒvZ
+        //ï¿½ï¿½ï¿½İƒtï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ÌˆÚ“ï¿½ï¿½Ê‚ï¿½ï¿½Ú“ï¿½ï¿½ï¿½ï¿½xï¿½ï¿½ï¿½ï¿½vï¿½Z
         Vector3 moveDelta = moveVelocity * Time.deltaTime;
 
 
         if ((inputMove != Vector2.zero || 0 < forcetime)
             && animator.GetCurrentAnimatorStateInfo(0).IsTag("Attack") == false)
         {
-            //ˆÚ“®‚³‚¹‚é
+            //ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             controller.Move(moveDelta);
 
-            //‰Ÿ‚µo‚·—Í‚ğˆÚ“®‚É‰Á‚¦‚é
+            //ï¿½ï¿½ï¿½ï¿½ï¿½oï¿½ï¿½ï¿½Í‚ï¿½ï¿½Ú“ï¿½ï¿½É‰ï¿½ï¿½ï¿½ï¿½ï¿½
             if (0 < forcetime) controller.Move(force);
 
             if (player != null)
@@ -368,7 +365,7 @@ public class PlayerController : MonoBehaviour
             }
 
             animator.SetFloat("Speed", 1.0f);
-            //ƒLƒƒƒ‰ƒNƒ^[‚Ì‰ñ“]
+            //ï¿½Lï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½^ï¿½[ï¿½Ì‰ï¿½]
             MoveRotation();
         }
         else
@@ -376,7 +373,7 @@ public class PlayerController : MonoBehaviour
             animator.SetFloat("Speed", 0);
         }
 
-        //‰Ÿ‚µo‚·ŠÔ‚Æ—Í‚ğŒ¸‚ç‚·
+        //ï¿½ï¿½ï¿½ï¿½ï¿½oï¿½ï¿½ï¿½ï¿½ï¿½Ô‚Æ—Í‚ï¿½ï¿½ï¿½ï¿½ç‚·
         forcetime -= Time.fixedDeltaTime;
         if (forcetime < 0)
         {
@@ -391,15 +388,15 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// ˆÚ“®‚ÌƒLƒƒƒ‰ƒNƒ^[‚Ì‰ñ“]ŠÖ”
+    /// ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ÌƒLï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½^ï¿½[ï¿½Ì‰ï¿½]ï¿½Öï¿½
     /// </summary>
     private void MoveRotation()
     {
-        //“ü—Í’l‚©‚çy²ü‚è‚Ì–Ú•WŠp“x‚ğŒvZ
+        //ï¿½ï¿½ï¿½Í’lï¿½ï¿½ï¿½ï¿½yï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì–Ú•Wï¿½pï¿½xï¿½ï¿½ï¿½vï¿½Z
         var targetAngleY = -Mathf.Atan2(inputMove.y, inputMove.x) * Mathf.Rad2Deg + 90;
-        //ŠÉ‹}‚³‚¹‚È‚ª‚çŸ‚ÌŠp“x‚ğŒvZ
+        //ï¿½É‹}ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½ï¿½çŸï¿½ÌŠpï¿½xï¿½ï¿½ï¿½vï¿½Z
         var angleY = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngleY, ref turnVelocity, smoothTime);
-        //‰ñ“]‚³‚¹‚é
+        //ï¿½ï¿½]ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         transform.rotation = Quaternion.Euler(0, angleY, 0);
         if(player != null) 
         {
@@ -407,7 +404,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    //ƒvƒŒƒCƒ„[‚ªƒmƒbƒNƒoƒbƒN‚·‚é force:‰Ÿ‚µo‚·—Í Base:ƒmƒbƒNƒoƒbƒN‚Ì”­¶’n“_
+    //ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½mï¿½bï¿½Nï¿½oï¿½bï¿½Nï¿½ï¿½ï¿½ï¿½ force:ï¿½ï¿½ï¿½ï¿½ï¿½oï¿½ï¿½ï¿½ï¿½ Base:ï¿½mï¿½bï¿½Nï¿½oï¿½bï¿½Nï¿½Ì”ï¿½ï¿½ï¿½ï¿½nï¿½_
     public void KnockBack(float force, float time, Vector3 Base)
     {
         Vector3 PlayerPos = transform.position;
@@ -415,7 +412,7 @@ public class PlayerController : MonoBehaviour
         PlayerPos.y = 0;
         Base.y = 0;
 
-        //ƒvƒŒƒCƒ„[‚Æ‘ÎÛŠÔ‚ÌŠp“x‚ğæ‚é
+        //ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Æ‘ÎÛŠÔ‚ÌŠpï¿½xï¿½ï¿½ï¿½ï¿½ï¿½
         var diff = (PlayerPos - Base).normalized;
         Vector3 PushAngle = diff * (force * time);
 
@@ -425,7 +422,7 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// ˆÚ“®ƒL[‚Ì“ü—Í’l‚ğæ“¾‚·‚é
+    /// ï¿½Ú“ï¿½ï¿½Lï¿½[ï¿½Ì“ï¿½ï¿½Í’lï¿½ï¿½ï¿½æ“¾ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     private void OnMove(InputAction.CallbackContext context)
     {
@@ -433,25 +430,25 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// œßˆËƒAƒNƒVƒ‡ƒ“
+    /// ï¿½ßˆËƒAï¿½Nï¿½Vï¿½ï¿½ï¿½ï¿½
     /// </summary>
-    /// <param name="targetObj">œßˆË‚·‚éƒLƒƒƒ‰ƒNƒ^[</param>
+    /// <param name="targetObj">ï¿½ßˆË‚ï¿½ï¿½ï¿½Lï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½^ï¿½[</param>
     private void Possession(GameObject targetObj)
     {
         GuideBarController.Instance.GuideSet(GuideBarController.GuideName.Pause, GuideBarController.GuideName.Return, GuideBarController.GuideName.Attack, GuideBarController.GuideName.Move);
 
         player = gameObject;
-        //ƒ^ƒO‚ğPlayer‚É•ÏX
+        //ï¿½^ï¿½Oï¿½ï¿½Playerï¿½É•ÏX
         targetObj.tag = "Player";
         targetObj.layer = gameObject.layer;
 
         SetPlayerActive(false);
         animator.SetFloat("Speed", 0);
 
-        //‘ÎÛ‚ÉƒvƒŒƒCƒ„[ƒRƒ“ƒgƒ[ƒ‰[‚ğ’Ç‰Á
+        //ï¿½ÎÛ‚Éƒvï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Rï¿½ï¿½ï¿½gï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½[ï¿½ï¿½Ç‰ï¿½
         targetObj.gameObject.AddComponent<CharacterController>();
         CharacterController characterController = targetObj?.gameObject.GetComponent<CharacterController>();
-        // ƒGƒlƒ~[‚ÌCapsuleCollider‚©‚çƒRƒŠƒWƒ‡ƒ“‚Ì‚‚³E’†S‚©‚ç‚ÌÀ•WE”¼Œa‚ğˆøŒp‚¢‚ÅƒfƒXƒgƒƒC
+        // ï¿½Gï¿½lï¿½~ï¿½[ï¿½ï¿½CapsuleColliderï¿½ï¿½ï¿½ï¿½Rï¿½ï¿½ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½Eï¿½ï¿½ï¿½Sï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½Eï¿½ï¿½ï¿½aï¿½ï¿½ï¿½ï¿½ï¿½pï¿½ï¿½ï¿½Åƒfï¿½Xï¿½gï¿½ï¿½ï¿½C
         CapsuleCollider capsuleCollider = targetObj?.gameObject.GetComponent<CapsuleCollider>();
         if (capsuleCollider != null)
         {
@@ -466,10 +463,10 @@ public class PlayerController : MonoBehaviour
 
         if (playerController != null)
         {
-            //‘€ì‘ÎÛ‚ğØ‚è‘Ö‚¦‚é
+            //ï¿½ï¿½ï¿½ï¿½ÎÛ‚ï¿½Ø‚ï¿½Ö‚ï¿½ï¿½ï¿½
             playerController.enabled = true;
 
-            //œßˆËƒLƒƒƒ‰‚Ìƒpƒ‰ƒ[ƒ^‚ğİ’è
+            //ï¿½ßˆËƒLï¿½ï¿½ï¿½ï¿½ï¿½Ìƒpï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½^ï¿½ï¿½İ’ï¿½
             EnemyController enemy = targetObj?.GetComponent<EnemyController>();
             //currentPossession = targetObj?.GetComponent<EnemyController>().enemyData;
             currentPossession = enemy.enemyData;
@@ -482,6 +479,7 @@ public class PlayerController : MonoBehaviour
 
             playerController._seData = new List<SoundData>();
             playerController._seData = _seData;
+            playerController._seData.Add(enemy.AttackSE);
 
             playerController.speed = 7.0f;
             playerController.player = player;
@@ -491,7 +489,7 @@ public class PlayerController : MonoBehaviour
             playerController.currentPossession = currentPossession;
             currentPossession = null;
 
-            //Player‚ÌHPslider‚ğœßˆË‘Ì‚ÌHP‚Éİ’è
+            //Playerï¿½ï¿½HPsliderï¿½ï¿½ßˆË‘Ì‚ï¿½HPï¿½Éİ’ï¿½
             //PlayerHpSlider playerHpSlider = GameObject.Find("HP").GetComponent<PlayerHpSlider>();
             //if (playerHpSlider != null)
             //{
@@ -506,32 +504,32 @@ public class PlayerController : MonoBehaviour
         EnemyController enemyController = targetObj?.GetComponent<EnemyController>();
         if(enemyController != null) 
         {
-            //“G‚ÌƒAƒjƒ[ƒ^[ƒXƒe[ƒ^ƒX‚ğ•ÏX
+            //ï¿½Gï¿½ÌƒAï¿½jï¿½ï¿½ï¿½[ï¿½^ï¿½[ï¿½Xï¿½eï¿½[ï¿½^ï¿½Xï¿½ï¿½ÏX
             //enemyController.animator.SetBool("IsPossession", true);
 
-            //ƒ‰ƒCƒgƒGƒtƒFƒNƒg‚ğíœ
+            //ï¿½ï¿½ï¿½Cï¿½gï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½íœ
             enemyController.lightEffect.SetActive(false);
             enemyController.enemyData.hp = playerController.maxHp;
             Destroy(enemyController);
 
-            // UI•\¦
+            // UIï¿½\ï¿½ï¿½
             ActionStateManager.Instance.RecordEnemyPossession(playerController.PossessionEnemyName);
         }
 
-        //œßˆË‘Ì‚Ì–¼‘O‚É"(Player)"‚ğ’Ç‰Á
+        //ï¿½ßˆË‘Ì‚Ì–ï¿½ï¿½Oï¿½ï¿½"(Player)"ï¿½ï¿½Ç‰ï¿½
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.Append(targetObj.name);
         stringBuilder.Append("(Player)");
         targetObj.name = stringBuilder.ToString();
 
-        //œßˆË‚µ‚½“G‚ÌHPƒo[‚ğíœ
+        //ï¿½ßˆË‚ï¿½ï¿½ï¿½ï¿½Gï¿½ï¿½HPï¿½oï¿½[ï¿½ï¿½ï¿½íœ
         Canvas canvas=targetObj?.GetComponentInChildren<Canvas>();
         if(canvas != null) 
         {
             canvas.enabled = false;
         }
         
-        //ƒJƒƒ‰‚Ìƒ^[ƒQƒbƒg‚ğœßˆËƒLƒƒƒ‰‚ÉØ‚è‘Ö‚¦‚é
+        //ï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½Ìƒ^ï¿½[ï¿½Qï¿½bï¿½gï¿½ï¿½ßˆËƒLï¿½ï¿½ï¿½ï¿½ï¿½ÉØ‚ï¿½Ö‚ï¿½ï¿½ï¿½
         GameObject camera = GameObject.Find("Main Camera");
         if (camera != null)
         {
@@ -542,9 +540,9 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// œßˆË‰Â”\‚É‚·‚é
+    /// ï¿½ßˆË‰Â”\ï¿½É‚ï¿½ï¿½ï¿½
     /// </summary>
-    /// <param name="context">œßˆËƒ{ƒ^ƒ“</param>
+    /// <param name="context">ï¿½ßˆËƒ{ï¿½^ï¿½ï¿½</param>
     private void CanPossesion(InputAction.CallbackContext context)
     {
         if (context.performed == true)
@@ -559,7 +557,7 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// lŠÔ‚É–ß‚éƒAƒNƒVƒ‡ƒ“
+    /// ï¿½lï¿½Ô‚É–ß‚ï¿½Aï¿½Nï¿½Vï¿½ï¿½ï¿½ï¿½
     /// </summary>
     private void ReturnAction(InputAction.CallbackContext context)
     {
@@ -570,7 +568,7 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// lŠÔ‚É–ß‚éˆ—
+    /// ï¿½lï¿½Ô‚É–ß‚éˆï¿½ï¿½
     /// </summary>
     private void Return()
     {
@@ -578,7 +576,7 @@ public class PlayerController : MonoBehaviour
         {
             GuideBarController.Instance.GuideSet(GuideBarController.GuideName.Pause, GuideBarController.GuideName.Attack, GuideBarController.GuideName.Move);
 
-            //"Player"(lŠÔ)‚ğ•\¦‚·‚é
+            //"Player"(ï¿½lï¿½ï¿½)ï¿½ï¿½\ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             PlayerController playerController = player.GetComponent<PlayerController>();
             playerController.SetPlayerActive(true);
             playerController.PlaySE("player_Return");
@@ -586,26 +584,26 @@ public class PlayerController : MonoBehaviour
             Color setColor = new Color(0.6705883f, 1.0f, 0.5803922f, 1.0f);
             _hpSlider.SetPlayerHp(playerController, setColor);
 
-            //ƒJƒƒ‰‚Ìƒ^[ƒQƒbƒg‚ğ"Player"(lŠÔ)‚É–ß‚·
+            //ï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½Ìƒ^ï¿½[ï¿½Qï¿½bï¿½gï¿½ï¿½"Player"(ï¿½lï¿½ï¿½)ï¿½É–ß‚ï¿½
             GameObject camera = GameObject.Find("Main Camera");
             if (camera != null)
             {
                 camera.GetComponent<CameraMovement>().SetCameraTarget(player);
             }
 
-            //œßˆË‘Ì‚ğíœ
+            //ï¿½ßˆË‘Ì‚ï¿½ï¿½íœ
             player = null;
             Destroy(gameObject);
         }
     }
 
     /// <summary>
-    /// ƒvƒŒƒCƒ„[‚Ì•\¦İ’èŠÖ”
+    /// ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ì•\ï¿½ï¿½ï¿½İ’ï¿½Öï¿½
     /// </summary>
-    /// <param name="isActive">true=•\¦ false=”ñ•\¦</param>
+    /// <param name="isActive">true=ï¿½\ï¿½ï¿½ false=ï¿½ï¿½\ï¿½ï¿½</param>
     public void SetPlayerActive(bool isActive)
     {
-        //ƒvƒŒƒCƒ„[•\¦İ’è
+        //ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½\ï¿½ï¿½ï¿½İ’ï¿½
         foreach (var child in _children)
         {
             child.gameObject.SetActive(isActive);
@@ -641,9 +639,9 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒvƒŒƒCƒ„[‚Ì“ü—Í‘€ì‚ğ—LŒøA–³Œø‰»‚·‚éŠÖ”
+    /// ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ì“ï¿½ï¿½Í‘ï¿½ï¿½ï¿½ï¿½Lï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öï¿½
     /// </summary>
-    /// <param name="value">true=—LŒø@false=–³Œø</param>
+    /// <param name="value">true=ï¿½Lï¿½ï¿½ï¿½@false=ï¿½ï¿½ï¿½ï¿½</param>
     public void SetInputAction(bool value)
     {
         if(value == true)
@@ -656,21 +654,21 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    //UŒ‚‚Ì“–‚½‚è”»’è‚ğ—LŒø‰»‚·‚é
+    //ï¿½Uï¿½ï¿½ï¿½Ì“ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½ï¿½Lï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     public void EnableHit()
     {
     }
 
-    //UŒ‚‚Ì“–‚½‚è”»’è‚ğ–³Œø‰»‚·‚é
+    //ï¿½Uï¿½ï¿½ï¿½Ì“ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½ğ–³Œï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     public void DisableHit()
     {
     }
 
     /// <summary>
-    /// •ó” æ“¾ŠÖ”
+    /// ï¿½ó” æ“¾ï¿½Öï¿½
     /// </summary>
-    /// <param name="addAttack">UŒ‚—Í‘‰Á’l</param>
-    /// <param name="addDefence">–hŒä—Í‘‰Á’l</param>
+    /// <param name="addAttack">ï¿½Uï¿½ï¿½ï¿½Í‘ï¿½ï¿½ï¿½ï¿½l</param>
+    /// <param name="addDefence">ï¿½hï¿½ï¿½Í‘ï¿½ï¿½ï¿½ï¿½l</param>
     public void GetTreasure(int addAttack,int addDefence)
     {
         IncreaseAttackPower(addAttack);
@@ -684,14 +682,14 @@ public class PlayerController : MonoBehaviour
         _hpSlider.UpdateHPSlider();
     }
 
-    // UŒ‚—Í‚ğ‘‰Á‚³‚¹‚éƒƒ\ƒbƒh
+    // ï¿½Uï¿½ï¿½ï¿½Í‚ğ‘‰ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½éƒï¿½\ï¿½bï¿½h
     public void IncreaseAttackPower(int addValue)
     {
         attackPower += addValue;
         _increaseAttackValue = addValue;
     }
 
-    //–hŒä—Í‚ğ‘‰Á‚³‚¹‚éƒƒ\ƒbƒh
+    //ï¿½hï¿½ï¿½Í‚ğ‘‰ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½éƒï¿½\ï¿½bï¿½h
     public void IncreaseDefencePower(int addValue)
     {
         defencePower += addValue;
