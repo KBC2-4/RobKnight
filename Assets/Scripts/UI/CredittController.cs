@@ -79,16 +79,16 @@ public class CredittController : MonoBehaviour
         }
 
         // 文字が画面外に出たらTitleシーンに遷移
-        //if (_creditsText.transform.position.y >= 1000) // この値は適宜調整
-        //{
-        //    SceneManager.LoadScene("Title"); // タイトルシーンに遷移
-        //}
-        // TextがPanelの範囲外に出たか確認
-        if (!IsTextWithinPanel(_creditsText.rectTransform, _creditsPanelRect))
+        if (_creditsText.transform.position.y >= 1000) // この値は適宜調整
         {
-            Debug.Log("範囲外に出ました");
             SceneManager.LoadScene("Title"); // タイトルシーンに遷移
         }
+        // TextがPanelの範囲外に出たか確認
+        //if (!IsTextWithinPanel(_creditsText.rectTransform, _creditsPanelRect))
+        //{
+        //    Debug.Log("範囲外に出ました");
+        //    SceneManager.LoadScene("Title"); // タイトルシーンに遷移
+        //}
     }
 
     // TextがPanelの範囲内にあるかどうかを判断するメソッド

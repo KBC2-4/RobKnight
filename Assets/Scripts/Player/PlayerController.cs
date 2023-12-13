@@ -416,7 +416,6 @@ public class PlayerController : MonoBehaviour
     /// <param name="targetObj">憑依するキャラクター</param>
     private void Possession(GameObject targetObj)
     {
-        GuideBarController.Instance.GuideSet(GuideBarController.GuideName.Possession, GuideBarController.GuideName.Attack, GuideBarController.GuideName.Move);
         player = gameObject;
         //タグをPlayerに変更
         targetObj.tag = "Player";
