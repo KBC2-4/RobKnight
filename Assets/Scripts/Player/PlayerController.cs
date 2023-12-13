@@ -10,7 +10,7 @@ using UnityEngine.UI;
 public class PlayerController : MonoBehaviour
 {
     Vector3 startPos;   // �X�|�[���n�_
-    CharacterController controller;�@// �L�����N�^�[�R���g���[���[
+    CharacterController controller;// �L�����N�^�[�R���g���[���[
     private Animator animator;
     public float speed = 5f;
     public float sensitivity = 30.0f;
