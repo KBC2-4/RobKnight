@@ -80,6 +80,8 @@ public class PlayerController : MonoBehaviour
         set => _isInfinity = value;
     }
 
+    CameraMovement _mainCamera;
+
     private void Awake()
     {
         inputActions = new InputControls();
@@ -106,6 +108,8 @@ public class PlayerController : MonoBehaviour
     {
         _increaseAttackValue = 0;
         startPos = transform.position;
+        GameObject cameraObject = GameObject.Find("Main Camera");
+        _mainCamera = cameraObject?.GetComponent<CameraMovement>();
         controller = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
         animator.Play("Idle");
@@ -211,6 +215,10 @@ public class PlayerController : MonoBehaviour
         _hitEnemyList.Clear();
         slashEffect?.Clear();
         slashEffect?.Stop();
+        if(_mainCamera.CameraState==CameraMovement.State.Shake)
+        {
+            _mainCamera.CameraState = CameraMovement.State.Follow;
+        }
     }
     /// <summary>
     /// 攻撃エフェクト再生停止
@@ -252,6 +260,10 @@ public class PlayerController : MonoBehaviour
                         enemy.Damage(attackPower);
                         _hitEnemyList.Add(enemy.GetInstanceID());
                         PlaySE("player_HitSlash");
+                        if (_mainCamera.CameraState != CameraMovement.State.Shake)
+                        {
+                            _mainCamera.CameraState = CameraMovement.State.Shake;
+                        }
                     }
                 }
                 //憑依
@@ -509,7 +521,7 @@ public class PlayerController : MonoBehaviour
         }
         
         //カメラのターゲットを憑依キャラに切り替える
-        GameObject camera = GameObject.Find("MainCamera");
+        GameObject camera = GameObject.Find("Main Camera");
         if (camera != null)
         {
             camera.GetComponent<CameraMovement>().SetCameraTarget(targetObj);
