@@ -136,6 +136,7 @@ public class PlayerController : MonoBehaviour
         {
             sensitivity = sensitivity * 1.5f;
         }
+
     }
 
     private void OnEnable()
@@ -215,10 +216,10 @@ public class PlayerController : MonoBehaviour
         _hitEnemyList.Clear();
         slashEffect?.Clear();
         slashEffect?.Stop();
-        if(_mainCamera.CameraState==CameraMovement.State.Shake)
-        {
-            _mainCamera.CameraState = CameraMovement.State.Follow;
-        }
+        //if(_mainCamera.CameraState==CameraMovement.State.Shake)
+        //{
+        //    _mainCamera.CameraState = CameraMovement.State.Follow;
+        //}
     }
     /// <summary>
     /// 攻撃エフェクト再生停止
@@ -259,23 +260,32 @@ public class PlayerController : MonoBehaviour
                         enemy.Damage(attackPower);
                         _hitEnemyList.Add(enemy.GetInstanceID());
                         PlaySE("player_HitSlash");
-                        if (_mainCamera.CameraState != CameraMovement.State.Shake)
-                        {
-                            _mainCamera.CameraState = CameraMovement.State.Shake;
-                        }
+                        //if (_mainCamera.CameraState != CameraMovement.State.Shake)
+                        //{
+                        //    _mainCamera.CameraState = CameraMovement.State.Shake;
+                        //}
                     }
                 }
                 //憑依
                 if (enemy.enemyData.hp <= 0)
                 {
-                    if (isPossession == false && canPossesion == true && name == "Player")
+                    if (name == "Player")
                     {
-                        Possession(enemy.gameObject);
+                        GuideBarController.Instance.GuideSet(GuideBarController.GuideName.Pause, GuideBarController.GuideName.Possession, GuideBarController.GuideName.Attack, GuideBarController.GuideName.Move);
+                        if (isPossession == false && canPossesion == true)
+                        {
+                            Possession(enemy.gameObject);
+                        }
                     }
                 }
                 
             }
         }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        GuideBarController.Instance.RemoveGuide(GuideBarController.GuideName.Possession);
     }
 
     public void Damage(int damage)
@@ -428,7 +438,8 @@ public class PlayerController : MonoBehaviour
     /// <param name="targetObj">憑依するキャラクター</param>
     private void Possession(GameObject targetObj)
     {
-        GuideBarController.Instance.GuideSet(GuideBarController.GuideName.Possession, GuideBarController.GuideName.Attack, GuideBarController.GuideName.Move);
+        GuideBarController.Instance.GuideSet(GuideBarController.GuideName.Pause, GuideBarController.GuideName.Return, GuideBarController.GuideName.Attack, GuideBarController.GuideName.Move);
+
         player = gameObject;
         //タグをPlayerに変更
         targetObj.tag = "Player";
@@ -565,6 +576,8 @@ public class PlayerController : MonoBehaviour
     {
         if (player != null)
         {
+            GuideBarController.Instance.GuideSet(GuideBarController.GuideName.Pause, GuideBarController.GuideName.Attack, GuideBarController.GuideName.Move);
+
             //"Player"(人間)を表示する
             PlayerController playerController = player.GetComponent<PlayerController>();
             playerController.SetPlayerActive(true);
@@ -574,7 +587,7 @@ public class PlayerController : MonoBehaviour
             _hpSlider.SetPlayerHp(playerController, setColor);
 
             //カメラのターゲットを"Player"(人間)に戻す
-            GameObject camera = GameObject.Find("MainCamera");
+            GameObject camera = GameObject.Find("Main Camera");
             if (camera != null)
             {
                 camera.GetComponent<CameraMovement>().SetCameraTarget(player);
