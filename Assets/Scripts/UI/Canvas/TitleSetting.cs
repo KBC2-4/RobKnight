@@ -40,7 +40,6 @@ public class TitleSetting : MonoBehaviour
         // SE‚ªÄ¶‚³‚ê‚È‚¢‚æ‚¤‚É‚·‚é
         UISoundManager.Instance.SetProgrammaticSelect();
 
-        Debug.Log("İ’è‰æ–Ê‚ğŠJ‚­");
     }
 
     // <summary>
