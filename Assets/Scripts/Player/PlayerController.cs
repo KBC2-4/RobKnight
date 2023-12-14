@@ -52,7 +52,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private int attackPower = 10;       //攻撃力
     private int _increaseAttackValue;               //攻撃増加値
     private bool isAttacking = false;
-    public ParticleSystem slashEffect;
+    
     private PlayerHpSlider _hpSlider;
 
     public static GameOverController Instance { get; private set; }
@@ -80,6 +80,10 @@ public class PlayerController : MonoBehaviour
     }
 
     CameraMovement _mainCamera;
+    //攻撃エフェクト
+    private ParticleSystem slashEffect;
+    //ステータスアップエフェクト
+    [SerializeField] private GameObject buffEffect;
 
     private void Awake()
     {
@@ -271,9 +275,9 @@ public class PlayerController : MonoBehaviour
                 {
                     if (name == "Player")
                     {
-                        GuideBarController.Instance.GuideSet(GuideBarController.GuideName.Pause, GuideBarController.GuideName.Possession, GuideBarController.GuideName.Attack, GuideBarController.GuideName.Move);
                         if (isPossession == false && canPossesion == true)
                         {
+                            PlaySE("player_Possesion");
                             Possession(enemy.gameObject);
                         }
                     }
@@ -281,11 +285,6 @@ public class PlayerController : MonoBehaviour
 
             }
         }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        GuideBarController.Instance.RemoveGuide(GuideBarController.GuideName.Possession);
     }
 
     public void Damage(int damage)
@@ -433,7 +432,8 @@ public class PlayerController : MonoBehaviour
     /// <param name="targetObj">憑依対象[</param>
     private void Possession(GameObject targetObj)
     {
-        GuideBarController.Instance.GuideSet(GuideBarController.GuideName.Pause, GuideBarController.GuideName.Return, GuideBarController.GuideName.Attack, GuideBarController.GuideName.Move);
+        GuideBarController.Instance.RemoveGuide(GuideBarController.GuideName.Possession);
+        GuideBarController.Instance.AddGuide(GuideBarController.GuideName.Return);
 
         player = gameObject;
         //憑依先のタグ、レイヤーをプレイヤーにする
@@ -532,7 +532,6 @@ public class PlayerController : MonoBehaviour
     {
         if (context.performed == true)
         {
-            PlaySE("player_Possesion");
             canPossesion = true;
         }
         else if (context.canceled == true)
@@ -559,8 +558,8 @@ public class PlayerController : MonoBehaviour
     {
         if (player != null)
         {
-            GuideBarController.Instance.GuideSet(GuideBarController.GuideName.Pause, GuideBarController.GuideName.Attack, GuideBarController.GuideName.Move);
-
+            GuideBarController.Instance.RemoveGuide(GuideBarController.GuideName.Return);
+            GuideBarController.Instance.AddGuide(GuideBarController.GuideName.Possession);
             //プレイヤーを有効化
             PlayerController playerController = player.GetComponent<PlayerController>();
             playerController.SetPlayerActive(true);
@@ -634,6 +633,11 @@ public class PlayerController : MonoBehaviour
             {
                 _mainCamera = GameObject.Find("Main Camera").GetComponent<CameraMovement>();
             }
+
+            if (isPossession == false)
+            {
+                GuideBarController.Instance.RemoveGuide(GuideBarController.GuideName.Return);
+            }
         }
         else
         {
@@ -656,6 +660,8 @@ public class PlayerController : MonoBehaviour
     /// <param name="addDefence">防御力増加量</param>
     public void GetTreasure(int addAttack, int addDefence)
     {
+        buffEffect.SetActive(true);
+
         IncreaseAttackPower(addAttack);
         IncreaseDefencePower(addDefence);
         hp = maxHp;
