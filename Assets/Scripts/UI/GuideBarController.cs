@@ -69,6 +69,7 @@ public class GuideBarController : MonoBehaviour
     // シーンがロードされたときに呼ばれるメソッド
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+
         ResetUIForNewScene(scene.name);
     }
 
@@ -80,9 +81,15 @@ public class GuideBarController : MonoBehaviour
         {
             _isDisplay = true;
             _guideCanvas.SetActive(true);
+            GuideSet(GuideBarController.GuideName.Move, GuideBarController.GuideName.Attack);
             // GuideSet(GuideName.Move, GuideName.Attack, GuideName.Possession);
             // UpdateUI(DeviceTypeDetector.Instance.GetCurrentDevice());
         }
+
+            //if (sceneName == "GameMain")
+            //{
+            //    // GuideSet(GuideName.Move, GuideName.Attack, GuideName.Possession);
+            //}
     }
 
     void Start()
@@ -100,15 +107,16 @@ public class GuideBarController : MonoBehaviour
             _isDisplay = true;
             _guideCanvas.SetActive(true);
             GuideSet(GuideName.Move,GuideName.Attack,GuideName.Possession);
-                        // ガイドの表示・非表示状態を適用
-            foreach (var guidePair in _buttonGuides)
-            {
-                if (_guideStates.TryGetValue(guidePair.Key, out bool isActive))
-                {
-                    guidePair.Value.SetActive(isActive);
-                }
-            }
             // SetUIVisibility();
+        }
+
+        // ガイドの表示・非表示状態を適用
+        foreach (var guidePair in _buttonGuides)
+        {
+            if (_guideStates.TryGetValue(guidePair.Key, out bool isActive))
+            {
+                guidePair.Value.SetActive(isActive);
+            }
         }
     }
 
@@ -134,12 +142,12 @@ public class GuideBarController : MonoBehaviour
             //_buttonGuides.Add("Possession", activePanel.transform.Find("PossessionAction").gameObject);
 
             // 各ボタンガイドと対応するGameObjectをマッピング（既存のキーがあれば上書き）
-            _buttonGuides[GuideName.Pause] = activePanel.transform.Find("PauseAction").gameObject;
-            _buttonGuides[GuideName.Move] = activePanel.transform.Find("MoveAction").gameObject;
-            _buttonGuides[GuideName.Zoom] = activePanel.transform.Find("ZoomAction").gameObject;
-            _buttonGuides[GuideName.Attack] = activePanel.transform.Find("AttackAction").gameObject;
-            _buttonGuides[GuideName.Return] = activePanel.transform.Find("ReturnAction").gameObject;
-            _buttonGuides[GuideName.Possession] = activePanel.transform.Find("PossessionAction").gameObject;
+            _buttonGuides[GuideName.Pause] = activePanel.transform.Find("PauseAction")?.gameObject;
+            _buttonGuides[GuideName.Move] = activePanel.transform.Find("MoveAction")?.gameObject;
+            _buttonGuides[GuideName.Zoom] = activePanel.transform.Find("ZoomAction")?.gameObject;
+            _buttonGuides[GuideName.Attack] = activePanel.transform.Find("AttackAction")?.gameObject;
+            _buttonGuides[GuideName.Return] = activePanel.transform.Find("ReturnAction")?.gameObject;
+            _buttonGuides[GuideName.Possession] = activePanel.transform.Find("PossessionAction")?.gameObject;
 
             // 初期状態ではすべてのボタンガイドを非表示にする
             //foreach (var guide in _buttonGuides.Values)
@@ -153,7 +161,10 @@ public class GuideBarController : MonoBehaviour
             {
                 if (_guideStates.TryGetValue(guidePair.Key, out bool isActive))
                 {
-                    guidePair.Value.SetActive(isActive);
+                    if (guidePair.Value != null)
+                    {
+                        guidePair.Value.SetActive(isActive);
+                    }
                 }
             }
         }

@@ -73,6 +73,9 @@ public class EnemyBehavior : ScriptableObject
         {
             controller.transform.LookAt(controller.player); // プレイヤーの方向を向く
             //attackAction.Act(controller); // 攻撃行動に移る
+            Vector3 myAngle = controller.transform.eulerAngles;
+            myAngle.x = 0;
+            controller.transform.eulerAngles = myAngle;
         }
     }
 

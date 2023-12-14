@@ -24,7 +24,7 @@ public class TitleLogoManager : MonoBehaviour
 
     void Start()
     {
-        Debug.Log(_hasAnimatedOnce);
+        // Debug.Log(_hasAnimatedOnce);
         if (!_hasAnimatedOnce)
         {
             //titleLogoAnimator.Play("TitleLogoAnimation");
@@ -36,5 +36,12 @@ public class TitleLogoManager : MonoBehaviour
             //titleLogoAnimator.Play("TitleLogoStatic");
             _titleLogoAnimator.SetTrigger("StaticTrigger");
         }
+
+        GuideBarController.Instance.GuideSet(GuideBarController.GuideName.Move, GuideBarController.GuideName.Attack);
+    }
+
+    void Update()
+    {
+
     }
 }

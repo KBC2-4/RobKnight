@@ -25,13 +25,17 @@ public class SpinStoneStatueMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (0 < forcetime)
+        if (0 < forcetime && !push_flg)
         {
             transform.position += -transform.up * Time.deltaTime * forcetime * power;
         }
-        else
+        else if (!push_flg)
         {
             transform.Rotate(0f, 0f, 90 * Time.deltaTime); //‰ñ“]
+        }
+        else 
+        {
+            _audioSorce.Stop();
         }
 
         //‰Ÿ‚µo‚·ŽžŠÔ‚ðŒ¸‚ç‚·
