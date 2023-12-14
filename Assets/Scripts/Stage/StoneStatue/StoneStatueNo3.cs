@@ -14,8 +14,6 @@ public class StoneStatueNo3 : MonoBehaviour
 
     public bool end = false; //オブジェクト終了
 
-    public GameObject obj;
-
     void Awake()
     {
 
@@ -69,12 +67,14 @@ public class StoneStatueNo3 : MonoBehaviour
         {
             // プレイヤーコントローラーを取得
             PlayerController playerController = other.gameObject.GetComponent<PlayerController>();
-
+            Debug.Log("当たった");
             // プレイヤーが憑依している状態か確認します。
             if (playerController != null)
             {
+                Debug.Log("プレイヤーコントロールない");
                 if (playerController.PossessionEnemyName == "Gobrin")
                 {
+                    Debug.Log("ゴブリンに当てられた");
                     if (playerController.IsAttacking == true && during_rotation == false)
                     {
                         _old_rotaey = transform.localEulerAngles.y;
