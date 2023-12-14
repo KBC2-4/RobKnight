@@ -42,7 +42,10 @@ public class TreasureScript : MonoBehaviour
             _backGroundImage.color = new Color(0.0f, 0.0f, 0.0f, 0.5f);
 
             // プレイヤーの攻撃力を増加させる
-            collider.gameObject.GetComponent<PlayerController>().GetTreasure(10, 10);
+            if (collider.gameObject.GetComponent<PlayerController>() != null)
+            {
+                collider.gameObject.GetComponent<PlayerController>().GetTreasure(10, 10);
+            }
 
             //テキスト
             isOnes = true;

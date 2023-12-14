@@ -1589,7 +1589,13 @@ MonoBehaviour:
     m_Bits: 136
   fieldOfViewAngle: 90
   rayCount: 60
+  uiPrompt: {fileID: 0}
   lightEffect: {fileID: 4684213744329743628}
+  SE: []
+  AttackSE:
+    fileName: 
+    audioClip: {fileID: 0}
+    volume: 1
 --- !u!1 &5505928466748474726
 GameObject:
   m_ObjectHideFlags: 0
@@ -2000,6 +2006,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8efe9662ef7002f4fb45c6007eacb125, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  highHealthColor: {r: 0, g: 1, b: 0, a: 1}
+  mediumHealthColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  lowHealthColor: {r: 1, g: 0, b: 0, a: 1}
+  updateSpeedSeconds: 0.5
 --- !u!114 &4022792610990879777
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2012,7 +2022,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 090dd239a84023541be3372aa091d64b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiPrompt: {fileID: 5205656149182606661}
+  keyboardMouseUI: {fileID: 0}
+  gamepadUI: {fileID: 0}
+  touchUI: {fileID: 0}
+  player: {fileID: 0}
+  displayDistance: 5
 --- !u!114 &3361178752691725878
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2025,7 +2039,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 090dd239a84023541be3372aa091d64b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiPrompt: {fileID: 820896854948354578}
+  keyboardMouseUI: {fileID: 0}
+  gamepadUI: {fileID: 0}
+  touchUI: {fileID: 0}
+  player: {fileID: 0}
+  displayDistance: 5
 --- !u!1 &6791424185469447472
 GameObject:
   m_ObjectHideFlags: 0
@@ -2633,6 +2651,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2477769348694108758, guid: 5cff4f48cf4319145ad2c59463bfb8b0,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2477769348694108758, guid: 5cff4f48cf4319145ad2c59463bfb8b0,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -306.1
+      objectReference: {fileID: 0}
     - target: {fileID: 5399876572213621148, guid: 5cff4f48cf4319145ad2c59463bfb8b0,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -2649,7 +2677,8 @@ PrefabInstance:
       value: HPSlider
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 6700318442338051280, guid: 5cff4f48cf4319145ad2c59463bfb8b0, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5cff4f48cf4319145ad2c59463bfb8b0, type: 3}
