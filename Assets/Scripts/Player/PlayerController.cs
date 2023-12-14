@@ -564,7 +564,11 @@ public class PlayerController : MonoBehaviour
             PlayerController playerController = player.GetComponent<PlayerController>();
             playerController.SetPlayerActive(true);
             playerController.PlaySE("player_Return");
-            playerController.buffEffect.SetActive(false);
+            if(playerController.buffEffect!=null) 
+            {
+                playerController.buffEffect.SetActive(false);
+            }
+            
 
             Color setColor = new Color(0.6705883f, 1.0f, 0.5803922f, 1.0f);
             _hpSlider.SetPlayerHp(playerController, setColor);
@@ -589,7 +593,10 @@ public class PlayerController : MonoBehaviour
         //子オブジェクトを取得
         foreach (var child in _children)
         {
-            child.gameObject.SetActive(isActive);
+            if (child != null)
+            {
+                child.gameObject.SetActive(isActive);
+            }
         }
         GetComponent<CapsuleCollider>().enabled = isActive;
         enabled = isActive;
@@ -698,7 +705,10 @@ public class PlayerController : MonoBehaviour
     public void PlaySE(string seFileName)
     {
         SoundData se = _seData.Find(data => data.FileName == seFileName);
-        _audioSource.volume = se.Volume;
-        _audioSource.PlayOneShot(se.AudioClip);
+        if (se != null)
+        {
+            _audioSource.volume = se.Volume;
+            _audioSource.PlayOneShot(se.AudioClip);
+        }
     }
 }
