@@ -467,6 +467,7 @@ public class PlayerController : MonoBehaviour
             playerController.maxHp = currentPossession.Poshp;
             playerController.hp = playerController.maxHp;
             playerController._hpSlider = _hpSlider;
+            
             playerController.attackPower = currentPossession.attackPower + _increaseAttackValue;
             playerController.defencePower = defencePower;
             playerController._audioSource= enemy.GetComponent<AudioSource>();
@@ -542,7 +543,7 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void ReturnAction(InputAction.CallbackContext context)
     {
-        if(context.performed == true)
+        if (context.performed == true && isAttacking == false)
         {
             Return();
         }
@@ -568,6 +569,9 @@ public class PlayerController : MonoBehaviour
             //カメラのターゲットをプレイヤーに戻す
             _mainCamera.SetCameraTarget(player);
 
+            _mainCamera.CameraState = CameraMovement.State.Follow;
+            _mainCamera.CameraState = CameraMovement.State.Follow;
+            
             player = null;
             Destroy(gameObject);
         }
@@ -663,8 +667,16 @@ public class PlayerController : MonoBehaviour
     // 攻撃力増加処理
     public void IncreaseAttackPower(int addValue)
     {
+        if (player != null)
+        {   //憑依状態の時もプレイヤーの攻撃力を増加
+            PlayerController playerController=player.GetComponent<PlayerController>();
+            playerController.attackPower += addValue;
+            //憑依状態の攻撃力設定
+            addValue += 10;
+            playerController._increaseAttackValue = addValue;
+        }
         attackPower += addValue;
-        _increaseAttackValue = addValue;
+        _increaseAttackValue = addValue + 10;
     }
 
     //防御力増加処理
