@@ -31,7 +31,7 @@ public class StoneStatueMove : MonoBehaviour
 
         //‰Ÿ‚µo‚·ŠÔ‚Æ—Í‚ğŒ¸‚ç‚·
         forcetime -= Time.fixedDeltaTime;
-        if (forcetime < 0)
+        if (forcetime < 0 || push_flg)
         {
             force = Vector3.zero;
             forcedecay = Vector3.zero;
