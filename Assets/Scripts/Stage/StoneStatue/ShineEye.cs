@@ -2,29 +2,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class shineeye : MonoBehaviour
+public class ShineEye : MonoBehaviour
 {
 
-    public Stone stone;
+    [SerializeField] private Stone _stone;
 
-    [SerializeField] Material color = default;
-    Material cubeMaterial;
-    private bool isShine;
+    [SerializeField] Material _color = default;
+    private bool _isShine;
 
     // Start is called before the first frame update
     void Start()
     {
-        isShine = false;
+        _isShine = false;
     }
 
     // Update is called once per frame
     void Update()
     {
 
-        if (stone.end && !isShine)
+        if (_stone.end && !_isShine)
         {
-            GetComponent<MeshRenderer>().material = color;
-            isShine = true;
+            GetComponent<MeshRenderer>().material = _color;
+            _isShine = true;
         }
     }
 }

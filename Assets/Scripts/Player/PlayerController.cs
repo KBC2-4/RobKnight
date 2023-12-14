@@ -49,7 +49,7 @@ public class PlayerController : MonoBehaviour
     private int hp = 250;
     private int maxHp = 250;
     [SerializeField] private int defencePower = 0;      //防御力
-    [SerializeField]private int attackPower = 10;       //攻撃力
+    [SerializeField] private int attackPower = 10;       //攻撃力
     private int _increaseAttackValue;               //攻撃増加値
     private bool isAttacking = false;
     public ParticleSystem slashEffect;
@@ -67,7 +67,7 @@ public class PlayerController : MonoBehaviour
     public string PossessionEnemyName;
 
     //オーディオソース
-    [SerializeField]private AudioSource _audioSource;
+    [SerializeField] private AudioSource _audioSource;
     //seデータ
     [SerializeField] private List<SoundData> _seData;
 
@@ -93,13 +93,13 @@ public class PlayerController : MonoBehaviour
         _hpSlider = GameObject.Find("HP").GetComponent<PlayerHpSlider>();
 
         //子オブジェクト
-        _children= new List<Transform>();
+        _children = new List<Transform>();
         int childCount = transform.childCount;
-        
+
         for (int i = 0; i < childCount; i++)
         {
             _children.Add(transform.GetChild(i));
-        }   
+        }
 
     }
 
@@ -112,12 +112,12 @@ public class PlayerController : MonoBehaviour
         animator = GetComponent<Animator>();
         animator.Play("Idle");
         slashEffect = GetComponentInChildren<ParticleSystem>();
-        if(slashEffect != null) 
+        if (slashEffect != null)
         {
             slashEffect.Stop();
         }
-        
-       
+
+
 
         currentPossession = null;
 
@@ -134,7 +134,7 @@ public class PlayerController : MonoBehaviour
     }
 
     private void OnEnable()
-    { 
+    {
         inputActions.Enable();
         inputActions.Player.Move.performed += OnMove;
         inputActions.Player.Move.canceled += OnMove;
@@ -204,10 +204,13 @@ public class PlayerController : MonoBehaviour
     {
         isAttacking = false;
         _hitEnemyList.Clear();
-        slashEffect?.Clear();
-        slashEffect?.Stop();
+        if (slashEffect != null)
+        {
+            slashEffect?.Clear();
+            slashEffect?.Stop();
+        }
 
-        if(_mainCamera.CameraState==CameraMovement.State.Shake)
+        if (_mainCamera.CameraState == CameraMovement.State.Shake)
         {
             _mainCamera.CameraState = CameraMovement.State.Follow;
             _mainCamera.ShakeCamera(-1);
@@ -275,7 +278,7 @@ public class PlayerController : MonoBehaviour
                         }
                     }
                 }
-                
+
             }
         }
     }
@@ -294,7 +297,7 @@ public class PlayerController : MonoBehaviour
 
         hp -= damage - defencePower;
         _hpSlider.UpdateHPSlider();
-       
+
         if (hp <= 0)
         {
             //憑依状態であれば解除
@@ -329,19 +332,19 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(animationLength);
     }
 
-    
-    private Vector3 force = new Vector3(0, 0, 0);   
-    private Vector3 forcedecay = new Vector3(0, 0, 0);  
-    private float forcetime = 0;                    
+
+    private Vector3 force = new Vector3(0, 0, 0);
+    private Vector3 forcedecay = new Vector3(0, 0, 0);
+    private float forcetime = 0;
     private void PlayerMove()
     {
         float speedX = inputMove.x * speed;
         float speedY = inputMove.y * speed;
 
-        
+
         Vector3 moveVelocity = new Vector3(speedX, 0, speedY);
 
-        
+
         Vector3 moveDelta = moveVelocity * Time.deltaTime;
 
 
@@ -351,7 +354,7 @@ public class PlayerController : MonoBehaviour
             //移動
             controller.Move(moveDelta);
 
-            
+
             if (0 < forcetime) controller.Move(force);
 
             if (player != null)
@@ -368,7 +371,7 @@ public class PlayerController : MonoBehaviour
             animator.SetFloat("Speed", 0);
         }
 
-        
+
         forcetime -= Time.fixedDeltaTime;
         if (forcetime < 0)
         {
@@ -376,7 +379,7 @@ public class PlayerController : MonoBehaviour
             forcedecay = Vector3.zero;
             forcetime = 0;
         }
-        else 
+        else
         {
             force -= (forcedecay * Time.fixedDeltaTime);
         }
@@ -389,17 +392,17 @@ public class PlayerController : MonoBehaviour
     {
         //入力値から回転値を取得
         var targetAngleY = -Mathf.Atan2(inputMove.y, inputMove.x) * Mathf.Rad2Deg + 90;
-        
+
         var angleY = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngleY, ref turnVelocity, smoothTime);
-        
+
         transform.rotation = Quaternion.Euler(0, angleY, 0);
-        if(player != null) 
+        if (player != null)
         {
-            player.transform.rotation= Quaternion.Euler(0, angleY, 0);
+            player.transform.rotation = Quaternion.Euler(0, angleY, 0);
         }
     }
 
-    
+
     public void KnockBack(float force, float time, Vector3 Base)
     {
         Vector3 PlayerPos = transform.position;
@@ -407,7 +410,7 @@ public class PlayerController : MonoBehaviour
         PlayerPos.y = 0;
         Base.y = 0;
 
-        
+
         var diff = (PlayerPos - Base).normalized;
         Vector3 PushAngle = diff * (force * time);
 
@@ -443,7 +446,7 @@ public class PlayerController : MonoBehaviour
         //キャラクターコントローラーの設定
         targetObj.gameObject.AddComponent<CharacterController>();
         CharacterController characterController = targetObj?.gameObject.GetComponent<CharacterController>();
-        
+
         CapsuleCollider capsuleCollider = targetObj?.gameObject.GetComponent<CapsuleCollider>();
         if (capsuleCollider != null)
         {
@@ -462,14 +465,14 @@ public class PlayerController : MonoBehaviour
 
             //憑依キャラの設定
             EnemyController enemy = targetObj?.GetComponent<EnemyController>();
-            
+
             currentPossession = enemy.enemyData;
             playerController.maxHp = currentPossession.Poshp;
             playerController.hp = playerController.maxHp;
             playerController._hpSlider = _hpSlider;
             playerController.attackPower = currentPossession.attackPower + _increaseAttackValue;
             playerController.defencePower = defencePower;
-            playerController._audioSource= enemy.GetComponent<AudioSource>();
+            playerController._audioSource = enemy.GetComponent<AudioSource>();
 
             playerController._seData = new List<SoundData>();
             playerController._seData = _seData;
@@ -479,18 +482,18 @@ public class PlayerController : MonoBehaviour
             playerController.player = player;
             playerController.PossessionEnemyName = currentPossession.enemyName;
             playerController.isPossession = true;
-            player = null;  
+            player = null;
             playerController.currentPossession = currentPossession;
             playerController._mainCamera = _mainCamera;
             currentPossession = null;
 
             Color setColor = new Color(0.8030842f, 0.4134211f, 0.9245283f, 1.0f);
-            _hpSlider.SetPlayerHp(playerController,setColor);
+            _hpSlider.SetPlayerHp(playerController, setColor);
 
         }
 
         EnemyController enemyController = targetObj?.GetComponent<EnemyController>();
-        if(enemyController != null) 
+        if (enemyController != null)
         {
             //エネミーの死亡時エフェクト削除
             enemyController.lightEffect.SetActive(false);
@@ -508,12 +511,12 @@ public class PlayerController : MonoBehaviour
         targetObj.name = stringBuilder.ToString();
 
         //憑依先のキャンバス削除
-        Canvas canvas=targetObj?.GetComponentInChildren<Canvas>();
-        if(canvas != null) 
+        Canvas canvas = targetObj?.GetComponentInChildren<Canvas>();
+        if (canvas != null)
         {
             canvas.enabled = false;
         }
-        
+
         //カメラのターゲットを憑依先に変更
         _mainCamera.SetCameraTarget(targetObj);
         isPossession = true;
@@ -542,7 +545,7 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void ReturnAction(InputAction.CallbackContext context)
     {
-        if(context.performed == true)
+        if (context.performed == true)
         {
             Return();
         }
@@ -561,7 +564,7 @@ public class PlayerController : MonoBehaviour
             PlayerController playerController = player.GetComponent<PlayerController>();
             playerController.SetPlayerActive(true);
             playerController.PlaySE("player_Return");
-           
+
             Color setColor = new Color(0.6705883f, 1.0f, 0.5803922f, 1.0f);
             _hpSlider.SetPlayerHp(playerController, setColor);
 
@@ -596,7 +599,7 @@ public class PlayerController : MonoBehaviour
             tag = "Untagged";
             gameObject.layer = 0;
         }
-        
+
     }
 
     public EnemyData GetPossessionData()
@@ -609,7 +612,7 @@ public class PlayerController : MonoBehaviour
         return maxHp;
     }
 
-    public int GetPlayerHp() 
+    public int GetPlayerHp()
     {
         return hp;
     }
@@ -620,7 +623,7 @@ public class PlayerController : MonoBehaviour
     /// <param name="value">true=�L���@false=����</param>
     public void SetInputAction(bool value)
     {
-        if(value == true)
+        if (value == true)
         {
             inputActions.Enable();
             if (_mainCamera == null)
@@ -647,7 +650,7 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     /// <param name="addAttack">攻撃力増加量</param>
     /// <param name="addDefence">防御力増加量</param>
-    public void GetTreasure(int addAttack,int addDefence)
+    public void GetTreasure(int addAttack, int addDefence)
     {
         IncreaseAttackPower(addAttack);
         IncreaseDefencePower(addDefence);
