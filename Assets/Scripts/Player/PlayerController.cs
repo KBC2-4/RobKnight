@@ -564,6 +564,7 @@ public class PlayerController : MonoBehaviour
             PlayerController playerController = player.GetComponent<PlayerController>();
             playerController.SetPlayerActive(true);
             playerController.PlaySE("player_Return");
+            playerController.buffEffect.SetActive(false);
 
             Color setColor = new Color(0.6705883f, 1.0f, 0.5803922f, 1.0f);
             _hpSlider.SetPlayerHp(playerController, setColor);
