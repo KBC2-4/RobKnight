@@ -8,7 +8,7 @@ public class GameClearController : MonoBehaviour
 {
     [SerializeField] private EnemyController _boss;
     [SerializeField] private TMP_Text _countdownText; // UIテキストへの参照
-    private static float _timeRemainingF = 30f;
+    private static float _timeRemainingF = 10f;
     [SerializeField] private GameObject _canvas; // ゲームクリアCanvas
     [SerializeField] private GameObject _camera; // ボス用のカメラ
     [SerializeField] private GameObject _cameraParent; // ボス用のカメラの親オブジェクト
@@ -32,7 +32,11 @@ public class GameClearController : MonoBehaviour
         {
             _cameraAnimatorControllerS = _cameraAnimatorController.GetComponent<CameraAnimatorController>();
         }
-        
+
+        // フラグを初期化
+        hasExecuted = false;
+
+
     }
 
     private void OnEnable()
@@ -87,6 +91,7 @@ public class GameClearController : MonoBehaviour
     {
         if (_boss.isDeath)
         {
+            Debug.Log("ボスを倒した！");
             if (!hasExecuted)
             {
                 

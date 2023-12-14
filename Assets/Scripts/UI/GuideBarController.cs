@@ -77,14 +77,14 @@ public class GuideBarController : MonoBehaviour
     private void ResetUIForNewScene(string sceneName)
     {
         // タイトルシーンの場合は、イントロアニメーションがないのでそのまま表示する
-        if (sceneName == "Title")
-        {
-            _isDisplay = true;
-            _guideCanvas.SetActive(true);
-            GuideSet(GuideBarController.GuideName.Move, GuideBarController.GuideName.Attack);
-            // GuideSet(GuideName.Move, GuideName.Attack, GuideName.Possession);
-            // UpdateUI(DeviceTypeDetector.Instance.GetCurrentDevice());
-        }
+        //if (sceneName == "Title")
+        //{
+        //    _isDisplay = true;
+        //    _guideCanvas.SetActive(true);
+        //    GuideSet(GuideBarController.GuideName.Move, GuideBarController.GuideName.Attack);
+        //    // GuideSet(GuideName.Move, GuideName.Attack, GuideName.Possession);
+        //    // UpdateUI(DeviceTypeDetector.Instance.GetCurrentDevice());
+        //}
 
             //if (sceneName == "GameMain")
             //{

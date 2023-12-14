@@ -185,7 +185,11 @@ public class EnemyController : MonoBehaviour
         //}
 
         gameObject.GetComponent<Rigidbody>().isKinematic = true;
-        gameObject.GetComponent<CapsuleCollider>().isTrigger = true;
+        if (gameObject.GetComponent<CapsuleCollider>() != null)
+        {
+            gameObject.GetComponent<CapsuleCollider>().isTrigger = true;
+        }
+        
         gameObject.GetComponent<BoxCollider>().isTrigger = true;
         bool isPossession = player.gameObject.GetComponent<PlayerController>().isPossession;
 
