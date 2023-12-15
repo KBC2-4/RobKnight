@@ -25,8 +25,8 @@ public class SettingsManager : MonoBehaviour
     {
         _windowModeDropdown.value = PlayerPrefs.GetInt("WindowMode", 0);
 
-        _seVolumeSlider.value = PlayerPrefs.GetFloat("SEVolume", -20.0f);
-        _bgmVolumeSlider.value = PlayerPrefs.GetFloat("BGMVolume", 2.0f);
+        _seVolumeSlider.value = PlayerPrefs.GetFloat("SEVolume", 5.0f);
+        _bgmVolumeSlider.value = PlayerPrefs.GetFloat("BGMVolume", 1.0f);
         AdjustSEVolume(_seVolumeSlider.value);
         _mixer.SetFloat("SEVolume", _seVolumeSlider.value);
         AdjustBGMVolume(_bgmVolumeSlider.value);
@@ -55,7 +55,7 @@ public class SettingsManager : MonoBehaviour
 
 
         // SE・BGM音量の読み込み
-        seVolume = PlayerPrefs.GetFloat("SEVolume", 1.0f); // デフォルト値を1.0とする
+        seVolume = PlayerPrefs.GetFloat("SEVolume", 5.0f); // デフォルト値を1.0とする
         bgmVolume = PlayerPrefs.GetFloat("BGMVolume", 1.0f); // デフォルト値を1.0とする
         
         // カメラの回転速度の読み込み

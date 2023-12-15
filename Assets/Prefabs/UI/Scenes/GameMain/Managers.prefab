@@ -51,7 +51,7 @@ MonoBehaviour:
   _introCamera: {fileID: 5585817561093298070}
   _inputActions: {fileID: -944628639613478452, guid: 4e1ec3c0ceba72c45b04f5da851592d5,
     type: 3}
-  noInputThreshold: 3
+  noInputThreshold: 1
   _isAlwayDisplay: 0
 --- !u!1 &1146160754544030409
 GameObject:
@@ -1332,6 +1332,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _cameraParent: {fileID: 0}
   _bossTransform: {fileID: 0}
+  _boss: {fileID: 0}
   _rotationSpeed: 30
 --- !u!1 &5566971311949820798
 GameObject:
