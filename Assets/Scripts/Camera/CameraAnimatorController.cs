@@ -8,6 +8,7 @@ public class CameraAnimatorController : MonoBehaviour
 {
     [SerializeField] private GameObject _cameraParent;  // カメラの親オブジェクト
     [SerializeField, Tooltip("ボスのTransform")] private Transform _bossTransform; // ボスのTransform
+    [SerializeField, Tooltip("ボスのオブジェクト")] private GameObject _boss; // ボスのオブジェクト
     [SerializeField, Tooltip("回転速度")] private float _rotationSpeed = 30f; // 回転速度
     private Vector3 _startPos;
     private Animator _animator;
@@ -37,16 +38,16 @@ public class CameraAnimatorController : MonoBehaviour
     IEnumerator RotateAroundBoss()
     {
         // カメラの初期位置を設定
-        //Vector3 bossPosition = _bossTransform.position;
+        // Vector3 bossPosition = _bossTransform.position;
         //Vector3 cameraPosition = bossPosition + new Vector3(0, 5, -10); // ボスの少し上と後ろに配置
         //transform.position = cameraPosition;
 
         while (true) // 無限ループ
         {
             // ボスの方を向く
-            _cameraParent.transform.GetChild(0).transform.LookAt(_bossTransform);
+            _cameraParent.transform.GetChild(0).transform.LookAt(_boss.transform);
             // ボスを中心に回転させる
-            _cameraParent.transform.GetChild(0).transform.RotateAround(_bossTransform.position, Vector3.up, _rotationSpeed * Time.deltaTime);
+            _cameraParent.transform.GetChild(0).transform.RotateAround(_boss.transform.position, Vector3.up, _rotationSpeed * Time.deltaTime);
             yield return null;
         }
     }
@@ -70,13 +71,17 @@ public void Animate()
     // Start is called before the first frame update
     void Start()
     {
-        Vector3 bossPosition = _bossTransform.position;
+        Vector3 bossPosition = _boss.transform.position;
         Vector3 cameraPosition = bossPosition + new Vector3(0, 1.8f, -6.1111f); // ボスの少し上と後ろに配置
         _cameraParent.transform.position = cameraPosition;
     }
 
     private void Update()
     {
+        Vector3 bossPosition = _boss.transform.position;
+        Vector3 cameraPosition = bossPosition + new Vector3(0, 1.8f, -6.1111f); // ボスの少し上と後ろに配置
+        _cameraParent.transform.position = cameraPosition;
+
         // アニメーションが終了したかどうかをチェック
         if (_isAnimating && !_animator.IsInTransition(0) && _animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1)
         {
