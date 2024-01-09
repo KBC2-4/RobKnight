@@ -1,6 +1,6 @@
 # Rob Knight
-![RobKnight](https://kbc-game.jp/robknight/images/game-screenshot.jpg "RobKnight")
-[公式サイト](http://robknight.kbc-game.jp/)
+🔗[公式サイト](https://robknight.kbc-game.jp/)
+![RobKnight](https://robknight.kbc-game.jp/images/game-screenshot.webp "RobKnight")
 
 # 操作方法
 
